@@ -6,6 +6,8 @@ add_translation('en', array(
 	'item:object:answer' => "Answers",
 	'item:object:question' => "Questions",
 	
+	'river:create:object:question' => '%s asked question %s',
+		
 	'questions' => 'Questions',
 	'questions:asked' => 'Asked by %s',
 	'questions:answered' => 'Last answered by %s %s',
