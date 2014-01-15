@@ -27,7 +27,7 @@ $options = array(
 	'type' => 'object',
 	'subtype' => 'answer',
 	'container_guid' => $question->guid,
-	'count' => TRUE,
+	'count' => true,
 	'order_by' => 'time_created asc',
 );
 

@@ -1,10 +1,8 @@
 <?php
 add_translation('en', array(
-
 	'answers' => 'Answers',
-
 	'answers:addyours' => 'Add Your Answer',
-
+	
 	'item:object:answer' => "Answers",
 	'item:object:question' => "Questions",
 	
