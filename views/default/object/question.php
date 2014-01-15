@@ -5,8 +5,8 @@
  * @package Questions
 */
 
-$full = elgg_extract('full', $vars, FALSE);
-$question = elgg_extract('entity', $vars, FALSE);
+$full = elgg_extract('full', $vars, false);
+$question = elgg_extract('entity', $vars, false);
 
 if (!$question) {
 	return true;
@@ -36,14 +36,15 @@ $answer_options = array(
 );
 
 $num_answers = elgg_get_entities($answer_options);
+$answer_text = "";
 
 if ($num_answers != 0) {
-	$last_answer_options = array(
+	$answer_options = array(
 		'limit' => 1,
 		'count' => false,
 	);
 
-	$last_answer = elgg_get_entities(array_merge($answer_options, $last_answer_options));
+	$last_answer = elgg_get_entities($answer_options);
 
 	$poster = $last_answer[0]->getOwnerEntity();
 	$answer_time = elgg_view_friendly_time($last_answer[0]->time_created);
@@ -55,16 +56,15 @@ if ($num_answers != 0) {
 	));
 }
 
-$metadata = elgg_view_menu('entity', array(
-	'entity' => $vars['entity'],
-	'handler' => 'questions',
-	'sort_by' => 'priority',
-	'class' => 'elgg-menu-hz'
-));
-
+$metadata = '';
 // do not show the metadata and controls in widget view
-if (elgg_in_context('widgets')) {
-	$metadata = '';
+if (!elgg_in_context('widgets')) {
+	$metadata = elgg_view_menu('entity', array(
+		'entity' => $vars['entity'],
+		'handler' => 'questions',
+		'sort_by' => 'priority',
+		'class' => 'elgg-menu-hz'
+	));
 }
 
 if ($full) {
@@ -81,18 +81,16 @@ if ($full) {
 	
 	$list_body .= elgg_view('output/longtext', array('value' => $question->description));
 	
-	//feels hacky...
-	$river_item = new ElggRiverItem();
-	$river_item->object_guid = $question->guid;
-	$list_body .= elgg_view('river/elements/footer', array('item' => $river_item));
+	// show a comment form like in the river
+	$body_vars = array(
+		'entity' => $question,
+		'inline' => true
+	);
+	$list_body .= "<div class='elgg-river-item hidden' id='comments-add-" . $question->getGUID() . "'>";
+	$list_body .= elgg_view_form('comments/add', array(), $body_vars);
+	$list_body .= "</div>";
 	
-	$body = elgg_view_image_block($poster_icon, $list_body);
-
-
-	echo <<<HTML
-$header
-$body
-HTML;
+	echo elgg_view_image_block($poster_icon, $list_body);
 
 } else {
 	// brief view
@@ -103,7 +101,6 @@ HTML;
 		'metadata' => $metadata,
 		'subtitle' => $subtitle,
 		'tags' => $tags,
-		'content' => $excerpt,
 	);
 	$list_body = elgg_view('page/components/summary', $params);
 
