@@ -41,7 +41,6 @@ function questions_entity_menu_handler($hook, $type, $items, $params) {
 
 function questions_notify_message_handler($hook, $entity_type, $returnvalue, $params) {
 	$entity = $params['entity'];
-	$to_entity = $params['to_entity'];
 	$method = $params['method'];
 
 	if (elgg_instanceof($entity, 'object', 'question')) {
