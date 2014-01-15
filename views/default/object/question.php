@@ -19,6 +19,8 @@ $poster_icon = elgg_view_entity_icon($poster, 'small');
 $poster_text = elgg_echo('questions:asked', array($poster->name));
 
 $tags = elgg_view('output/tags', array('tags' => $question->tags));
+$categories = elgg_view('output/categories', $vars);
+
 $date = elgg_view_friendly_time($question->time_created);
 
 $answers_link = '';
@@ -63,7 +65,7 @@ if (!elgg_in_context('widgets')) {
 }
 
 if ($full) {
-	$subtitle = "$poster_text $date $answers_link";
+	$subtitle = "$poster_text $date $answers_link $categories";
 
 	$params = array(
 		'entity' => $question,
