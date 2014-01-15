@@ -40,6 +40,7 @@ $answer->container_guid = $container_guid;
 
 try {
 	$answer->save();
+	add_to_river("river/object/answer/create", "create", elgg_get_logged_in_user_guid(), $answer->guid, $answer->access_id);
 } catch (Exception $e) {
 	register_error(elgg_echo("questions:action:answer:save:error:save"));
 	register_error($e->getMessage());
