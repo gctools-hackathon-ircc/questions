@@ -15,6 +15,8 @@ add_translation('en', array(
 	'questions:menu:user_hover:make_expert' => "Make Questions expert",
 	'questions:menu:user_hover:remove_expert' => "Remove Questions expert",
 	
+	'river:create:object:question' => '%s asked question %s',
+		
 	'questions' => 'Questions',
 	'questions:asked' => 'Asked by %s',
 	'questions:answered' => 'Last answered by %s %s',

@@ -13,9 +13,8 @@ if (!elgg_instanceof($question, 'object', 'question') || !$question->canEdit()) 
 	forward(REFERRER);
 }
 
-$title = elgg_echo('questions:edit');
-
-elgg_push_breadcrumb($title);
+elgg_push_breadcrumb($question->title, $question->getURL());
+elgg_push_breadcrumb(elgg_echo('edit'));
 
 $vars = array(
 	'entity' => $question,
@@ -24,10 +23,9 @@ $vars = array(
 $content = elgg_view_form('object/question/save', array(), $vars);
 
 $body = elgg_view_layout('content', array(
-	'title' => $title,
+	'title' => elgg_echo('edit'),
 	'content' => $content,
-	'filter' => '',
-	'buttons' => '',
+	'filter' => ''
 ));
 
-echo elgg_view_page($title, $body);
+echo elgg_view_page(elgg_echo('edit'), $body);

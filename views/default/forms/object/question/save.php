@@ -5,6 +5,7 @@ $question = elgg_extract('entity', $vars);
 if (!$question) {
 	$question = new ElggQuestion();
 	$question->container_guid = elgg_get_page_owner_guid();
+	$question->access_id = ACCESS_DEFAULT;
 }
 
 $title = array(
@@ -23,12 +24,6 @@ $tags = array(
 	'name' => 'tags',
 	'id' => 'question_tags',
 	'value' => elgg_get_sticky_value('question', 'tags', $question->tags),
-);
-
-$categories = array(
-	'name' => 'categories',
-	'id' => 'question_categories',
-	'value' => elgg_get_sticky_value('question', 'categories', $question->categories),
 );
 
 $access_id = array(
@@ -56,7 +51,7 @@ elgg_clear_sticky_form('question');
 
 <?php
 if (elgg_view_exists('input/categories')) {
-	echo elgg_view('input/categories', $categories);
+	echo elgg_view('input/categories', $vars);
 }
 ?>
 
