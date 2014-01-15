@@ -13,20 +13,15 @@ if (!$question) {
 }
 
 $poster = $question->getOwnerEntity();
-$container = $question->getContainerEntity();
 
 $poster_icon = elgg_view_entity_icon($poster, 'small');
-$poster_link = elgg_view('output/url', array(
-	'href' => $poster->getURL(),
-	'text' => $poster->name,
-));
+
 $poster_text = elgg_echo('questions:asked', array($poster->name));
 
 $tags = elgg_view('output/tags', array('tags' => $question->tags));
 $date = elgg_view_friendly_time($question->time_created);
 
 $answers_link = '';
-$answers_text = '';
 
 $answer_options = array(
 	'type' => 'object',

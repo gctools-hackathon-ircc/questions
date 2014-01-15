@@ -15,6 +15,6 @@ $url = elgg_view('output/url', array(
 
 echo elgg_echo("questions:river:answer:created", array($url)) . " ";
 echo elgg_view('output/url', array(
-	'href' => $answer->getURL(),
+	'href' => $object->getURL(),
 	'text' => elgg_echo("questions:river:answer:create"),
 ));
