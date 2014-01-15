@@ -78,6 +78,8 @@ if ($full) {
 	
 	$list_body .= elgg_view('output/longtext', array('value' => $question->description));
 	
+	$comment_count = $question->countComments();
+	
 	$comment_options = array(
 			'guid' => $question->getGUID(),
 			'annotation_name' => 'generic_comment',

@@ -12,12 +12,15 @@ $entity_menu = elgg_view_menu('entity', array(
 
 $body = elgg_view('output/longtext', array('value' => $answer->description));
 
+$comment_count = $answer->countComments();
+
 $comment_options = array(
 		'guid' => $answer->getGUID(),
 		'annotation_name' => 'generic_comment',
 		'limit' => 3,
 		'order_by' => 'n_table.time_created desc'
 );
+
 $comments = elgg_get_annotations($comment_options);
 
 if ($comments) {
