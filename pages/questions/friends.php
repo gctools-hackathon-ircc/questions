@@ -21,6 +21,7 @@ if (!$content) {
 $params = array(
 	'title' => $title,
 	'content' => $content,
+	'filter_context' => 'friends'
 );
 
 $body = elgg_view_layout('content', $params);

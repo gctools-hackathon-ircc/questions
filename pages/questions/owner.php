@@ -26,6 +26,7 @@ if (!$content) {
 $vars = array(
 	'title' => $title,
 	'content' => $content,
+	'filter_context' => 'mine'
 );
 
 // don't show filter if out of filter context
