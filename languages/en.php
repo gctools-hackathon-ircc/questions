@@ -30,5 +30,4 @@ add_translation('en', array(
 
 	'widget:questions:title' => "Questions",
 	'widget:questions:description' => "You can view the status of your questions.",
-	'widget:questions:limit' => "Number of questions to display:",
 ));

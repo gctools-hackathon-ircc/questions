@@ -2,33 +2,32 @@
 add_translation('fr', array(
 	'item:object:question' => 'Questions',
 
-	'answers' => 'Réponses',
+	'answers' => 'Rï¿½ponses',
 
-	'answers:addyours' => 'Ajouter votre Réponse',
+	'answers:addyours' => 'Ajouter votre Rï¿½ponse',
 
-	'item:object:answer' => "Réponses",
+	'item:object:answer' => "Rï¿½ponses",
 	'item:object:question' => "Questions",
 
 	'questions' => 'Questions',
-	'questions:asked' => 'Posée par %s',
-	'questions:answered' => 'Dernière réponse par %s %s',
+	'questions:asked' => 'Posï¿½e par %s',
+	'questions:answered' => 'Derniï¿½re rï¿½ponse par %s %s',
 
 	'questions:everyone' => 'Toutes les Questions',
 	'questions:add' => 'Poser une Question',
 	'questions:owner' => "Questions de %s",
-	'questions:none' => "Aucune question n'a encore été posée.",
+	'questions:none' => "Aucune question n'a encore ï¿½tï¿½ posï¿½e.",
 	'questions:friends' => "Questions de vos Amis",
 	'questions:group' => 'Les questions du Groupe',
 
 	'object:question:title' => 'Question',
-	'object:question:description' => "Détails",
+	'object:question:description' => "Dï¿½tails",
 
 	/**
 	 * Widgets
 	 */
 
 	'widget:questions:title' => "Questions",
-	'widget:questions:description' => "Vous pouvez afficher l'état de vos questions.",
-	'widget:questions:limit' => "Nombre de questions à afficher:",
+	'widget:questions:description' => "Vous pouvez afficher l'ï¿½tat de vos questions.",
+	
 ));
-?>

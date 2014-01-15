@@ -51,12 +51,12 @@ $access_id = array(
 	<?php echo elgg_view('input/tags', $tags); ?>
 </div>
 
-<?php if (elgg_view_exists('input/categories')): ?>
+<?php if (elgg_view_exists('input/categories')) { ?>
 <div>
 	<label for="question_categories"><?php echo elgg_echo('categories'); ?></label>
 	<?php echo elgg_view('input/categories', $categories); ?>
 </div>
-<?php endif; ?>
+<?php } ?>
 
 <div>
 	<label for="question_access_id"><?php echo elgg_echo('access'); ?></label>

@@ -10,7 +10,6 @@ $body = elgg_view_menu('entity', array(
 	'class' => 'elgg-menu-hz'
 ));
 
-
 $body .= elgg_view('output/longtext', array('value' => $answer->description));
 
 //feels hacky...

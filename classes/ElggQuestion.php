@@ -24,4 +24,10 @@ class ElggQuestion extends ElggObject {
 	public function listAnswers(array $options = array()) {
 		return elgg_list_entities($options, array($this, 'getAnswers'));
 	}
+	
+	public function getURL() {
+		$url = "/questions/view/" . $this->guid . "/" . elgg_get_friendly_title($this->title);
+		
+		return elgg_normalize_url($url);
+	}
 }
