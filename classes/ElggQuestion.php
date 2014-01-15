@@ -25,7 +25,7 @@ class ElggQuestion extends ElggObject {
 	}
 	
 	public function getURL() {
-		$url = "/questions/view/" . $this->guid . "/" . elgg_get_friendly_title($this->title);
+		$url = "questions/view/" . $this->guid . "/" . elgg_get_friendly_title($this->title);
 		
 		return elgg_normalize_url($url);
 	}
