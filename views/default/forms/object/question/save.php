@@ -26,12 +26,6 @@ $tags = array(
 	'value' => elgg_get_sticky_value('question', 'tags', $question->tags),
 );
 
-$categories = array(
-	'name' => 'categories',
-	'id' => 'question_categories',
-	'value' => elgg_get_sticky_value('question', 'categories', $question->categories),
-);
-
 $access_id = array(
 	'name' => 'access_id',
 	'id' => 'question_access_id',
@@ -57,7 +51,7 @@ elgg_clear_sticky_form('question');
 
 <?php
 if (elgg_view_exists('input/categories')) {
-	echo elgg_view('input/categories', $categories);
+	echo elgg_view('input/categories', $vars);
 }
 ?>
 
