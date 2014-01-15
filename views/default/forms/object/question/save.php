@@ -5,6 +5,7 @@ $question = elgg_extract('entity', $vars);
 if (!$question) {
 	$question = new ElggQuestion();
 	$question->container_guid = elgg_get_page_owner_guid();
+	$question->access_id = ACCESS_DEFAULT;
 }
 
 $title = array(
