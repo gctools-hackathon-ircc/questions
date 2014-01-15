@@ -39,7 +39,7 @@ function questions_entity_menu_handler($hook, $type, $items, $params) {
 	return $items;
 }
 
-function questions_notify_message_handler($hook, $entity_type, $returnvalue, $params) {
+function questions_notify_message_handler($hook, $type, $returnvalue, $params) {
 	$entity = $params['entity'];
 	$method = $params['method'];
 
@@ -66,4 +66,42 @@ function questions_notify_message_handler($hook, $entity_type, $returnvalue, $pa
 	}
 
 	return null;
+}
+
+function questions_user_hover_menu_handler($hook, $type, $returnvalue, $params) {
+	$result = $returnvalue;
+	
+	// are experts enabled
+	if (questions_experts_enabled()) {
+		if (!empty($params) && is_array($params)) {
+			// get the user for this menu
+			$user = elgg_extract("entity", $params);
+			
+			if (!empty($user) && elgg_instanceof($user, "user") && !$user->isAdmin()) {
+				// get page owner
+				$page_owner = elgg_get_page_owner_entity();
+				if (!elgg_instanceof($page_owner, "group")) {
+					$page_owner = elgg_get_site_entity();
+				}
+				
+				// can the current person edit the page owner, to assign the role
+				// and is the current user not the owner of this page owner
+				if ($page_owner->canEdit() && !$page_owner->canEdit($user->getGUID())) {
+					$text = elgg_echo("questions:menu:user_hover:make_expert");
+					if (check_entity_relationship($user->getGUID(), QUESTIONS_EXPERT_ROLE, $page_owner->getGUID())) {
+						$text = elgg_echo("questions:menu:user_hover:remove_expert");
+					}
+					
+					$result[] = ElggMenuItem::factory(array(
+						"name" => "questions_expert",
+						"text" => $text,
+						"href" => "action/questions/toggle_expert?user_guid=" . $user->getGUID() . "&guid=" . $page_owner->getGUID(),
+						"confirm" => elgg_echo("question:areyousure")
+					));
+				}
+			}
+		}
+	}
+	
+	return $result;
 }

@@ -3,6 +3,8 @@
  * This file is loaded when all the active plugins get loaded
  */
 
+define("QUESTIONS_EXPERT_ROLE", "questions_expert");
+
 require_once(dirname(__FILE__) . "/lib/functions.php");
 require_once(dirname(__FILE__) . "/lib/events.php");
 require_once(dirname(__FILE__) . "/lib/hooks.php");
@@ -47,6 +49,8 @@ function questions_init() {
 	elgg_register_plugin_hook_handler("notify:entity:message", "object", 'questions_notify_message_handler');
 	
 	// actions
+	elgg_register_action("questions/toggle_expert", dirname(__FILE__) . "/actions/toggle_expert.php");
+	
 	// question
 	$actions_base = dirname(__FILE__) . '/actions/object/question';
 	elgg_register_action("object/question/save", "$actions_base/save.php");
