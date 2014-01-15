@@ -40,9 +40,7 @@ if ($question->canWriteToContainer(0, 'object', 'answer')) {
 	$user_icon = elgg_view_entity_icon(elgg_get_logged_in_user_entity(), 'small');
 	$add_form = elgg_view_form('object/answer/add', array(), array('container_guid' => $question->guid));
 	
-	$add_block = elgg_view_image_block($user_icon, $add_form);
-	
-	$content .= elgg_view_module('info', elgg_echo('answers:addyours'), $add_block);
+	$content .= elgg_view_module('info', elgg_echo('answers:addyours'), $add_form);
 }
 
 $body = elgg_view_layout('content', array(
