@@ -14,6 +14,10 @@ $content = elgg_list_entities(array(
 	'list_type_toggle' => false,
 ));
 
+if (!$content) {
+	$content = elgg_echo('questions:none');
+}
+
 $title = elgg_echo('questions:everyone');
 
 $body = elgg_view_layout('content', array(

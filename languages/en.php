@@ -6,8 +6,6 @@ add_translation('en', array(
 	'item:object:answer' => "Answers",
 	'item:object:question' => "Questions",
 	
-	'item:object:questions' => "Questions",
-
 	'questions' => 'Questions',
 	'questions:asked' => 'Asked by %s',
 	'questions:answered' => 'Last answered by %s %s',
@@ -18,6 +16,7 @@ add_translation('en', array(
 	'questions:none' => "No questions have been submitted yet.",
 	'questions:friends' => "Friends' Questions",
 	'questions:group' => 'Group questions',
+	'questions:enable' => 'Enable group questions',
 
 	'object:question:title' => 'Question',
 	'object:question:description' => "Details",
