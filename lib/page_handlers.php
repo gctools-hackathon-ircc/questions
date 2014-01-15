@@ -3,7 +3,7 @@
 function questions_page_handler($segments) {
 	elgg_push_breadcrumb(elgg_echo('questions'), "/questions/all");
 
-	$pages = dirname(__FILE__) . "/pages/questions";
+	$pages = dirname(dirname(__FILE__)) . "/pages/questions";
 
 	switch ($segments[0]) {
 		case "all":
