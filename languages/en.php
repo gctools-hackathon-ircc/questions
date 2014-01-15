@@ -31,4 +31,20 @@ add_translation('en', array(
 	'widget:questions:title' => "Questions",
 	'widget:questions:description' => "You can view the status of your questions.",
 	'widget:questions:limit' => "Number of questions to display:",
+	
+	'questions:action:answer:save:error:container' => "You do not have permission to answer that question!",
+	'questions:action:answer:save:error:body' => "A body is required: %s, %s",
+	'questions:action:answer:save:error:save' => "There was a problem saving your answer!",
+	
+	'questions:action:question:save:error:container' => "You do not have permission to answer that question!",
+	'questions:action:question:save:error:body' => "A title and description are required: %s, %s, %s",
+	'questions:action:question:save:error:save' => "There was a problem saving your question!",
+	
+	'' => "",
+	'' => "",
+	'' => "",
+	'' => "",
+	'' => "",
+	'' => "",
+	'' => "",
 ));
