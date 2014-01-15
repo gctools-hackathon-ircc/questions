@@ -3,8 +3,17 @@ add_translation('en', array(
 	'answers' => 'Answers',
 	'answers:addyours' => 'Add Your Answer',
 	
+	/**
+	 * General stuff
+	 */
 	'item:object:answer' => "Answers",
 	'item:object:question' => "Questions",
+	
+	/**
+	 * Menu items
+	 */
+	'questions:menu:user_hover:make_expert' => "Make Questions expert",
+	'questions:menu:user_hover:remove_expert' => "Remove Questions expert",
 	
 	'river:create:object:question' => '%s asked question %s',
 	'river:create:object:answer' => '%s provided an answered for the question %s',
@@ -25,6 +34,15 @@ add_translation('en', array(
 	'object:question:description' => "Details",
 	
 	/**
+	 * plugin settings
+	 */
+	'questions:settings:experts:title' => "Q&A expert settings",
+	'questions:settings:experts:enable' => "Enable expert roles",
+	'questions:settings:experts:enable:description' => "Experts have special privilages and can be assigned by site administrators and group owners.",
+	'questions:settings:experts:answer' => "Only experts can answer a question",
+	'questions:settings:experts:mark' => "Only experts can mark an answer as the correct answer",
+	
+	/**
 	 * Widgets
 	 */
 
@@ -43,4 +61,6 @@ add_translation('en', array(
 	'questions:action:question:save:error:body' => "A title and description are required: %s, %s, %s",
 	'questions:action:question:save:error:save' => "There was a problem saving your question!",
 	
+	'questions:action:toggle_expert:success:make' => "%s is now a questions expert for %s",
+	'questions:action:toggle_expert:success:remove' => "%s is no longer a questions expert for %s",
 ));
