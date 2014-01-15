@@ -7,6 +7,8 @@
 
 elgg_set_page_owner_guid(elgg_get_logged_in_user_guid());
 
+elgg_register_title_button();
+
 $content = elgg_list_entities(array(
 	'type' => 'object',
 	'subtype' => 'question',

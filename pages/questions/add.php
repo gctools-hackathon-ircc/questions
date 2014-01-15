@@ -15,7 +15,6 @@ $body = elgg_view_layout('content', array(
 	'title' => $title,
 	'content' => $content,
 	'filter' => '',
-	'buttons' => '',
 ));
 
 echo elgg_view_page($title, $body);

@@ -1,6 +1,6 @@
 <?php
 
-$question = $vars['entity'];
+$question = elgg_extract('entity', $vars);
 
 if (!$question) {
 	$question = new ElggQuestion();
@@ -10,32 +10,35 @@ if (!$question) {
 $title = array(
 	'name' => 'title',
 	'id' => 'question_title',
-	'value' => $question->title,
+	'value' => elgg_get_sticky_value('question', 'title', $question->title),
 );
 
 $description = array(
 	'name' => 'description',
 	'id' => 'question_description',
-	'value' => $question->description,
+	'value' => elgg_get_sticky_value('question', 'description', $question->description),
 );
 
 $tags = array(
 	'name' => 'tags',
 	'id' => 'question_tags',
-	'value' => $question->tags,
+	'value' => elgg_get_sticky_value('question', 'tags', $question->tags),
 );
 
 $categories = array(
 	'name' => 'categories',
 	'id' => 'question_categories',
-	'value' => $question->categories,
+	'value' => elgg_get_sticky_value('question', 'categories', $question->categories),
 );
 
 $access_id = array(
 	'name' => 'access_id',
 	'id' => 'question_access_id',
-	'value' => $question->access_id,
+	'value' => (int) elgg_get_sticky_value('question', 'access_id', $question->access_id),
 );
+
+// clear sticky form
+elgg_clear_sticky_form('question');
 ?>
 
 <div>
@@ -51,12 +54,11 @@ $access_id = array(
 	<?php echo elgg_view('input/tags', $tags); ?>
 </div>
 
-<?php if (elgg_view_exists('input/categories')) { ?>
-<div>
-	<label for="question_categories"><?php echo elgg_echo('categories'); ?></label>
-	<?php echo elgg_view('input/categories', $categories); ?>
-</div>
-<?php } ?>
+<?php
+if (elgg_view_exists('input/categories')) {
+	echo elgg_view('input/categories', $categories);
+}
+?>
 
 <div>
 	<label for="question_access_id"><?php echo elgg_echo('access'); ?></label>
