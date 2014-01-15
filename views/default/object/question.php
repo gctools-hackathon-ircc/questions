@@ -124,13 +124,14 @@ if ($full) {
 
 } else {
 	// brief view
-	$subtitle = "$poster_text $date $answers_link <span class=\"questions-latest-answer\">$answer_text</span>";
+	$subtitle = "$poster_text $date $answers_link $categories";
 
 	$params = array(
 		'entity' => $question,
 		'metadata' => $metadata,
 		'subtitle' => $subtitle,
 		'tags' => $tags,
+		'content' => $answer_text
 	);
 	$list_body = elgg_view('page/components/summary', $params);
 

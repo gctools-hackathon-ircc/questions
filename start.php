@@ -37,6 +37,7 @@ function questions_init() {
 	
 	// register page handler for nice urls
 	elgg_register_page_handler('questions', 'questions_page_handler');
+	elgg_register_page_handler('answers', 'answers_page_handler');
 	
 	// register group options
 	add_group_tool_option('questions', elgg_echo("questions:enable"), true);

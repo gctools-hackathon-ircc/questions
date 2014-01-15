@@ -34,6 +34,11 @@ add_translation('en', array(
 	'object:question:description' => "Details",
 	
 	/**
+	 * answers
+	 */
+	'questions:answer:edit' => "Update answer",
+		
+	/**
 	 * plugin settings
 	 */
 	'questions:settings:experts:title' => "Q&A expert settings",
