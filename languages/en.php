@@ -8,7 +8,7 @@ add_translation('en', array(
 	'item:object:answer' => "Answers",
 	'item:object:question' => "Questions",
 	
-        'item:object:questions' => "Questions",
+	'item:object:questions' => "Questions",
 
 	'questions' => 'Questions',
 	'questions:asked' => 'Asked by %s',
@@ -23,11 +23,24 @@ add_translation('en', array(
 
 	'object:question:title' => 'Question',
 	'object:question:description' => "Details",
-
+	
 	/**
 	 * Widgets
 	 */
 
 	'widget:questions:title' => "Questions",
 	'widget:questions:description' => "You can view the status of your questions.",
+	
+	/**
+	 * Actions
+	 */
+	
+	'questions:action:answer:save:error:container' => "You do not have permission to answer that question!",
+	'questions:action:answer:save:error:body' => "A body is required: %s, %s",
+	'questions:action:answer:save:error:save' => "There was a problem saving your answer!",
+	
+	'questions:action:question:save:error:container' => "You do not have permission to answer that question!",
+	'questions:action:question:save:error:body' => "A title and description are required: %s, %s, %s",
+	'questions:action:question:save:error:save' => "There was a problem saving your question!",
+	
 ));

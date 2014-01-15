@@ -1,13 +1,15 @@
 <?php
-$answer = get_entity(get_input('guid'));
+
+$guid = (int) get_input('guid');
+$answer = get_entity($guid);
 
 if (!$answer instanceof ElggAnswer) {
-	register_error("Invalid answer guid");
+	register_error(elgg_echo("ClassException:ClassnameNotClass", array($guid, elgg_echo("item:object:answer"))));
 	forward(REFERER);
 }
 
 if (!$answer->canEdit()) {
-	register_error("You do not have permission to delete that answer");
+	register_error(elgg_echo("InvalidParameterException:NoEntityFound"));
 	forward(REFERER);
 }
 

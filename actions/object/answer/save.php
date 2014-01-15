@@ -11,7 +11,7 @@ $adding = !$answer->guid;
 $editing = !$adding;
 
 if ($editing && !$answer->canEdit()) {
-	register_error("You do not have permission to edit this answer!");
+	register_error(elgg_echo("InvalidParameterException:NoEntityFound"));
 	forward(REFERER);
 }
 
@@ -21,7 +21,7 @@ if (!$container_guid) {
 }
 
 if ($adding && !can_write_to_container(0, $container_guid, 'object', 'answer')) {
-	register_error("You do not have permission to answer that question!");
+	register_error(elgg_echo("questions:action:answer:save:error:container"));
 	forward(REFERER);
 }
 
@@ -30,7 +30,7 @@ $question = get_entity($container_guid);
 $description = get_input('description');
 
 if (empty($container_guid) || empty($description)) {
-	register_error("A body is required: $container_guid, $title, $description");
+	register_error(elgg_echo("questions:action:answer:save:error:body", array($container_guid, $description)));
 	forward(REFERER);
 }
 
@@ -41,7 +41,7 @@ $answer->container_guid = $container_guid;
 try {
 	$answer->save();
 } catch (Exception $e) {
-	register_error("There was a problem saving your answer!");
+	register_error(elgg_echo("questions:action:answer:save:error:save"));
 	register_error($e->getMessage());
 }
 
