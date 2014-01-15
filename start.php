@@ -28,7 +28,7 @@ function questions_init() {
 	));
 	
 	// make question searchable
-	elgg_register_entity_type("object", 'questions');
+	elgg_register_entity_type("object", 'question');
 	
 	// register widget
 	elgg_register_widget_type('questions', elgg_echo("widget:questions:title"), elgg_echo("widget:questions:description"));
