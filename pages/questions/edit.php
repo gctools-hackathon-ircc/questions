@@ -26,8 +26,7 @@ $content = elgg_view_form('object/question/save', array(), $vars);
 $body = elgg_view_layout('content', array(
 	'title' => $title,
 	'content' => $content,
-	'filter' => '',
-	'buttons' => '',
+	'filter' => ''
 ));
 
 echo elgg_view_page($title, $body);
