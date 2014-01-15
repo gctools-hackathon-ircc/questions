@@ -78,11 +78,42 @@ if ($full) {
 	
 	$list_body .= elgg_view('output/longtext', array('value' => $question->description));
 	
+	$comment_options = array(
+			'guid' => $question->getGUID(),
+			'annotation_name' => 'generic_comment',
+			'limit' => 3,
+			'order_by' => 'n_table.time_created desc'
+	);
+	$comments = elgg_get_annotations($comment_options);
+	
+	if ($comments) {
+		// why is this reversing it? because we're asking for the 3 latest
+		// comments by sorting desc and limiting by 3, but we want to display
+		// these comments with the latest at the bottom.
+		$comments = array_reverse($comments);
+	
+		$list_body .= "<span class='elgg-river-comments-tab'>" . elgg_echo('comments') . "</span>";
+		$list_body .= elgg_view_annotation_list($comments, array('list_class' => 'elgg-river-comments'));
+	
+		if ($comment_count > count($comments)) {
+			$num_more_comments = $comment_count - count($comments);
+			$url = $object->getURL();
+			$params = array(
+				'href' => $url,
+				'text' => elgg_echo('river:comments:more', array($num_more_comments)),
+				'is_trusted' => true,
+			);
+			$link = elgg_view('output/url', $params);
+			$list_body .= "<div class=\"elgg-river-more\">$link</div>";
+		}
+	}
+	
 	// show a comment form like in the river
 	$body_vars = array(
-		'entity' => $question,
-		'inline' => true
+			'entity' => $question,
+			'inline' => true
 	);
+	
 	$list_body .= "<div class='elgg-river-item hidden' id='comments-add-" . $question->getGUID() . "'>";
 	$list_body .= elgg_view_form('comments/add', array(), $body_vars);
 	$list_body .= "</div>";
