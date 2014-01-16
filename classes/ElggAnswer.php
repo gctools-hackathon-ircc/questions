@@ -2,8 +2,6 @@
 
 class ElggAnswer extends ElggObject {
 	
-	const MARK_FIELD_NAME = "correct_answer";
-	
 	function initializeAttributes() {
 		parent::initializeAttributes();
 		$this->attributes['subtype'] = 'answer';
@@ -15,5 +13,9 @@ class ElggAnswer extends ElggObject {
 		$url = $container_entity->getURL() . "#answer-" . $this->guid;
 		
 		return $url;
+	}
+	
+	public function isMarkedCorrect() {
+		return (boolean) $this->correct_answer;
 	}
 }

@@ -44,7 +44,7 @@ class ElggQuestion extends ElggObject {
 			"limit" => 1,
 			"container_guid" => $this->getGUID(),
 			"metadata_name_value_pairs" => array(
-				"name" => ElggAnswer::MARK_FIELD_NAME,
+				"name" => "correct_answer",
 				"value" => true
 			)
 		);

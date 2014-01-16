@@ -3,6 +3,11 @@ $answer = $vars['entity'];
 
 $image = elgg_view_entity_icon(get_entity($answer->owner_guid), 'small');
 
+if ($answer->isMarkedCorrect()) {
+	$title = "blabla title";
+	$image .= "<div class='questions-checkmark' title='$title'></div>";
+}
+
 $entity_menu = elgg_view_menu('entity', array(
 	'entity' => $vars['entity'],
 	'handler' => 'answers',

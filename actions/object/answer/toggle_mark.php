@@ -15,16 +15,14 @@ if (!empty($guid)) {
 			$question = $entity->getContainerEntity();
 			$answer = $question->getMarkedAnswer();
 			
-			$field_name = ElggAnswer::MARK_FIELD_NAME;
-			
 			if (empty($answer)) {
 				// no answer yet, so mark this one
-				$entity->$field_name = true;
+				$entity->correct_answer = true;
 				
 				system_message(elgg_echo("questions:action:answer:toggle_mark:success:mark"));
 			} elseif ($answer->getGUID() == $entity->getGUID()) {
 				// the marked answer is this answer, so unmark
-				unset($entity->$field_name);
+				unset($entity->correct_answer);
 				
 				system_message(elgg_echo("questions:action:answer:toggle_mark:success:unmark"));
 			} else {
