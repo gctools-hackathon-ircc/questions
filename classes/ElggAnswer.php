@@ -1,7 +1,9 @@
 <?php
 
 class ElggAnswer extends ElggObject {
-
+	
+	const MARK_FIELD_NAME = "correct_answer";
+	
 	function initializeAttributes() {
 		parent::initializeAttributes();
 		$this->attributes['subtype'] = 'answer';

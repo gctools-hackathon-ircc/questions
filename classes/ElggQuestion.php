@@ -29,4 +29,31 @@ class ElggQuestion extends ElggObject {
 		
 		return elgg_normalize_url($url);
 	}
+	
+	/**
+	 * Get the answer that was marked as the correct answer
+	 *
+	 * @return bool|ElggAnswer the answer or false if non are marked
+	 */
+	public function getMarkedAnswer() {
+		$result = false;
+		
+		$options = array(
+			"type" => "object",
+			"subtype" => "answer",
+			"limit" => 1,
+			"container_guid" => $this->getGUID(),
+			"metadata_name_value_pairs" => array(
+				"name" => ElggAnswer::MARK_FIELD_NAME,
+				"value" => true
+			)
+		);
+		
+		$answers = elgg_get_entities_from_metadata($options);
+		if (!empty($answers)) {
+			$result = $answers[0];
+		}
+		
+		return $result;
+	}
 }

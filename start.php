@@ -62,5 +62,6 @@ function questions_init() {
 	elgg_register_action('object/answer/add', "$actions_base/save.php");
 	elgg_register_action('object/answer/edit', "$actions_base/save.php");
 	elgg_register_action('answers/delete', "$actions_base/delete.php");
+	elgg_register_action('answers/toggle_mark', "$actions_base/toggle_mark.php");
 	
 }
