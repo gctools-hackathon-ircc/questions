@@ -15,6 +15,9 @@ add_translation('en', array(
 	'questions:menu:user_hover:make_expert' => "Make Questions expert",
 	'questions:menu:user_hover:remove_expert' => "Remove Questions expert",
 	
+	'questions:menu:entity:answer:mark' => "This is correct",
+	'questions:menu:entity:answer:unmark' => "No longer correct",
+	
 	'river:create:object:question' => '%s asked question %s',
 		
 	'questions' => 'Questions',
@@ -55,6 +58,11 @@ add_translation('en', array(
 	'questions:action:answer:save:error:container' => "You do not have permission to answer that question!",
 	'questions:action:answer:save:error:body' => "A body is required: %s, %s",
 	'questions:action:answer:save:error:save' => "There was a problem saving your answer!",
+	
+	'questions:action:answer:toggle_mark:error:not_allowed' => "You're not allowed to mark answers as the correct answer",
+	'questions:action:answer:toggle_mark:error:duplicate' => "There already is a correct answer to this question",
+	'questions:action:answer:toggle_mark:success:mark' => "The answer is marked as the correct answer",
+	'questions:action:answer:toggle_mark:success:unmark' => "The answer is no longer marked as the correct answer",
 	
 	'questions:action:question:save:error:container' => "You do not have permission to answer that question!",
 	'questions:action:question:save:error:body' => "A title and description are required: %s, %s, %s",

@@ -21,18 +21,43 @@ function questions_owner_block_menu_handler($hook, $type, $items, $params) {
 }
 
 function questions_entity_menu_handler($hook, $type, $items, $params) {
-	$entity = $params['entity'];
-
-	if ($entity->getSubtype() == 'question' || $entity->getSubtype() == 'answer') {
-		if ($entity->canAnnotate(0, 'generic_comment')) {
-			$items[] = ElggMenuItem::factory(array(
-					'name' => 'comment',
-					'rel' => 'toggle',
-					'link_class' => 'elgg-toggler',
-					'href' => "#comments-add-$entity->guid",
-					'text' => elgg_view_icon('speech-bubble'),
-					'priority' => 600,
-			));
+	
+	if (!empty($params) && is_array($params)) {
+		$entity = elgg_extract("entity", $params);
+		
+		if (!empty($entity) && (elgg_instanceof($entity, "object", "question") || elgg_instanceof($entity, "object", "answer"))) {
+			if ($entity->canAnnotate(0, "generic_comment")) {
+				$items[] = ElggMenuItem::factory(array(
+						"name" => "comment",
+						"rel" => "toggle",
+						"link_class" => "elgg-toggler",
+						"href" => "#comments-add-$entity->guid",
+						"text" => elgg_view_icon("speech-bubble"),
+						"priority" => 600,
+				));
+			}
+			
+			if (elgg_instanceof($entity, "object", "answer") && questions_can_mark_answer($entity)) {
+				$question = $entity->getContainerEntity();
+				$answer = $question->getMarkedAnswer();
+				
+				if (empty($answer)) {
+					$items[] = ElggMenuItem::factory(array(
+						"name" => "questions_mark",
+						"text" => elgg_echo("questions:menu:entity:answer:mark"),
+						"href" => "action/answers/toggle_mark?guid=" . $entity->getGUID(),
+						"is_action" => true
+					));
+				} elseif ($entity->getGUID() == $answer->getGUID()) {
+					// there is an anwser and it's this entity
+					$items[] = ElggMenuItem::factory(array(
+						"name" => "questions_mark",
+						"text" => elgg_echo("questions:menu:entity:answer:unmark"),
+						"href" => "action/answers/toggle_mark?guid=" . $entity->getGUID(),
+						"is_action" => true
+					));
+				}
+			}
 		}
 	}
 
