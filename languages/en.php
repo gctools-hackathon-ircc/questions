@@ -40,6 +40,7 @@ add_translation('en', array(
 	 * answers
 	 */
 	'questions:answer:edit' => "Update answer",
+	'questions:answer:checkmark:title' => "%s marked this as the correct answer on %s",
 		
 	/**
 	 * plugin settings

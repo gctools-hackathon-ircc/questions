@@ -3,8 +3,16 @@ $answer = $vars['entity'];
 
 $image = elgg_view_entity_icon(get_entity($answer->owner_guid), 'small');
 
-if ($answer->isMarkedCorrect()) {
-	$title = "blabla title";
+$correct_answer = $answer->getCorrectAnswerMetadata();
+
+if ($correct_answer) {
+	$owner = $correct_answer->getOwnerEntity();
+	$owner_name = htmlspecialchars($owner->name);
+	
+	$timestamp = htmlspecialchars(date(elgg_echo('friendlytime:date_format'), $correct_answer->time_created));
+	
+	$title = elgg_echo("questions:answer:checkmark:title", array($owner_name, $timestamp));
+	
 	$image .= "<div class='questions-checkmark' title='$title'></div>";
 }
 

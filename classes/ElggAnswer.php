@@ -15,7 +15,19 @@ class ElggAnswer extends ElggObject {
 		return $url;
 	}
 	
-	public function isMarkedCorrect() {
-		return (boolean) $this->correct_answer;
+	public function getCorrectAnswerMetadata() {
+		$result = false;
+		
+		$options = array(
+				"metadata_name" => "correct_answer",
+				"guid" => $this->guid
+			);
+		
+		$metadata = elgg_get_metadata($options);
+		if ($metadata) {
+			$result = $metadata[0];
+		}
+		
+		return $result;
 	}
 }
