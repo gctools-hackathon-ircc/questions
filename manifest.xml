@@ -14,6 +14,11 @@
 		<version>1.8</version>
 	</requires>
 	
+	<requires>
+		<type>plugin</type>
+		<name>likes</name>
+	</requires>
+	
 	<screenshot>
 		<path>screenshots/group-questions.png</path>
 		<description>Ask questions to a certain group of users</description>
