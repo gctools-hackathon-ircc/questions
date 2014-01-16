@@ -33,8 +33,9 @@ add_translation('en', array(
 	'questions:group' => 'Group questions',
 	'questions:enable' => 'Enable group questions',
 
-	'object:question:title' => 'Question',
-	'object:question:description' => "Details",
+	'questions:edit:question:title' => 'Question',
+	'questions:edit:question:description' => "Details",
+	'questions:edit:question:container' => "Where should this question be listed",
 	
 	/**
 	 * answers

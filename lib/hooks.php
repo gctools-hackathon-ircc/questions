@@ -149,3 +149,57 @@ function questions_container_permissions_handler($hook, $type, $returnvalue, $pa
 	
 	return $result;
 }
+
+function questions_permissions_handler($hook, $type, $returnvalue, $params) {
+	$result = $returnvalue;
+	
+	// do we have to check further
+	if (questions_experts_enabled()) {
+		// check if an expert can edit a question
+		if (!$result && !empty($params) && is_array($params)) {
+			// get the provided data
+			$entity = elgg_extract("entity", $params);
+			$user = elgg_extract("user", $params);
+			
+			if (!empty($user) && elgg_instanceof($user, "user") && !empty($entity) && elgg_instanceof($entity, "object", "question")) {
+				$container = $entity->getContainerEntity();
+				if (!elgg_instanceof($container, "group")) {
+					$container = elgg_get_site_entity();
+				}
+				
+				if (questions_is_expert($container, $user)) {
+					$result = true;
+				}
+			}
+		}
+		
+		// an expert should be able to edit an answer, so fix this
+		if ($result && !empty($params) && is_array($params)) {
+			// get the provided data
+			$entity = elgg_extract("entity", $params);
+			$user = elgg_extract("user", $params);
+				
+			if (!empty($user) && elgg_instanceof($user, "user") && !empty($entity) && elgg_instanceof($entity, "object", "answer")) {
+				// user is not the owner
+				if ($entity->getOwnerGUID() != $user->getGUID()) {
+					$question = $entity->getContainerEntity();
+					
+					if (!empty($question) && elgg_instanceof($question, "object", "question")) {
+						$container = $question->getContainerEntity();
+						if (!elgg_instanceof($container, "group")) {
+							$container = elgg_get_site_entity();
+						}
+						
+						// if the user is an expert
+						if (check_entity_relationship($user->getGUID(), QUESTIONS_EXPERT_ROLE, $container->getGUID())) {
+							$result = false;
+						}
+					}
+				}
+			}
+		}
+	}
+	
+	return $result;
+}
+
