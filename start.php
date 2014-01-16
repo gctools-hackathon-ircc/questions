@@ -51,6 +51,9 @@ function questions_init() {
 	elgg_register_plugin_hook_handler("container_permissions_check", "object", 'questions_container_permissions_handler');
 	elgg_register_plugin_hook_handler("permissions_check", "object", 'questions_permissions_handler');
 	
+	// events
+	elgg_register_event_handler("leave", "group", "questions_leave_group_handler");
+	
 	// actions
 	elgg_register_action("questions/toggle_expert", dirname(__FILE__) . "/actions/toggle_expert.php");
 	
