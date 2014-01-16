@@ -27,9 +27,17 @@ $options = array(
 	'type' => 'object',
 	'subtype' => 'answer',
 	'container_guid' => $question->guid,
-	'count' => true,
-	'order_by' => 'time_created asc',
+	'count' => true
 );
+
+if (elgg_is_active_plugin("likes")) {
+	// order answers based on likes
+	$dbprefix = elgg_get_config("dbprefix");
+	$likes_id = add_metastring("likes");
+	
+	$options["selects"] = array("(SELECT count(a.name_id) as likes_count FROM " . $dbprefix . "annotations a WHERE a.entity_guid = e.guid and a.name_id = " . $likes_id . ") as likes_count");
+	$options["order_by"] = "likes_count desc, e.time_created asc";
+}
 
 $answers = elgg_list_entities($options);
 $count = elgg_get_entities($options);
