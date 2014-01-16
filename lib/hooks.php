@@ -130,3 +130,22 @@ function questions_user_hover_menu_handler($hook, $type, $returnvalue, $params) 
 	
 	return $result;
 }
+
+function questions_container_permissions_handler($hook, $type, $returnvalue, $params) {
+	$result = $returnvalue;
+	
+	if (!$result && !empty($params) && is_array($params)) {
+		$question = elgg_extract("container", $params);
+		$user = elgg_extract("user", $params);
+		$subtype = elgg_extract("subtype", $params);
+		
+		if (($subtype == "answer") && !empty($user) && elgg_instanceof($question, "object", "question")) {
+			$container = $question->getContainerEntity();
+			if (elgg_instanceof($container, "user")) {
+				$result = true;
+			}
+		}
+	}
+	
+	return $result;
+}
