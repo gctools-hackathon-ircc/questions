@@ -23,12 +23,26 @@ elgg_push_breadcrumb($title);
 
 $content = elgg_view_entity($question, array('full_view' => true));
 
+$answers = "";
+
+// add the answer marked as the correct answer first
+$marked_answer = $question->getMarkedAnswer();
+if ($marked_answer) {
+	$answers .= elgg_view_entity($marked_answer);
+}
+
+// add the rest of the answers
 $options = array(
 	'type' => 'object',
 	'subtype' => 'answer',
 	'container_guid' => $question->guid,
 	'count' => true
 );
+
+if ($marked_answer) {
+	// do not include the marked answer as it already  added to the output before
+	$options["wheres"] = array("e.guid <> " . $marked_answer->getGUID());
+}
 
 if (elgg_is_active_plugin("likes")) {
 	// order answers based on likes
@@ -39,8 +53,12 @@ if (elgg_is_active_plugin("likes")) {
 	$options["order_by"] = "likes_count desc, e.time_created asc";
 }
 
-$answers = elgg_list_entities($options);
+$answers .= elgg_list_entities($options);
+
 $count = elgg_get_entities($options);
+if ($marked_answer) {
+	$count++;
+}
 
 $content .= elgg_view_module('info', "$count " . elgg_echo('answers'), elgg_view_menu('filter') . $answers);
 
