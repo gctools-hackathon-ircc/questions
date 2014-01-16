@@ -36,7 +36,8 @@ $options = array(
 	'type' => 'object',
 	'subtype' => 'answer',
 	'container_guid' => $question->guid,
-	'count' => true
+	'count' => true,
+	'limit' => false
 );
 
 if ($marked_answer) {
