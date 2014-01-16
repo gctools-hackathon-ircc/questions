@@ -19,6 +19,7 @@ add_translation('en', array(
 	'questions:menu:entity:answer:unmark' => "No longer correct",
 	
 	'river:create:object:question' => '%s asked question %s',
+	'river:create:object:answer' => '%s provided an answered for the question %s',
 		
 	'questions' => 'Questions',
 	'questions:asked' => 'Asked by %s',
@@ -35,6 +36,11 @@ add_translation('en', array(
 	'object:question:title' => 'Question',
 	'object:question:description' => "Details",
 	
+	/**
+	 * answers
+	 */
+	'questions:answer:edit' => "Update answer",
+		
 	/**
 	 * plugin settings
 	 */

@@ -19,6 +19,8 @@ $poster_icon = elgg_view_entity_icon($poster, 'small');
 $poster_text = elgg_echo('questions:asked', array($poster->name));
 
 $tags = elgg_view('output/tags', array('tags' => $question->tags));
+$categories = elgg_view('output/categories', $vars);
+
 $date = elgg_view_friendly_time($question->time_created);
 
 $answers_link = '';
@@ -63,7 +65,7 @@ if (!elgg_in_context('widgets')) {
 }
 
 if ($full) {
-	$subtitle = "$poster_text $date $answers_link";
+	$subtitle = "$poster_text $date $answers_link $categories";
 
 	$params = array(
 		'entity' => $question,
@@ -76,11 +78,26 @@ if ($full) {
 	
 	$list_body .= elgg_view('output/longtext', array('value' => $question->description));
 	
+	$comment_count = $question->countComments();
+	
+	$comment_options = array(
+			'guid' => $question->getGUID(),
+			'annotation_name' => 'generic_comment',
+			'limit' => false
+	);
+	$comments = elgg_get_annotations($comment_options);
+	
+	if ($comments) {
+		$list_body .= "<span class='elgg-river-comments-tab'>" . elgg_echo('comments') . "</span>";
+		$list_body .= elgg_view_annotation_list($comments, array('list_class' => 'elgg-river-comments'));
+	}
+	
 	// show a comment form like in the river
 	$body_vars = array(
-		'entity' => $question,
-		'inline' => true
+			'entity' => $question,
+			'inline' => true
 	);
+	
 	$list_body .= "<div class='elgg-river-item hidden' id='comments-add-" . $question->getGUID() . "'>";
 	$list_body .= elgg_view_form('comments/add', array(), $body_vars);
 	$list_body .= "</div>";
@@ -89,13 +106,14 @@ if ($full) {
 
 } else {
 	// brief view
-	$subtitle = "$poster_text $date $answers_link <span class=\"questions-latest-answer\">$answer_text</span>";
+	$subtitle = "$poster_text $date $answers_link $categories";
 
 	$params = array(
 		'entity' => $question,
 		'metadata' => $metadata,
 		'subtitle' => $subtitle,
 		'tags' => $tags,
+		'content' => $answer_text
 	);
 	$list_body = elgg_view('page/components/summary', $params);
 

@@ -12,6 +12,21 @@ $entity_menu = elgg_view_menu('entity', array(
 
 $body = elgg_view('output/longtext', array('value' => $answer->description));
 
+$comment_count = $answer->countComments();
+
+$comment_options = array(
+		'guid' => $answer->getGUID(),
+		'annotation_name' => 'generic_comment',
+		'limit' => false
+);
+
+$comments = elgg_get_annotations($comment_options);
+
+if ($comments) {
+	$body .= "<span class='elgg-river-comments-tab'>" . elgg_echo('comments') . "</span>";
+	$body .= elgg_view_annotation_list($comments, array('list_class' => 'elgg-river-comments'));
+}
+
 // show a comment form like in the river
 $body_vars = array(
 	'entity' => $answer,
