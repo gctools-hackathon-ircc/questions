@@ -61,7 +61,7 @@ if ($marked_answer) {
 	$count++;
 }
 
-$content .= elgg_view_module('info', "$count " . elgg_echo('answers'), elgg_view_menu('filter') . $answers);
+$content .= elgg_view_module('info', "$count " . elgg_echo('answers'), elgg_view_menu('filter') . $answers, array("class" => "mtm"));
 
 if ($question->canWriteToContainer(0, 'object', 'answer')) {
 	$user_icon = elgg_view_entity_icon(elgg_get_logged_in_user_entity(), 'small');
