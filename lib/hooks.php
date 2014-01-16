@@ -133,6 +133,7 @@ function questions_user_hover_menu_handler($hook, $type, $returnvalue, $params) 
 
 function questions_container_permissions_handler($hook, $type, $returnvalue, $params) {
 	$result = $returnvalue;
+	static $experts_only;
 	
 	if (!$result && !empty($params) && is_array($params)) {
 		$question = elgg_extract("container", $params);
@@ -140,12 +141,28 @@ function questions_container_permissions_handler($hook, $type, $returnvalue, $pa
 		$subtype = elgg_extract("subtype", $params);
 		
 		if (($subtype == "answer") && !empty($user) && elgg_instanceof($question, "object", "question")) {
+			// check expert setting
+			if (!isset($experts_only)) {
+				$experts_only = false;
+				
+				$setting = elgg_get_plugin_setting("experts_answer", "questions");
+				if ($setting == "yes") {
+					$experts_only = true;
+				}
+			}
+			
+			// get the container of the question
 			$container = $question->getContainerEntity();
-			if (elgg_instanceof($container, "user")) {
-				$result = true;
-			} elseif (elgg_instanceof($container, "group")) {
-				// if the user can ask a question in the group, he should be able to answer one too
-				$result = $container->canWriteToContainer($user->getGUID(), "object", "question");
+			
+			if (!$experts_only) {
+				if (elgg_instanceof($container, "user")) {
+					$result = true;
+				} elseif (elgg_instanceof($container, "group")) {
+					// if the user can ask a question in the group, he should be able to answer one too
+					$result = $container->canWriteToContainer($user->getGUID(), "object", "question");
+				}
+			} else {
+				$result = questions_is_expert($container, $user);
 			}
 		}
 	}
