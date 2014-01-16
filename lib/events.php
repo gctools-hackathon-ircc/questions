@@ -37,7 +37,6 @@ function questions_leave_group_handler($event, $type, $params) {
  *
  * @return void
  */
-
 function questions_leave_site_handler($event, $type, $relationship) {
 	
 	if (!empty($relationship) && ($relationship instanceof ElggRelationship)) {
