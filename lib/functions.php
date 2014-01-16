@@ -136,30 +136,93 @@ function questions_validate_access_id($access_id, $container_guid) {
 		
 		if (!empty($container)) {
 			if (elgg_instanceof($container, "user")) {
-				// make sure access_id is not a group acl
-				$acl = get_access_collection($access_id);
-				
-				if (!empty($acl) && ($acl->owner_guid != $container->getGUID())) {
-					// this acl is a group acl, so set to something else
-					$access_id = ACCESS_LOGGED_IN;
+				// is a default level defined in the plugin settings
+				$personal_access_id = questions_get_personal_access_level();
+				if ($personal_access_id !== false) {
+					$access_id = $personal_access_id;
+				} else {
+					// make sure access_id is not a group acl
+					$acl = get_access_collection($access_id);
+					
+					if (!empty($acl) && ($acl->owner_guid != $container->getGUID())) {
+						// this acl is a group acl, so set to something else
+						$access_id = ACCESS_LOGGED_IN;
+					}
 				}
 			} elseif (elgg_instanceof($container, "group")) {
-				// friends access not allowed in groups
-				if ($access_id == ACCESS_FRIENDS) {
-					// so set it to group access
-					$access_id = $container->group_acl;
-				}
-				
-				// check if access is an acl
-				$acl = get_access_collection($access_id);
-				
-				if (!empty($acl) && ($acl->owner_guid != $container->getGUID())) {
-					// this acl is an acl, make sure it's the group acl
-					$access_id = $container->group_acl;
+				// is a default level defined in the plugin settings
+				$group_access_id = questions_get_group_access_level($container);
+				if ($group_access_id !== false) {
+					$access_id = $group_access_id;
+				} else {
+					// friends access not allowed in groups
+					if ($access_id == ACCESS_FRIENDS) {
+						// so set it to group access
+						$access_id = $container->group_acl;
+					}
+					
+					// check if access is an acl
+					$acl = get_access_collection($access_id);
+					
+					if (!empty($acl) && ($acl->owner_guid != $container->getGUID())) {
+						// this acl is an acl, make sure it's the group acl
+						$access_id = $container->group_acl;
+					}
 				}
 			}
 		}
 	}
 	
 	return $access_id;
+}
+
+/**
+ * Get the default defined peronal access setting.
+ *
+ * @return bool|int the access_id or false if up to the user
+ */
+function questions_get_personal_access_level() {
+	static $result;
+	
+	if (!isset($result)) {
+		$result = false;
+		
+		$setting = elgg_get_plugin_setting("access_personal", "questions");
+		if (!empty($setting) && ($setting != "user_defined")) {
+			$result = (int) $setting;
+		}
+	}
+	
+	return $result;
+}
+
+/**
+ * Get the default defined group access setting.
+ *
+ * @param ElggGroup $group the group if the setting is group_acl
+ *
+ * @return bool|int the access_id or false if up to the user
+ */
+function questions_get_group_access_level(ElggGroup $group) {
+	static $plugin_setting;
+	$result = false;
+	
+	if (!isset($plugin_setting)) {
+		$plugin_setting = false;
+		
+		$setting = elgg_get_plugin_setting("access_group", "questions");
+		if (!empty($setting) && ($setting != "user_defined")) {
+			$plugin_setting = $setting;
+		}
+	}
+	
+	if ($plugin_setting) {
+		if ($plugin_setting == "group_acl") {
+			$result = $group->group_acl;
+		} else {
+			$result = (int) $plugin_setting;
+		}
+	}
+	
+	return $result;
 }

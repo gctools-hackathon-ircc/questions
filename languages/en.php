@@ -29,6 +29,7 @@ add_translation('en', array(
 	'questions:add' => 'Add a Question',
 	'questions:owner' => "%s's Questions",
 	'questions:none' => "No questions have been submitted yet.",
+	'questions:friends' => "Friends' Questions",
 	'questions:group' => 'Group questions',
 	'questions:enable' => 'Enable group questions',
 
@@ -50,6 +51,12 @@ add_translation('en', array(
 	'questions:settings:experts:enable:description' => "Experts have special privilages and can be assigned by site administrators and group owners.",
 	'questions:settings:experts:answer' => "Only experts can answer a question",
 	'questions:settings:experts:mark' => "Only experts can mark an answer as the correct answer",
+	
+	'questions:settings:access:title' => "Access settings",
+	'questions:settings:access:personal' => "What will be de access level for personal questions",
+	'questions:settings:access:group' => "What will be de access level for group questions",
+	'questions:settings:access:options:user' => "User defined",
+	'questions:settings:access:options:group' => "Group members",
 	
 	/**
 	 * Widgets
