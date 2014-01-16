@@ -14,10 +14,10 @@
 		<version>1.8</version>
 	</requires>
 	
-	<requires>
+	<suggests>
 		<type>plugin</type>
 		<name>likes</name>
-	</requires>
+	</suggests>
 	
 	<screenshot>
 		<path>screenshots/group-questions.png</path>
