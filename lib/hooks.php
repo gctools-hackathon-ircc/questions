@@ -143,6 +143,9 @@ function questions_container_permissions_handler($hook, $type, $returnvalue, $pa
 			$container = $question->getContainerEntity();
 			if (elgg_instanceof($container, "user")) {
 				$result = true;
+			} elseif (elgg_instanceof($container, "group")) {
+				// if the user can ask a question in the group, he should be able to answer one too
+				$result = $container->canWriteToContainer($user->getGUID(), "object", "question");
 			}
 		}
 	}
