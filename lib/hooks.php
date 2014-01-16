@@ -64,6 +64,26 @@ function questions_entity_menu_handler($hook, $type, $items, $params) {
 	return $items;
 }
 
+/**
+ * Remove the friend tab from the filter menu in the questions context
+ *
+ * @param unknown_type $hook
+ * @param unknown_type $type
+ * @param unknown_type $items
+ * @param unknown_type $params
+ */
+function questions_filter_menu_handler($hook, $type, $items, $params) {
+	if (!empty($items) && is_array($items) && elgg_in_context("questions")) {
+		foreach ($items as $key => $item) {
+			if ($item->getName() == "friend") {
+				unset($items[$key]);
+			}
+		}
+	}
+
+	return $items;
+}
+
 function questions_notify_message_handler($hook, $type, $returnvalue, $params) {
 	$entity = $params['entity'];
 	$method = $params['method'];

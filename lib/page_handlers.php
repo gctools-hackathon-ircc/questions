@@ -19,11 +19,6 @@ function questions_page_handler($segments) {
 			include "$pages/owner.php";
 			break;
 
-		case "friends":
-			gatekeeper();
-			include "$pages/friends.php";
-			break;
-
 		case "view":
 			set_input('guid', $segments[1]);
 			include "$pages/view.php";
