@@ -116,3 +116,50 @@ function questions_can_mark_answer(ElggAnswer $entity, ElggUser $user = null) {
 	
 	return $result;
 }
+
+/**
+ * Make sure the provided access_id is valid for this container
+ *
+ * @param int $access_id the current access_id
+ * @param int $container_guid the container where the entity will be placed
+ *
+ * @return int the correct access_id for this container
+ */
+function questions_validate_access_id($access_id, $container_guid) {
+	
+	if (!$access_id == ACCESS_DEFAULT) {
+		$access_id = get_default_access();
+	}
+	
+	if (!empty($container_guid)) {
+		$container = get_entity($container_guid);
+		
+		if (!empty($container)) {
+			if (elgg_instanceof($container, "user")) {
+				// make sure access_id is not a group acl
+				$acl = get_access_collection($access_id);
+				
+				if (!empty($acl) && ($acl->owner_guid != $container->getGUID())) {
+					// this acl is a group acl, so set to something else
+					$access_id = ACCESS_LOGGED_IN;
+				}
+			} elseif (elgg_instanceof($container, "group")) {
+				// friends access not allowed in groups
+				if ($access_id == ACCESS_FRIENDS) {
+					// so set it to group access
+					$access_id = $container->group_acl;
+				}
+				
+				// check if access is an acl
+				$acl = get_access_collection($access_id);
+				
+				if (!empty($acl) && ($acl->owner_guid != $container->getGUID())) {
+					// this acl is an acl, make sure it's the group acl
+					$access_id = $container->group_acl;
+				}
+			}
+		}
+	}
+	
+	return $access_id;
+}

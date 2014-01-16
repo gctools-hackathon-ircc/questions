@@ -2,7 +2,7 @@
 
 elgg_make_sticky_form('question');
 
-$guid = get_input('guid');
+$guid = (int) get_input('guid');
 
 $question = new ElggQuestion($guid);
 
@@ -15,7 +15,7 @@ if ($editing && !$question->canEdit()) {
 	forward(REFERER);
 }
 
-$container_guid = get_input('container_guid');
+$container_guid = (int) get_input('container_guid');
 if (!$container_guid) {
 	$container_guid = elgg_get_logged_in_user_guid();
 }
@@ -28,12 +28,15 @@ if ($adding && !can_write_to_container(0, $container_guid, 'object', 'question')
 $title = get_input('title', '', false);
 $description = get_input('description');
 $tags = string_to_tag_array(get_input('tags', ''));
-$access_id = get_input('access_id', ACCESS_DEFAULT);
+$access_id = (int) get_input('access_id', ACCESS_DEFAULT);
 
 if (empty($container_guid) || empty($title) || empty($description)) {
 	register_error(elgg_echo("questions:action:question:save:error:body", array($container_guid, $title, $description)));
 	forward(REFERER);
 }
+
+// make sure we have a valid access_id
+$access_id = questions_validate_access_id($access_id, $container_guid);
 
 $question->title = $title;
 $question->description = $description;
