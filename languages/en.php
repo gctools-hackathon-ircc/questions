@@ -46,6 +46,10 @@ add_translation('en', array(
 	/**
 	 * plugin settings
 	 */
+	'questions:settings:general:title' => "General settings",
+	'questions:settings:general:close' => "Close a question when it gets a marked answer",
+	'questions:settings:general:close:description' => "When an answer of a question is marked as the correct answer, close the question. This will mean no more answers can be given.",
+	
 	'questions:settings:experts:title' => "Q&A expert settings",
 	'questions:settings:experts:enable' => "Enable expert roles",
 	'questions:settings:experts:enable:description' => "Experts have special privilages and can be assigned by site administrators and group owners.",
@@ -72,6 +76,7 @@ add_translation('en', array(
 	'questions:action:answer:save:error:container' => "You do not have permission to answer that question!",
 	'questions:action:answer:save:error:body' => "A body is required: %s, %s",
 	'questions:action:answer:save:error:save' => "There was a problem saving your answer!",
+	'questions:action:answer:save:error:question_closed' => "The question you're trying to answer is already closed!",
 	
 	'questions:action:answer:toggle_mark:error:not_allowed' => "You're not allowed to mark answers as the correct answer",
 	'questions:action:answer:toggle_mark:error:duplicate' => "There already is a correct answer to this question",

@@ -74,16 +74,16 @@ if ($full) {
 		'subtitle' => $subtitle,
 		'tags' => $tags,
 	);
-	$list_body = elgg_view('page/components/summary', $params);
+	$list_body = elgg_view('object/elements/summary', $params);
 	
 	$list_body .= elgg_view('output/longtext', array('value' => $question->description));
 	
 	$comment_count = $question->countComments();
 	
 	$comment_options = array(
-			'guid' => $question->getGUID(),
-			'annotation_name' => 'generic_comment',
-			'limit' => false
+		'guid' => $question->getGUID(),
+		'annotation_name' => 'generic_comment',
+		'limit' => false
 	);
 	$comments = elgg_get_annotations($comment_options);
 	
@@ -94,8 +94,8 @@ if ($full) {
 	
 	// show a comment form like in the river
 	$body_vars = array(
-			'entity' => $question,
-			'inline' => true
+		'entity' => $question,
+		'inline' => true
 	);
 	
 	$list_body .= "<div class='elgg-river-item hidden' id='comments-add-" . $question->getGUID() . "'>";
@@ -106,16 +106,28 @@ if ($full) {
 
 } else {
 	// brief view
+	$title_text = "";
+	if ($question->getStatus() == "closed") {
+		$title_text = elgg_view_icon("lock-closed");
+	}
+	$title_text .= elgg_get_excerpt($question->title, 100);
+	$title = elgg_view("output/url", array(
+		"text" => $title_text,
+		"href" => $question->getURL(),
+		"is_trusted" => true
+	));
+	
 	$subtitle = "$poster_text $date $answers_link $categories";
 
 	$params = array(
 		'entity' => $question,
+		'title' => $title,
 		'metadata' => $metadata,
 		'subtitle' => $subtitle,
 		'tags' => $tags,
 		'content' => $answer_text
 	);
-	$list_body = elgg_view('page/components/summary', $params);
+	$list_body = elgg_view('object/elements/summary', $params);
 
 	echo elgg_view_image_block($poster_icon, $list_body);
 }

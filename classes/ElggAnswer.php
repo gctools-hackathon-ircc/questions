@@ -4,6 +4,7 @@ class ElggAnswer extends ElggObject {
 	
 	function initializeAttributes() {
 		parent::initializeAttributes();
+		
 		$this->attributes['subtype'] = 'answer';
 	}
 
@@ -19,9 +20,9 @@ class ElggAnswer extends ElggObject {
 		$result = false;
 		
 		$options = array(
-				"metadata_name" => "correct_answer",
-				"guid" => $this->guid
-			);
+			"metadata_name" => "correct_answer",
+			"guid" => $this->guid
+		);
 		
 		$metadata = elgg_get_metadata($options);
 		if ($metadata) {
@@ -29,5 +30,32 @@ class ElggAnswer extends ElggObject {
 		}
 		
 		return $result;
+	}
+	
+	/**
+	 * Mark an answer as the correct answer for this question
+	 */
+	public function markAsCorrect() {
+		// first set the mark
+		$this->correct_answer = true;
+		
+		// depending of the plugin settings, we also need to close the question
+		if (questions_close_on_marked_answer()) {
+			$question = $this->getContainerEntity();
+			
+			$question->close();
+		}
+	}
+	
+	/**
+	 * This answer is nog longer the correct answer for this question
+	 */
+	public function undoMarkAsCorrect() {
+		unset($this->correct_answer);
+		
+		// don't forget to reopen the question
+		$question = $this->getContainerEntity();
+			
+		$question->reopen();
 	}
 }

@@ -17,12 +17,12 @@ if (!empty($guid)) {
 			
 			if (empty($answer)) {
 				// no answer yet, so mark this one
-				$entity->correct_answer = true;
+				$entity->markAsCorrect();
 				
 				system_message(elgg_echo("questions:action:answer:toggle_mark:success:mark"));
 			} elseif ($answer->getGUID() == $entity->getGUID()) {
 				// the marked answer is this answer, so unmark
-				unset($entity->correct_answer);
+				$entity->undoMarkAsCorrect();
 				
 				system_message(elgg_echo("questions:action:answer:toggle_mark:success:unmark"));
 			} else {

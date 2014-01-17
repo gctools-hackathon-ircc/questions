@@ -226,3 +226,23 @@ function questions_get_group_access_level(ElggGroup $group) {
 	
 	return $result;
 }
+
+/**
+ * This function checks of the plugin setting to close a question on a marked answer is set
+ *
+ * @return bool true is we need to close, false otherwise
+ */
+function questions_close_on_marked_answer() {
+	static $result;
+	
+	if (!isset($result)) {
+		$result = false;
+		
+		$setting = elgg_get_plugin_setting("close_on_marked_answer", "questions");
+		if ($setting == "yes") {
+			$result = true;
+		}
+	}
+	
+	return $result;
+}

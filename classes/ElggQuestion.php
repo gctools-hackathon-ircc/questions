@@ -1,8 +1,10 @@
 <?php
 
 class ElggQuestion extends ElggObject {
+	
 	protected function initializeAttributes() {
 		parent::initializeAttributes();
+		
 		$this->attributes['subtype'] = 'question';
 	}
 
@@ -31,7 +33,7 @@ class ElggQuestion extends ElggObject {
 	}
 	
 	/**
-	 * Get the answer that was marked as the correct answer
+	 * Get the answer that was marked as the correct answer.
 	 *
 	 * @return bool|ElggAnswer the answer or false if non are marked
 	 */
@@ -52,6 +54,68 @@ class ElggQuestion extends ElggObject {
 		$answers = elgg_get_entities_from_metadata($options);
 		if (!empty($answers)) {
 			$result = $answers[0];
+		}
+		
+		return $result;
+	}
+	
+	/**
+	 * Helper function to close a question from further answers.
+	 *
+	 * @return void
+	 */
+	public function close() {
+		$this->status = "closed";
+	}
+	
+	/**
+	 * Reopen the question for more answers.
+	 *
+	 * @return void
+	 */
+	public function reopen() {
+		$this->status = "open";
+	}
+	
+	/**
+	 * Get the current status of the question.
+	 *
+	 * This can be
+	 * - 'open'
+	 * - 'closed'
+	 *
+	 * @return string the current status
+	 */
+	public function getStatus() {
+		$result = "open";
+		
+		// do we even support status
+		if (questions_close_on_marked_answer()) {
+			// make sure the status is correct
+			switch ($this->status) {
+				case "open":
+					// is it still open, so no marked answer
+					if ($this->getMarkedAnswer()) {
+						$this->close();
+					}
+					break;
+				case "closed":
+					// is it still open, so no marked answer
+					if (!$this->getMarkedAnswer()) {
+						$this->reopen();
+					}
+					break;
+				default:
+					// no setting yet
+					if ($this->getMarkedAnswer()) {
+						$this->close();
+					} else {
+						$this->reopen();
+					}
+					break;
+			}
+			
+			$result = $this->status;
 		}
 		
 		return $result;

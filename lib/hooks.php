@@ -193,15 +193,15 @@ function questions_container_permissions_handler($hook, $type, $returnvalue, $pa
 function questions_permissions_handler($hook, $type, $returnvalue, $params) {
 	$result = $returnvalue;
 	
-	// do we have to check further
-	if (questions_experts_enabled()) {
-		// check if an expert can edit a question
-		if (!$result && !empty($params) && is_array($params)) {
-			// get the provided data
-			$entity = elgg_extract("entity", $params);
-			$user = elgg_extract("user", $params);
-			
-			if (!empty($user) && elgg_instanceof($user, "user") && !empty($entity) && elgg_instanceof($entity, "object", "question")) {
+	if (!empty($params) && is_array($params)) {
+		// get the provided data
+		$entity = elgg_extract("entity", $params);
+		$user = elgg_extract("user", $params);
+		
+		// expert only changes
+		if (questions_experts_enabled()) {
+			// check if an expert can edit a question
+			if (!$result && !empty($user) && elgg_instanceof($user, "user") && !empty($entity) && elgg_instanceof($entity, "object", "question")) {
 				$container = $entity->getContainerEntity();
 				if (!elgg_instanceof($container, "group")) {
 					$container = elgg_get_site_entity();
@@ -211,15 +211,9 @@ function questions_permissions_handler($hook, $type, $returnvalue, $params) {
 					$result = true;
 				}
 			}
-		}
-		
-		// an expert should be able to edit an answer, so fix this
-		if ($result && !empty($params) && is_array($params)) {
-			// get the provided data
-			$entity = elgg_extract("entity", $params);
-			$user = elgg_extract("user", $params);
-				
-			if (!empty($user) && elgg_instanceof($user, "user") && !empty($entity) && elgg_instanceof($entity, "object", "answer")) {
+			
+			// an expert should be able to edit an answer, so fix this
+			if ($result && !empty($user) && elgg_instanceof($user, "user") && !empty($entity) && elgg_instanceof($entity, "object", "answer")) {
 				// user is not the owner
 				if ($entity->getOwnerGUID() != $user->getGUID()) {
 					$question = $entity->getContainerEntity();
@@ -235,6 +229,17 @@ function questions_permissions_handler($hook, $type, $returnvalue, $params) {
 							$result = false;
 						}
 					}
+				}
+			}
+		}
+		
+		// questions can't be editted by owner if it is closed
+		if ($result && !empty($user) && elgg_instanceof($user, "user") && !empty($entity) && elgg_instanceof($entity, "object", "question")) {
+			// is the question closed
+			if ($entity->getStatus() == "closed") {
+				// are you the owner
+				if ($user->getGUID() == $entity->getOwnerGUID()) {
+					$result = false;
 				}
 			}
 		}
