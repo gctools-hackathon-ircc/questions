@@ -11,36 +11,40 @@ if ($group->questions_enable == "no") {
 	return true;
 }
 
-$all_link = elgg_view('output/url', array(
-	'href' => "questions/group/$group->guid",
-	'text' => elgg_echo('link:view:all'),
+$all_link = elgg_view("output/url", array(
+	"href" => "questions/group/" . $group->getGUID() . "/all",
+	"text" => elgg_echo("link:view:all"),
+	"is_trusted" => true
 ));
 
-$header = "<span class=\"groups-widget-viewall\">$all_link</span>";
-$header .= '<h3>' . elgg_echo('questions:group') . '</h3>';
-
-elgg_push_context('widgets');
+elgg_push_context("widgets");
 $options = array(
-	'type' => 'object',
-	'subtype' => 'question',
-	'container_guid' => elgg_get_page_owner_guid(),
-	'limit' => 6,
-	'full_view' => false,
-	'pagination' => false,
+	"type" => "object",
+	"subtype" => "question",
+	"container_guid" => elgg_get_page_owner_guid(),
+	"limit" => 6,
+	"full_view" => false,
+	"pagination" => false,
 );
 $content = elgg_list_entities($options);
 elgg_pop_context();
 
 if (!$content) {
-	$content = '<p>' . elgg_echo('questions:none') . '</p>';
+	$content = elgg_view("output/longtext", array("value" => elgg_echo("questions:none")));
 }
 
-if ($group->canWriteToContainer()) {
-	$new_link = elgg_view('output/url', array(
-		'href' => "questions/add/$group->guid",
-		'text' => elgg_echo('questions:add'),
+$new_link = "";
+if ($group->canWriteToContainer(0, "object", "question")) {
+	$new_link = elgg_view("output/url", array(
+		"href" => "questions/add/$group->guid",
+		"text" => elgg_echo("questions:add"),
+		"is_trusted" => true
 	));
-	$content .= "<span class='elgg-widget-more'>$new_link</span>";
 }
 
-echo elgg_view_module('info', '', $content, array('header' => $header));
+echo elgg_view("groups/profile/module", array(
+	"title" => elgg_echo("questions:group"),
+	"content" => $content,
+	"all_link" => $all_link,
+	"add_link" => $new_link,
+));
