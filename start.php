@@ -33,7 +33,7 @@ function questions_init() {
 	elgg_register_entity_type("object", 'question');
 	
 	// register widget
-	elgg_register_widget_type('questions', elgg_echo("widget:questions:title"), elgg_echo("widget:questions:description"));
+	elgg_register_widget_type('questions', elgg_echo("widget:questions:title"), elgg_echo("widget:questions:description"), "index,profile,dashboard,groups");
 	
 	// register page handler for nice urls
 	elgg_register_page_handler('questions', 'questions_page_handler');
@@ -51,6 +51,7 @@ function questions_init() {
 	elgg_register_plugin_hook_handler("notify:entity:message", "object", 'questions_notify_message_handler');
 	elgg_register_plugin_hook_handler("container_permissions_check", "object", 'questions_container_permissions_handler');
 	elgg_register_plugin_hook_handler("permissions_check", "object", 'questions_permissions_handler');
+	elgg_register_plugin_hook_handler("widget_url", "widget_manager", 'questions_widget_url_handler');
 	
 	// events
 	elgg_register_event_handler("leave", "group", "questions_leave_group_handler");

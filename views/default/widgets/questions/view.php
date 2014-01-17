@@ -3,19 +3,26 @@
  *	Questions widget content
  **/
 
-$widget = $vars['entity'];
+$widget = $vars["entity"];
 
-// Get any wire notes to display
-// Get the current page's owner
-$page_owner = elgg_get_page_owner_entity();
-if ($page_owner === false || is_null($page_owner)) {
-	$page_owner = elgg_get_logged_in_user_entity();
-	elgg_set_page_owner_guid($page_owner->getGUID());
+$limit = (int) $widget->limit;
+if ($limit < 1) {
+	$limit = 5;
 }
 
-echo elgg_list_entities(array(
-	'type' => 'object',
-	'subtype' => 'question',
-	'container_guid' => $page_owner->guid,
-	'limit' => $widget->limit,
-));
+$options = array(
+	"type" => "object",
+	"subtype" => "question",
+	"limit" => $limit,
+);
+
+if ($widget->context != "index") {
+	$options["container_guid"] = $widget->getOwnerGUID();
+}
+
+$content = elgg_list_entities($options);
+if (empty($content)) {
+	$content = elgg_view("output/longtext", array("value" => elgg_echo("questions:none")));
+}
+
+echo $content;

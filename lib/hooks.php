@@ -248,3 +248,31 @@ function questions_permissions_handler($hook, $type, $returnvalue, $params) {
 	return $result;
 }
 
+function questions_widget_url_handler($hook, $type, $returnvalue, $params) {
+	$result = $returnvalue;
+	
+	if(!$result && !empty($params) && is_array($params)){
+		$widget = elgg_extract("entity", $params);
+	
+		if(!empty($widget) && elgg_instanceof($widget, "object", "widget")){
+			// only handle questions widget
+			if ($widget->handler == "questions") {
+				// who owns the widget
+				$owner = $widget->getOwnerEntity();
+				
+				if (elgg_instanceof($owner, "user")) {
+					// user
+					$result = "questions/owner/" . $owner->username;
+				} elseif (elgg_instanceof($owner, "group")) {
+					// group
+					$result = "questions/group/" . $owner->getGUID() . "/all";
+				} elseif (elgg_instanceof($owner, "site")) {
+					// site
+					$result = "questions/all";
+				}
+			}
+		}
+	}
+	
+	return $result;
+}
