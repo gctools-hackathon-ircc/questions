@@ -15,8 +15,14 @@ if (!$question) {
 $poster = $question->getOwnerEntity();
 
 $poster_icon = elgg_view_entity_icon($poster, 'small');
+$poster_link = elgg_view("output/url", array("text" => $poster->name, "href" => $poster->getURL(), "is_trusted" => true));
+$poster_text = elgg_echo('questions:asked', array($poster_link));
 
-$poster_text = elgg_echo('questions:asked', array($poster->name));
+$container = $question->getContainerEntity();
+if (elgg_instanceof($container, "group") && (elgg_get_page_owner_guid() != $container->getGUID())) {
+	$group_link = elgg_view("output/url", array("text" => $container->name, "href" => "questions/group/" . $container->getGUID() . "/all", "is_trusted" => true));
+	$poster_text .= " " . elgg_echo("river:ingroup", array($group_link));
+}
 
 $tags = elgg_view('output/tags', array('tags' => $question->tags));
 $categories = elgg_view('output/categories', $vars);
