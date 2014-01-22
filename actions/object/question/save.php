@@ -20,6 +20,11 @@ if (!$container_guid) {
 	$container_guid = elgg_get_logged_in_user_guid();
 }
 
+$moving = false;
+if ($editing && ($container_guid != $question->getContainerGUID())) {
+	$moving = true;
+}
+
 if ($adding && !can_write_to_container(0, $container_guid, 'object', 'question')) {
 	register_error(elgg_echo("questions:action:question:save:error:container"));
 	forward(REFERER);
@@ -52,7 +57,7 @@ try {
 		add_to_river('river/object/question/create', 'create', elgg_get_logged_in_user_guid(), $question->guid, $question->access_id);
 		
 		// notify experts
-		questions_notify_experts_new_question($question);
+		questions_notify_experts_new_question($question, $moving);
 	}
 } catch (Exception $e) {
 	register_error(elgg_echo("questions:action:question:save:error:save"));

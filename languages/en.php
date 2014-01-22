@@ -40,10 +40,17 @@ add_translation('en', array(
 	/**
 	 * expert notifications
 	 */
-	'questions:notify_experts:subject' => "A new question was asked",
-	'questions:notify_expert:message' => "Hi %s
+	'questions:notify_experts:create:subject' => "A new question was asked",
+	'questions:notify_experts:create:message' => "Hi %s
 
 The question: %s was asked.
+
+To answer the question go here:
+%s",
+	'questions:notify_experts:moving:subject' => "A question was moved",
+	'questions:notify_experts:moving:message' => "Hi %s
+
+The question: %s was moved so you'll have to answer it.
 
 To answer the question go here:
 %s",

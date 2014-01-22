@@ -250,11 +250,12 @@ function questions_close_on_marked_answer() {
 /**
  * Notify the experts that a new question was asked
  *
- * @param ElggQuestion $entity
+ * @param ElggQuestion $entity the question to notify about
+ * @param bool $moving is this qquestion being moved
  *
  * @return void
  */
-function questions_notify_experts_new_question(ElggQuestion $entity) {
+function questions_notify_experts_new_question(ElggQuestion $entity, $moving = false) {
 	
 	// only if experts enabled
 	if (questions_experts_enabled()) {
@@ -287,15 +288,23 @@ function questions_notify_experts_new_question(ElggQuestion $entity) {
 			// trigger a hook so others can extend the list
 			$params = array(
 				"entity" => $entity,
-				"experts" => $experts
+				"experts" => $experts,
+				"moving" => $moving
 			);
 			$experts = elgg_trigger_plugin_hook("notify_experts", "questions", $params, $experts);
 			
 			if (!empty($experts) && is_array($experts)) {
-				$subject = elgg_echo("questions:notify_experts:subject");
+				$subject_key = "questions:notify_experts:create:subject";
+				$message_key = "questions:notify_experts:create:message";
+				if ($moving) {
+					$subject_key = "questions:notify_experts:moving:subject";
+					$message_key = "questions:notify_experts:moving:message";
+				}
+				
+				$subject = elgg_echo($subject_key);
 				
 				foreach ($experts as $expert) {
-					$message = elgg_echo("questions:notify_expert:message", array(
+					$message = elgg_echo($message_key, array(
 						$expert->name,
 						$entity->title,
 						$entity->getURL()
