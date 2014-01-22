@@ -246,3 +246,64 @@ function questions_close_on_marked_answer() {
 	
 	return $result;
 }
+
+/**
+ * Notify the experts that a new question was asked
+ *
+ * @param ElggQuestion $entity
+ *
+ * @return void
+ */
+function questions_notify_experts_new_question(ElggQuestion $entity) {
+	
+	// only if experts enabled
+	if (questions_experts_enabled()) {
+		// validate input
+		if (!empty($entity) && elgg_instanceof($entity, "object", "question")) {
+			$experts = array();
+			$container = $entity->getContainerEntity();
+			if (!elgg_instanceof($container, "group")) {
+				$container = elgg_get_site_entity();
+			}
+			
+			// get experts
+			$options = array(
+				"type" => "user",
+				"site_guid" => false,
+				"limit" => false,
+				"relationship" => QUESTIONS_EXPERT_ROLE,
+				"relationship_guid" => $container->getGUID(),
+				"inverse_relationship" => true,
+			);
+			if ($users = elgg_get_entities_from_relationship($options)) {
+				$experts = $users;
+			}
+			
+			// add group owner to list
+			if (elgg_instanceof($container, "group")) {
+				$experts[] = $container->getOwnerEntity();
+			}
+			
+			// trigger a hook so others can extend the list
+			$params = array(
+				"entity" => $entity,
+				"experts" => $experts
+			);
+			$experts = elgg_trigger_plugin_hook("notify_experts", "questions", $params, $experts);
+			
+			if (!empty($experts) && is_array($experts)) {
+				$subject = elgg_echo("questions:notify_experts:subject");
+				
+				foreach ($experts as $expert) {
+					$message = elgg_echo("questions:notify_expert:message", array(
+						$expert->name,
+						$entity->title,
+						$entity->getURL()
+					));
+					
+					notify_user($expert->getGUID(), $entity->getOwnerGUID(), $subject, $message, null, "email");
+				}
+			}
+		}
+	}
+}

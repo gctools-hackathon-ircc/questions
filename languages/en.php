@@ -38,6 +38,17 @@ add_translation('en', array(
 	'questions:edit:question:container' => "Where should this question be listed",
 	
 	/**
+	 * expert notifications
+	 */
+	'questions:notify_experts:subject' => "A new question was asked",
+	'questions:notify_expert:message' => "Hi %s
+
+The question: %s was asked.
+
+To answer the question go here:
+%s",
+	
+	/**
 	 * answers
 	 */
 	'questions:answer:edit' => "Update answer",

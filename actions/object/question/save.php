@@ -48,7 +48,11 @@ try {
 	$question->save();
 	
 	if ($adding) {
+		// add river event
 		add_to_river('river/object/question/create', 'create', elgg_get_logged_in_user_guid(), $question->guid, $question->access_id);
+		
+		// notify experts
+		questions_notify_experts_new_question($question);
 	}
 } catch (Exception $e) {
 	register_error(elgg_echo("questions:action:question:save:error:save"));
