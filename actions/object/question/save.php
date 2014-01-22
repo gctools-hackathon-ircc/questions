@@ -58,6 +58,13 @@ try {
 		
 		// notify experts
 		questions_notify_experts_new_question($question, $moving);
+		
+		// check for a solution time limit
+		$solution_time = questions_get_solution_time($question->getContainerEntity());
+		if ($solution_time) {
+			// add x number of days when the question should be solved
+			$question->solution_time = ($question->time_created + ($solution_time * 24 * 60 * 60));
+		}
 	}
 } catch (Exception $e) {
 	register_error(elgg_echo("questions:action:question:save:error:save"));

@@ -31,6 +31,12 @@ $general_settings .= elgg_view("input/dropdown", array("name" => "params[close_o
 $general_settings .= "<div class='elgg-subtext'>" . elgg_echo("questions:settings:general:close:description") . "</div>";
 $general_settings .= "</div>";
 
+$general_settings .= "<div>";
+$general_settings .= elgg_echo("questions:settings:general:solution_time");
+$general_settings .= elgg_view("input/dropdown", array("name" => "params[site_solution_time]", "value" => $plugin->site_solution_time, "options" => range(0, 30), "class" => "mls"));
+$general_settings .= "<div class='elgg-subtext'>" . elgg_echo("questions:settings:general:solution_time:description") . "</div>";
+$general_settings .= "</div>";
+
 echo elgg_view_module("inline", elgg_echo("questions:settings:general:title"), $general_settings);
 
 // adding expert roles

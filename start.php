@@ -43,6 +43,8 @@ function questions_init() {
 	add_group_tool_option('questions', elgg_echo("questions:enable"), true);
 	elgg_extend_view("groups/tool_latest", "questions/group_module");
 	
+	elgg_extend_view("groups/edit", "questions/groups_edit");
+	
 	// plugin hooks
 	elgg_register_plugin_hook_handler("register", "menu:owner_block", 'questions_owner_block_menu_handler');
 	elgg_register_plugin_hook_handler("register", "menu:user_hover", 'questions_user_hover_menu_handler');
@@ -58,6 +60,7 @@ function questions_init() {
 	
 	// actions
 	elgg_register_action("questions/toggle_expert", dirname(__FILE__) . "/actions/toggle_expert.php");
+	elgg_register_action("questions/group_settings", dirname(__FILE__) . "/actions/group_settings.php");
 	
 	// question
 	$actions_base = dirname(__FILE__) . '/actions/object/question';

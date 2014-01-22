@@ -67,6 +67,8 @@ To answer the question go here:
 	'questions:settings:general:title' => "General settings",
 	'questions:settings:general:close' => "Close a question when it gets a marked answer",
 	'questions:settings:general:close:description' => "When an answer of a question is marked as the correct answer, close the question. This will mean no more answers can be given.",
+	'questions:settings:general:solution_time' => "Set a default solution time in days",
+	'questions:settings:general:solution_time:description' => "Questions should be answered before this time expires, groups can override this setting with their own time limit. 0 for no limit.",
 	
 	'questions:settings:experts:title' => "Q&A expert settings",
 	'questions:settings:experts:enable' => "Enable expert roles",
@@ -79,6 +81,12 @@ To answer the question go here:
 	'questions:settings:access:group' => "What will be de access level for group questions",
 	'questions:settings:access:options:user' => "User defined",
 	'questions:settings:access:options:group' => "Group members",
+	
+	/**
+	 * group settings
+	 */
+	'questions:group_settings:title' => "Questions settings",
+	'questions:group_settings:solution_time:description' => "Questions should be answered before this time expires. 0 for no limit.",
 	
 	/**
 	 * Widgets
@@ -107,4 +115,6 @@ To answer the question go here:
 	
 	'questions:action:toggle_expert:success:make' => "%s is now a questions expert for %s",
 	'questions:action:toggle_expert:success:remove' => "%s is no longer a questions expert for %s",
+	
+	'questions:action:group_settings:success' => "The group settings were saved",
 ));

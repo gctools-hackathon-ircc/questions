@@ -316,3 +316,30 @@ function questions_notify_experts_new_question(ElggQuestion $entity, $moving = f
 		}
 	}
 }
+
+/**
+ * Return the number of days it should take to solve a question.
+ *
+ * @param ElggEntity $container if a group is provided, first the setting of the group is checked, then the default setting of the site
+ *
+ * @return int the number of days it should take to solve the question. 0 for infinite
+ */
+function questions_get_solution_time(ElggEntity $container) {
+	$result = 0;
+	
+	// get site setting
+	$result = (int) elgg_get_plugin_setting("site_solution_time", "questions");
+	
+	// check is group
+	if (elgg_instanceof($container, "group")) {
+		// get group setting
+		$group_setting = $container->getPrivateSetting("questions_solution_time");
+		if (($group_setting !== false) && ($group_setting !== null)) {
+			// we have a valid group setting
+			$result = (int) $group_setting;
+		}
+		
+	}
+	
+	return $result;
+}
