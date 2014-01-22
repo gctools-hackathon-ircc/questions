@@ -84,35 +84,6 @@ function questions_filter_menu_handler($hook, $type, $items, $params) {
 	return $items;
 }
 
-function questions_notify_message_handler($hook, $type, $returnvalue, $params) {
-	$entity = $params['entity'];
-	$method = $params['method'];
-
-	if (elgg_instanceof($entity, 'object', 'question')) {
-		$descr = $entity->description;
-		$title = $entity->title;
-		$url = $entity->getURL();
-		$owner = $entity->getOwnerEntity();
-		$via = elgg_echo("questions:via");
-
-		if ($method == 'sms') {
-			//shortening the url for sms
-			$url = elgg_get_site_url() . "view/$entity->guid";
-			return "$owner->name $via: $url ($title)";
-		}
-
-		if ($method == 'email') {
-			return "$owner->name $via: $title \n\n $descr \n\n $url";
-		}
-
-		if ($method == 'web') {
-			return "$owner->name $via: $title \n\n $descr \n\n $url";
-		}
-	}
-
-	return null;
-}
-
 function questions_user_hover_menu_handler($hook, $type, $returnvalue, $params) {
 	$result = $returnvalue;
 	
