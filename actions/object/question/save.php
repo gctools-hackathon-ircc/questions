@@ -57,7 +57,7 @@ try {
 		add_to_river('river/object/question/create', 'create', elgg_get_logged_in_user_guid(), $question->guid, $question->access_id);
 		
 		// notify experts
-		questions_notify_experts_new_question($question, $moving);
+		questions_notify_experts($question, $moving);
 		
 		// check for a solution time limit
 		$solution_time = questions_get_solution_time($question->getContainerEntity());

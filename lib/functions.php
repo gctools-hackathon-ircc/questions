@@ -255,7 +255,7 @@ function questions_close_on_marked_answer() {
  *
  * @return void
  */
-function questions_notify_experts_new_question(ElggQuestion $entity, $moving = false) {
+function questions_notify_experts(ElggQuestion $entity, $moving = false) {
 	
 	// only if experts enabled
 	if (questions_experts_enabled()) {
