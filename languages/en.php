@@ -56,6 +56,11 @@ The question: %s was moved so you'll have to answer it.
 To answer the question go here:
 %s",
 	
+	'questions:daily:notification:subject' => "Daily questions workload overview",
+	'questions:daily:notification:message:more' => "View more",
+	'questions:daily:notification:message:overdue' => "The following questions are overdue",
+	'questions:daily:notification:message:due' => "The following questions need to be solved today",
+	'questions:daily:notification:message:new' => "New questions asked",
 	/**
 	 * answers
 	 */

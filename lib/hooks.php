@@ -247,3 +247,179 @@ function questions_widget_url_handler($hook, $type, $returnvalue, $params) {
 	
 	return $result;
 }
+
+/**
+ * A plugin hook for the CRON, so we can send out notifications to the experts about there workload
+ *
+ * @param string $hook the 'cron' hook
+ * @param string $type the 'daily' interval
+ * @param unknown_type $returnvalue default return value
+ * @param array $params supplied params
+ *
+ * @return void
+ */
+function questions_daily_cron_handler($hook, $type, $returnvalue, $params) {
+	
+	// are experts enabled
+	if (questions_experts_enabled()) {
+		
+		// validate input
+		if (!empty($params) && is_array($params)) {
+			$time = elgg_extract("time", $params, time());
+			$dbprefix = elgg_get_config("dbprefix");
+			$site = elgg_get_site_entity();
+			
+			// get all experts
+			$expert_options = array(
+				"type" => "user",
+				"site_guids" => false,
+				"limit" => false,
+				"joins" => array("JOIN " . $dbprefix . "entity_relationships re2 ON e.guid = re2.guid_one"),
+				"wheres" => array("(re2.guid_two = " . $site->getGUID() . " AND re2.relationship = 'member_of_site')"),
+				"relationship" => QUESTIONS_EXPERT_ROLE,
+				"inverse_relationship" => true
+			);
+			$experts = elgg_get_entities_from_relationship($expert_options);
+			
+			if (!empty($experts)) {
+				// sending could take a while
+				set_time_limit(0);
+				
+				$status_id = add_metastring("status");
+				$closed_id = add_metastring("closed");
+				
+				$status_where = "NOT EXISTS (
+					SELECT 1
+					FROM " . $dbprefix . "metadata md
+					WHERE md.entity_guid = e.guid
+					AND md.name_id = " . $status_id . "
+					AND md.value_id = " . $closed_id . ")";
+				
+				$question_options = array(
+					"type" => "object",
+					"subtype" => "question",
+					"limit" => 3,
+				);
+				
+				// loop through all experts
+				foreach ($experts as $expert) {
+					// fake a logged in user
+					$backup_user = elgg_extract("user", $_SESSION);
+					$_SESSION["user"] = $expert;
+					
+					$subject = elgg_echo("questions:daily:notification:subject", array(), get_current_language());
+					$message = "";
+					
+					$container_where = array();
+					if (check_entity_relationship($expert->getGUID(), QUESTIONS_EXPERT_ROLE, $site->getGUID())) {
+						$container_where[] = "(e.container_guid NOT IN (
+							SELECT ge.guid
+							FROM " . $dbprefix . "entities ge
+							WHERE ge.type = 'group'
+							AND ge.site_guid = " . $site->getGUID() . "
+							AND ge.enabled = 'yes'
+						))";
+					}
+					
+					$group_options = array(
+						"type" => "group",
+						"limit" => false,
+						"relationship" => QUESTIONS_EXPERT_ROLE,
+						"relationship_guid" => $expert->getGUID(),
+						"callback" => "questions_row_to_guid"
+					);
+					$groups = elgg_get_entities_from_relationship($group_options);
+					if (!empty($groups)) {
+						$container_where[] = "(e.container_guid IN (" . implode(",", $groups) . "))";
+					}
+					
+					$container_where = "(" . implode(" OR ", $container_where) . ")";
+					
+					// get overdue questions
+					// eg: solution_time < $time && status != closed
+					$question_options["metadata_name_value_pairs"] = array(
+						"name" => "solution_time",
+						"value" => $time,
+						"operator" => "<",
+					);
+					$question_options["wheres"] = array(
+						$status_where,
+						$container_where
+					);
+					$question_options["order_by_metadata"] = array(
+						"name" => "solution_time",
+						"direction" => "ASC",
+						"as" => "integer"
+					);
+					$questions = elgg_get_entities_from_metadata($question_options);
+					if (!empty($questions)) {
+						$message .= elgg_echo("questions:daily:notification:message:overdue", array(), get_current_language()) . PHP_EOL;
+						
+						foreach ($questions as $question) {
+							$message .= " - " . $question->title . " (" . $question->getURL() . ")" . PHP_EOL;
+						}
+						
+						$message .= elgg_echo("questions:daily:notification:message:more", array(), get_current_language());
+						$message .= " " . $site->url . "questions/todo" . PHP_EOL . PHP_EOL;
+					}
+					
+					// get due questions
+					// eg: solution_time >= $time && solution_time < ($time + 1 day) && status != closed
+					$question_options["metadata_name_value_pairs"] = array(
+						array(
+							"name" => "solution_time",
+							"value" => $time,
+							"operator" => ">=",
+						),
+						array(
+							"name" => "solution_time",
+							"value" => $time + (24 * 60 * 60),
+							"operator" => "<",
+						),
+					);
+					$questions = elgg_get_entities_from_metadata($question_options);
+					if (!empty($questions)) {
+						$message .= elgg_echo("questions:daily:notification:message:due", array(), get_current_language()) . PHP_EOL;
+					
+						foreach ($questions as $question) {
+							$message .= " - " . $question->title . " (" . $question->getURL() . ")" . PHP_EOL;
+						}
+					
+						$message .= elgg_echo("questions:daily:notification:message:more", array(), get_current_language());
+						$message .= " " . $site->url . "questions/todo" . PHP_EOL . PHP_EOL;
+					}
+					
+					// get new questions
+					// eg: time_created >= ($time - 1 day)
+					unset($question_options["metadata_name_value_pairs"]);
+					unset($question_options["order_by_metadata"]);
+					$question_options["wheres"] = array(
+						$container_where,
+						"(e.time_created > " . ($time - (24 * 60 *60)) . ")"
+					);
+					$questions = elgg_get_entities_from_metadata($question_options);
+					if (!empty($questions)) {
+						$message .= elgg_echo("questions:daily:notification:message:new", array(), get_current_language()) . PHP_EOL;
+							
+						foreach ($questions as $question) {
+							$message .= " - " . $question->title . " (" . $question->getURL() . ")" . PHP_EOL;
+						}
+							
+						$message .= elgg_echo("questions:daily:notification:message:more", array(), get_current_language());
+						$message .= " " . $site->url . "questions/all" . PHP_EOL . PHP_EOL;
+					}
+					
+					// is there content in the message
+					if (!empty($message)) {
+						// force to email
+						notify_user($expert->getGUID(), $site->getGUID(), $subject, $message, null, "email");
+					}
+					
+					// restore user
+					$_SESSION["user"] = $backup_user;
+				}
+			}
+		}
+	}
+}
+ 
