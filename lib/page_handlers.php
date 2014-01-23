@@ -6,7 +6,7 @@
  * @param array $segments
  */
 function questions_page_handler($segments) {
-	elgg_push_breadcrumb(elgg_echo('questions'), "/questions/all");
+	elgg_push_breadcrumb(elgg_echo('questions'), "questions/all");
 
 	$pages = dirname(dirname(__FILE__)) . "/pages/questions";
 
@@ -41,6 +41,7 @@ function questions_page_handler($segments) {
 			break;
 
 		default:
+			forward("questions/all");
 			return false;
 	}
 
@@ -53,7 +54,7 @@ function questions_page_handler($segments) {
  * @param array $segments
  */
 function answers_page_handler($segments) {
-	elgg_push_breadcrumb(elgg_echo('questions'), "/questions/all");
+	elgg_push_breadcrumb(elgg_echo('questions'), "questions/all");
 
 	$pages = dirname(dirname(__FILE__)) . "/pages/answers";
 
@@ -64,6 +65,7 @@ function answers_page_handler($segments) {
 			include "$pages/edit.php";
 			break;
 		default:
+			forward("questions/all");
 			return false;
 	}
 
