@@ -78,7 +78,7 @@ if ($marked_answer) {
 	$count++;
 }
 
-$content .= elgg_view_module('info', "$count " . elgg_echo('answers'), elgg_view_menu('filter') . $answers, array("class" => "mtm"));
+$content .= elgg_view_module('info', "$count " . elgg_echo('answers'), $answers, array("class" => "mtm"));
 
 // add answer form
 if (($question->getStatus() == "open") && $question->canWriteToContainer(0, 'object', 'answer')) {

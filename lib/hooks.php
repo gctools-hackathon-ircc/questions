@@ -79,6 +79,38 @@ function questions_filter_menu_handler($hook, $type, $items, $params) {
 				unset($items[$key]);
 			}
 		}
+		
+		$updated_href = "questions/updated";
+		if (elgg_get_page_owner_entity() instanceof ElggGroup) {
+			$updated_href .= "/" . elgg_get_page_owner_guid();
+		}
+		
+		$items[] = ElggMenuItem::factory(array(
+			"name" => "updated",
+			"text" => elgg_echo("questions:menu:filter:updated"),
+			"href" => $updated_href,
+			"priority" => 600
+		));
+		if (questions_is_expert()) {
+			$items[] = ElggMenuItem::factory(array(
+				"name" => "todo",
+				"text" => elgg_echo("questions:menu:filter:todo"),
+				"href" => "questions/todo",
+				"priority" => 700
+			));
+		}
+		
+		$experts_href = "questions/experts";
+		if (elgg_get_page_owner_entity() instanceof ElggGroup) {
+			$experts_href .= "/" . elgg_get_page_owner_guid();
+		}
+		
+		$items[] = ElggMenuItem::factory(array(
+				"name" => "experts",
+				"text" => elgg_echo("questions:menu:filter:experts"),
+				"href" => $experts_href,
+				"priority" => 800
+		));
 	}
 
 	return $items;
