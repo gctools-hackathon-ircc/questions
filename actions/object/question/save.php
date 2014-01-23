@@ -67,7 +67,7 @@ try {
 		$solution_time = questions_get_solution_time($question->getContainerEntity());
 		if ($solution_time) {
 			// add x number of days when the question should be solved
-			$question->solution_time = ($question->time_created + ($solution_time * 24 * 60 * 60));
+			$question->solution_time = (time() + ($solution_time * 24 * 60 * 60));
 		}
 	}
 } catch (Exception $e) {
