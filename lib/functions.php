@@ -358,3 +358,14 @@ function questions_limited_to_groups() {
 	
 	return $result;
 }
+
+/**
+ * Return the GUID from a database row
+ *
+ * @param stdObject $row the database row
+ *
+ * @return int the GUID
+ */
+function questions_row_to_guid($row) {
+	return (int) $row->guid;
+}
