@@ -16,8 +16,16 @@ $options = array(
 	"limit" => $limit,
 );
 
-if ($widget->context != "index") {
-	$options["container_guid"] = $widget->getOwnerGUID();
+switch ($widget->context) {
+	case "profile":
+	case "dashboard":
+		// user shows owned
+		$options["owner_guid"] = $widget->getOwnerGUID();
+		break;
+	case "groups":
+		// only in this container
+		$options["container_guid"] = $widget->getOwnerGUID();
+		break;
 }
 
 $content = elgg_list_entities($options);
