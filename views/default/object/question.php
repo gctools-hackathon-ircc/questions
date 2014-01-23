@@ -114,7 +114,7 @@ if ($full) {
 	// brief view
 	$title_text = "";
 	if ($question->getStatus() == "closed") {
-		$title_text = elgg_view_icon("lock-closed");
+		$title_text = elgg_view_icon("checkmark");
 	}
 	$title_text .= elgg_get_excerpt($question->title, 100);
 	$title = elgg_view("output/url", array(
