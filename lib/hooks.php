@@ -372,7 +372,7 @@ function questions_daily_cron_handler($hook, $type, $returnvalue, $params) {
 					$question_options["metadata_name_value_pairs"] = array(
 						"name" => "solution_time",
 						"value" => $time,
-						"operator" => "<",
+						"operand" => "<",
 					);
 					$question_options["wheres"] = array(
 						$status_where,
@@ -401,14 +401,15 @@ function questions_daily_cron_handler($hook, $type, $returnvalue, $params) {
 						array(
 							"name" => "solution_time",
 							"value" => $time,
-							"operator" => ">=",
+							"operand" => ">=",
 						),
 						array(
 							"name" => "solution_time",
 							"value" => $time + (24 * 60 * 60),
-							"operator" => "<",
+							"operand" => "<",
 						),
 					);
+					
 					$questions = elgg_get_entities_from_metadata($question_options);
 					if (!empty($questions)) {
 						$message .= elgg_echo("questions:daily:notification:message:due", array(), get_current_language()) . PHP_EOL;
@@ -434,7 +435,7 @@ function questions_daily_cron_handler($hook, $type, $returnvalue, $params) {
 						$message .= elgg_echo("questions:daily:notification:message:new", array(), get_current_language()) . PHP_EOL;
 							
 						foreach ($questions as $question) {
-							$message .= " - " . $question->title . " (" . $question->getURL() . ")" . PHP_EOL;
+							$message .= " - " . $question->title . " (" . $question->getURL() . ")" . $question->solution_time . PHP_EOL;
 						}
 							
 						$message .= elgg_echo("questions:daily:notification:message:more", array(), get_current_language());
