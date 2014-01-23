@@ -280,11 +280,6 @@ function questions_notify_experts(ElggQuestion $entity, $moving = false) {
 				$experts = $users;
 			}
 			
-			// add group owner to list
-			if (elgg_instanceof($container, "group")) {
-				$experts[] = $container->getOwnerEntity();
-			}
-			
 			// trigger a hook so others can extend the list
 			$params = array(
 				"entity" => $entity,
