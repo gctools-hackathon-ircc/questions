@@ -21,7 +21,7 @@ function questions_init() {
 	
 	// extend CSS/JS
 	elgg_extend_view("css/elgg", "css/questions/site");
-	elgg_extend_view("js/elgg", "questions/js");
+	elgg_extend_view("js/elgg", "js/questions/site");
 	
 	elgg_register_menu_item("site", array(
 		"name" => 'questions',

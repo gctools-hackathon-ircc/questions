@@ -343,3 +343,23 @@ function questions_get_solution_time(ElggEntity $container) {
 	
 	return $result;
 }
+
+/**
+ * Check the plugin setting if questions are limited to groups.
+ *
+ * @return bool true if limited
+ */
+function questions_limited_to_groups() {
+	static $result;
+	
+	if (!isset($result)) {
+		$result = false;
+		
+		$setting = elgg_get_plugin_setting("limit_to_groups", "questions");
+		if ($setting == "yes") {
+			$result = true;
+		}
+	}
+	
+	return $result;
+}

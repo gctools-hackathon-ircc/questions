@@ -36,6 +36,7 @@ add_translation('en', array(
 	'questions:edit:question:title' => 'Question',
 	'questions:edit:question:description' => "Details",
 	'questions:edit:question:container' => "Where should this question be listed",
+	'questions:edit:question:container:select' => "Please select a group",
 	
 	/**
 	 * expert notifications
@@ -69,6 +70,8 @@ To answer the question go here:
 	'questions:settings:general:close:description' => "When an answer of a question is marked as the correct answer, close the question. This will mean no more answers can be given.",
 	'questions:settings:general:solution_time' => "Set a default solution time in days",
 	'questions:settings:general:solution_time:description' => "Questions should be answered before this time expires, groups can override this setting with their own time limit. 0 for no limit.",
+	'questions:settings:general:limit_to_groups' => "Limit questions to group context only",
+	'questions:settings:general:limit_to_groups:description' => "If set to 'yes', questions can no longer be made in the personal context.",
 	
 	'questions:settings:experts:title' => "Q&A expert settings",
 	'questions:settings:experts:enable' => "Enable expert roles",
@@ -112,6 +115,7 @@ To answer the question go here:
 	'questions:action:question:save:error:container' => "You do not have permission to answer that question!",
 	'questions:action:question:save:error:body' => "A title and description are required: %s, %s, %s",
 	'questions:action:question:save:error:save' => "There was a problem saving your question!",
+	'questions:action:question:save:error:limited_to_groups' => "Questions are limited to group, please select a group",
 	
 	'questions:action:toggle_expert:success:make' => "%s is now a questions expert for %s",
 	'questions:action:toggle_expert:success:remove' => "%s is no longer a questions expert for %s",

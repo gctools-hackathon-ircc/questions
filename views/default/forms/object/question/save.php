@@ -57,15 +57,15 @@ elgg_clear_sticky_form("question");
 ?>
 
 <div>
-	<label for="question_title"><?php echo elgg_echo('questions:edit:question:title'); ?></label>
+	<label for="question_title"><?php echo elgg_echo("questions:edit:question:title"); ?></label>
 	<?php echo elgg_view("input/text", $title); ?>
 </div>
 <div>
-	<label for="question_description"><?php echo elgg_echo('questions:edit:question:description'); ?></label>
+	<label for="question_description"><?php echo elgg_echo("questions:edit:question:description"); ?></label>
 	<?php echo elgg_view("input/longtext", $description); ?>
 </div>
 <div>
-	<label for="question_tags"><?php echo elgg_echo('tags'); ?></label>
+	<label for="question_tags"><?php echo elgg_echo("tags"); ?></label>
 	<?php echo elgg_view("input/tags", $tags); ?>
 </div>
 
@@ -119,7 +119,12 @@ if (!$editing || (questions_experts_enabled() && questions_is_expert(elgg_get_pa
 			if ($owner->getGUID() == $question->getContainerGUID()) {
 				$selected = "selected='selected'";
 			}
-			$select .= "<option value='" . $owner->getGUID() . "' " . $selected . ">" . $owner->name . "</option>";
+			
+			if (!questions_limited_to_groups()) {
+				$select .= "<option value='" . $owner->getGUID() . "' " . $selected . ">" . $owner->name . "</option>";
+			} else {
+				$select .= "<option value='' " . $selected . ">" . elgg_echo("questions:edit:question:container:select") . "</option>";
+			}
 			
 			// add groups
 			$select .= "<optgroup label='" . htmlspecialchars(elgg_echo("groups"), ENT_QUOTES, "UTF-8", false) . "'>";
