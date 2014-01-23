@@ -31,7 +31,7 @@ function questions_experts_enabled() {
  *
  * @return bool true if the user is an expert, false otherwise
  */
-function questions_is_expert($container = null, ElggUser $user = null) {
+function questions_is_expert(ElggEntity $container = null, ElggUser $user = null) {
 	$result = false;
 	
 	// make sure we have a user
@@ -58,13 +58,13 @@ function questions_is_expert($container = null, ElggUser $user = null) {
 		$dbprefix = elgg_get_config("dbprefix");
 		
 		$expert_options = array(
-				"type" => "user",
-				"site_guids" => false,
-				"limit" => false,
-				"joins" => array("JOIN " . $dbprefix . "entity_relationships re2 ON e.guid = re2.guid_one"),
-				"wheres" => array("(re2.guid_two = " . elgg_get_site_entity()->getGUID() . " AND re2.relationship = 'member_of_site')"),
-				"relationship" => QUESTIONS_EXPERT_ROLE,
-				"inverse_relationship" => true
+			"site_guids" => false,
+			"count" => true,
+			"joins" => array("JOIN " . $dbprefix . "entity_relationships re2 ON e.guid = re2.guid_one"),
+			"wheres" => array("(re2.guid_two = " . elgg_get_site_entity()->getGUID() . " AND re2.relationship = 'member_of_site')"),
+			"relationship" => QUESTIONS_EXPERT_ROLE,
+			"relationship_guid" => $user->getGUID(),
+			"inverse_relationship" => true,
 		);
 		
 		if (elgg_get_entities_from_relationship($expert_options)) {

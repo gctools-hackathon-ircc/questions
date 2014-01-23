@@ -125,7 +125,7 @@ function questions_user_hover_menu_handler($hook, $type, $returnvalue, $params) 
 			// get the user for this menu
 			$user = elgg_extract("entity", $params);
 			
-			if (!empty($user) && elgg_instanceof($user, "user") && !$user->isAdmin()) {
+			if (!empty($user) && elgg_instanceof($user, "user")) {
 				// get page owner
 				$page_owner = elgg_get_page_owner_entity();
 				if (!elgg_instanceof($page_owner, "group")) {
