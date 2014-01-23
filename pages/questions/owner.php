@@ -39,11 +39,6 @@ $vars = array(
 	'filter_context' => 'mine'
 );
 
-// don't show filter if out of filter context
-if ($page_owner instanceof ElggGroup) {
-	$vars['filter'] = false;
-}
-
 $body = elgg_view_layout('content', $vars);
 
 echo elgg_view_page($title, $body);
