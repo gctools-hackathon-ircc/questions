@@ -1,7 +1,7 @@
 <?php
 
 $group = elgg_extract("entity", $vars);
-if (!empty($group) && elgg_instanceof($group, "group") && $group->canEdit()) {
+if (!empty($group) && elgg_instanceof($group, "group") && $group->canEdit() && ($group->questions_enable == "yes")) {
 	$solution_time = questions_get_solution_time($group);
 	
 	$content = "<div>";

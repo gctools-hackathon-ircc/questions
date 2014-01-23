@@ -40,7 +40,7 @@ function questions_init() {
 	elgg_register_page_handler('answers', 'answers_page_handler');
 	
 	// register group options
-	add_group_tool_option('questions', elgg_echo("questions:enable"), true);
+	add_group_tool_option('questions', elgg_echo("questions:enable"), false);
 	elgg_extend_view("groups/tool_latest", "questions/group_module");
 	
 	elgg_extend_view("groups/edit", "questions/groups_edit");
