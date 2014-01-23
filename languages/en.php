@@ -17,6 +17,10 @@ add_translation('en', array(
 	
 	'questions:menu:entity:answer:mark' => "This is correct",
 	'questions:menu:entity:answer:unmark' => "No longer correct",
+
+	'questions:menu:filter:updated' => "Recently updated",
+	'questions:menu:filter:todo' => "Todo",
+	'questions:menu:filter:experts' => "Experts",
 	
 	'river:create:object:question' => '%s asked question %s',
 	'river:create:object:answer' => '%s provided an answered for the question %s',
@@ -27,6 +31,8 @@ add_translation('en', array(
 
 	'questions:everyone' => 'All Questions',
 	'questions:add' => 'Add a Question',
+	'questions:todo' => 'Todo',
+	'questions:updated' => 'Recently updated',
 	'questions:owner' => "%s's Questions",
 	'questions:none' => "No questions have been submitted yet.",
 	'questions:friends' => "Friends' Questions",

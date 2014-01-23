@@ -26,12 +26,12 @@ function questions_experts_enabled() {
 /**
  * Check if a user is an expert
  *
- * @param ElggEntity $container the container where a question was asked
+ * @param ElggEntity $container the container where a question was asked, leave empty for any relationship
  * @param ElggUser $user the user to check (defaults to current user)
  *
  * @return bool true if the user is an expert, false otherwise
  */
-function questions_is_expert(ElggEntity $container, ElggUser $user = null) {
+function questions_is_expert($container = null, ElggUser $user = null) {
 	$result = false;
 	
 	// make sure we have a user
@@ -39,26 +39,40 @@ function questions_is_expert(ElggEntity $container, ElggUser $user = null) {
 		$user = elgg_get_logged_in_user_entity();
 	}
 	
-	if (!empty($container) && !empty($user) && elgg_instanceof($user, "user")) {
-		// the container has to be a ElggSite or ElggGroup, but can be an ElggUser
+	if (empty($user)) {
+		return false;
+	}
+	
+	if (elgg_instanceof($container)) {
 		if (elgg_instanceof($container, "user")) {
 			$container = elgg_get_site_entity();
 		}
 		
 		if (elgg_instanceof($container, "site") || elgg_instanceof($container, "group")) {
-			// admins are always experts
-			if ($user->isAdmin()) {
-				$result = true;
-			} elseif (elgg_instanceof($container, "group") && $container->canEdit()) {
-				// group owners are experts in their own groups
-				$result = true;
-			} elseif (check_entity_relationship($user->getGUID(), QUESTIONS_EXPERT_ROLE, $container->getGUID())) {
+			if (check_entity_relationship($user->getGUID(), QUESTIONS_EXPERT_ROLE, $container->getGUID())) {
 				// user has the expert role
 				$result = true;
 			}
 		}
+	} else {
+		$dbprefix = elgg_get_config("dbprefix");
+		
+		$expert_options = array(
+				"type" => "user",
+				"site_guids" => false,
+				"limit" => false,
+				"joins" => array("JOIN " . $dbprefix . "entity_relationships re2 ON e.guid = re2.guid_one"),
+				"wheres" => array("(re2.guid_two = " . elgg_get_site_entity()->getGUID() . " AND re2.relationship = 'member_of_site')"),
+				"relationship" => QUESTIONS_EXPERT_ROLE,
+				"inverse_relationship" => true
+		);
+		
+		if (elgg_get_entities_from_relationship($expert_options)) {
+			// check if user has any expert relationship
+			$result = true;
+		}
 	}
-	
+		
 	return $result;
 }
 

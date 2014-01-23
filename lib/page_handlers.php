@@ -15,6 +15,14 @@ function questions_page_handler($segments) {
 			include "$pages/all.php";
 			break;
 
+		case "updated":
+			include "$pages/updated.php";
+			break;
+			
+		case "todo":
+			include "$pages/todo.php";
+			break;
+
 		case "owner":
 			include "$pages/owner.php";
 			break;
