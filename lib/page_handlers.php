@@ -39,6 +39,13 @@ function questions_page_handler($segments) {
 			group_gatekeeper();
 			include "$pages/owner.php";
 			break;
+			
+		case 'experts':
+			if (isset($segments[1]) && is_numeric($segments[1])) {
+				elgg_set_page_owner_guid($segments[1]);
+			}
+			include "$pages/experts.php";
+			break;
 
 		default:
 			forward("questions/all");

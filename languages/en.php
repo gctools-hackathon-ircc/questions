@@ -39,6 +39,12 @@ add_translation('en', array(
 	'questions:edit:question:container:select' => "Please select a group",
 	
 	/**
+	 * experts page
+	 */
+	'questions:experts:title' => "Experts",
+	'questions:experts:none' => "No experts have been assigned for %s yet.",
+	
+	/**
 	 * expert notifications
 	 */
 	'questions:notify_experts:create:subject' => "A new question was asked",
