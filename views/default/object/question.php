@@ -51,7 +51,8 @@ if ($num_answers != 0) {
 
 	$poster = $last_answer[0]->getOwnerEntity();
 	$answer_time = elgg_view_friendly_time($last_answer[0]->time_created);
-	$answer_text = elgg_echo('questions:answered', array($poster->name, $answer_time));
+	$poster_text = elgg_view("output/url", array("href" => $poster->getURL(), "text" => $poster->name));
+	$answer_text = elgg_echo('questions:answered', array($poster_text, $answer_time));
 
 	$answers_link = elgg_view('output/url', array(
 		'href' => $question->getURL() . '#question-answers',
