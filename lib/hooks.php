@@ -100,17 +100,19 @@ function questions_filter_menu_handler($hook, $type, $items, $params) {
 			));
 		}
 		
-		$experts_href = "questions/experts";
-		if (elgg_get_page_owner_entity() instanceof ElggGroup) {
-			$experts_href .= "/" . elgg_get_page_owner_guid();
+		if (questions_experts_enabled()) {
+			$experts_href = "questions/experts";
+			if (elgg_get_page_owner_entity() instanceof ElggGroup) {
+				$experts_href .= "/" . elgg_get_page_owner_guid();
+			}
+			
+			$items[] = ElggMenuItem::factory(array(
+					"name" => "experts",
+					"text" => elgg_echo("questions:menu:filter:experts"),
+					"href" => $experts_href,
+					"priority" => 800
+			));
 		}
-		
-		$items[] = ElggMenuItem::factory(array(
-				"name" => "experts",
-				"text" => elgg_echo("questions:menu:filter:experts"),
-				"href" => $experts_href,
-				"priority" => 800
-		));
 	}
 
 	return $items;
