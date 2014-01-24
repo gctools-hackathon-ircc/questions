@@ -71,8 +71,16 @@ if (!elgg_in_context('widgets')) {
 	));
 }
 
-if ($question->solution_time) {
-	$answer_text .= "<span class='question-solution-time float-alt'>" . elgg_view("output/date", array("value" => $question->solution_time)) . "</span>";
+$solution_time = $question->solution_time;
+if ($solution_time) {
+	$solution_class = "question-solution-time float-alt";
+	if ($solution_time < time()) {
+		$solution_class .= " question-solution-time-late";
+	} elseif ($solution_time < (time() + (24 * 60 * 60))) {
+		$solution_class .= " question-solution-time-due";
+	}
+	
+	$answer_text .= "<span class='" . $solution_class . "'>" . elgg_view("output/date", array("value" => $question->solution_time)) . "</span>";
 }
 
 if ($full) {
