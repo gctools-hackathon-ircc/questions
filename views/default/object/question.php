@@ -5,7 +5,7 @@
  * @package Questions
 */
 
-$full = elgg_extract('full', $vars, false);
+$full = elgg_extract('full_view', $vars, false);
 $question = elgg_extract('entity', $vars, false);
 
 if (!$question) {
@@ -66,7 +66,8 @@ if (!elgg_in_context('widgets')) {
 		'entity' => $vars['entity'],
 		'handler' => 'questions',
 		'sort_by' => 'priority',
-		'class' => 'elgg-menu-hz'
+		'class' => 'elgg-menu-hz',
+		'full_view' => $full
 	));
 }
 

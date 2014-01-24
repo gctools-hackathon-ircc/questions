@@ -27,14 +27,16 @@ function questions_entity_menu_handler($hook, $type, $items, $params) {
 		
 		if (!empty($entity) && (elgg_instanceof($entity, "object", "question") || elgg_instanceof($entity, "object", "answer"))) {
 			if ($entity->canAnnotate(0, "generic_comment")) {
-				$items[] = ElggMenuItem::factory(array(
-						"name" => "comment",
-						"rel" => "toggle",
-						"link_class" => "elgg-toggler",
-						"href" => "#comments-add-$entity->guid",
-						"text" => elgg_view_icon("speech-bubble"),
-						"priority" => 600,
-				));
+				if (elgg_extract("full_view", $params, false) || elgg_instanceof($entity, "object", "answer")) {
+					$items[] = ElggMenuItem::factory(array(
+							"name" => "comment",
+							"rel" => "toggle",
+							"link_class" => "elgg-toggler",
+							"href" => "#comments-add-$entity->guid",
+							"text" => elgg_view_icon("speech-bubble"),
+							"priority" => 600,
+					));
+				}
 			}
 			
 			if (elgg_instanceof($entity, "object", "answer") && questions_can_mark_answer($entity)) {
