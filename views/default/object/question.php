@@ -70,6 +70,10 @@ if (!elgg_in_context('widgets')) {
 	));
 }
 
+if ($question->solution_time) {
+	$answer_text .= "<span class='question-solution-time float-alt'>" . elgg_view("output/date", array("value" => $question->solution_time)) . "</span>";
+}
+
 if ($full) {
 	$subtitle = "$poster_text $date $answers_link $categories";
 
