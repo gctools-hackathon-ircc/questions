@@ -55,8 +55,6 @@ function questions_is_expert(ElggEntity $container = null, ElggUser $user = null
 			}
 		}
 	} else {
-		$dbprefix = elgg_get_config("dbprefix");
-		
 		$expert_options = array(
 			"count" => true,
 			"relationship" => QUESTIONS_EXPERT_ROLE,
