@@ -30,4 +30,8 @@
 	color: red;
 }
 
+.question-listing-checkmark {
+	background-position: 0 -126px;
+}
+
 /* end questions css*/
