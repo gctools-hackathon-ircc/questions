@@ -19,8 +19,7 @@ $site = elgg_get_site_entity();
 $user = elgg_get_logged_in_user_entity();
 
 $dbprefix = elgg_get_config("dbprefix");
-$status_id = add_metastring("status");
-$closed_id = add_metastring("closed");
+$correct_answer_id = add_metastring("correct_answer");
 
 $container_where = array();
 if (check_entity_relationship($user->getGUID(), QUESTIONS_EXPERT_ROLE, $site->getGUID())) {
@@ -47,17 +46,18 @@ if (!empty($groups)) {
 
 $container_where = "(" . implode(" OR ", $container_where) . ")";
 
-$content = elgg_list_entities(array(
+$content = elgg_list_entities_from_metadata(array(
 	'type' => 'object',
 	'subtype' => 'question',
 	'wheres' => array("NOT EXISTS (
 				SELECT 1
-				FROM " . $dbprefix . "metadata md
-				WHERE md.entity_guid = e.guid
-				AND md.name_id = " . $status_id . "
-				AND md.value_id = " . $closed_id . ")", $container_where),
+				FROM " . $dbprefix . "entities e2
+				JOIN " . $dbprefix . "metadata md ON e2.guid = md.entity_guid
+				WHERE e2.container_guid = e.guid
+				AND md.name_id = " . $correct_answer_id . ")"),
 	'full_view' => false,
 	'list_type_toggle' => false,
+	'order_by_metadata' => array("name" => "solution_time")
 ));
 
 if (!$content) {
