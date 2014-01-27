@@ -28,6 +28,7 @@ add_translation('en', array(
 	'questions' => 'Questions',
 	'questions:asked' => 'Asked by %s',
 	'questions:answered' => 'Last answered by %s %s',
+	'questions:answered:correct' => 'Correct answer provided by %s %s',
 
 	'questions:everyone' => 'All Questions',
 	'questions:add' => 'Add a Question',

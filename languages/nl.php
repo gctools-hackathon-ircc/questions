@@ -28,6 +28,7 @@ add_translation('nl', array(
 	'questions' => 'Vragen',
 	'questions:asked' => 'Gesteld door %s',
 	'questions:answered' => 'Laatst beantwoord door %s %s',
+	'questions:answered:correct' => 'Juiste antwoord gegeven door %s %s',
 
 	'questions:everyone' => 'Alle Vragen',
 	'questions:add' => 'Stel een vraag',
