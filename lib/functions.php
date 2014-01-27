@@ -58,18 +58,22 @@ function questions_is_expert(ElggEntity $container = null, ElggUser $user = null
 		$dbprefix = elgg_get_config("dbprefix");
 		
 		$expert_options = array(
-			"site_guids" => false,
 			"count" => true,
-			"joins" => array("JOIN " . $dbprefix . "entity_relationships re2 ON e.guid = re2.guid_two"),
-			"wheres" => array("(re2.guid_two = " . elgg_get_site_entity()->getGUID() . " AND re2.relationship = 'member_of_site')"),
 			"relationship" => QUESTIONS_EXPERT_ROLE,
-			"relationship_guid" => $user->getGUID(),
-// 			"inverse_relationship" => true,
+			"relationship_guid" => $user->getGUID()
 		);
-
+		
 		if (elgg_get_entities_from_relationship($expert_options)) {
-			// check if user has any expert relationship
+			// check if user has any expert relationship with entity on this site
 			$result = true;
+		}
+		
+		if (!$result) {
+			// added specific check for Subsite Manager plugin where site has no current site entity set as entity_guid
+			if (check_entity_relationship($user->getGUID(), QUESTIONS_EXPERT_ROLE, elgg_get_site_entity()->getGUID())) {
+				// user has the expert role for this site
+				$result = true;
+			}
 		}
 	}
 		
