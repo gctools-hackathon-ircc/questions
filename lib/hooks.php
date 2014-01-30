@@ -67,25 +67,48 @@ function questions_entity_menu_handler($hook, $type, $items, $params) {
 }
 
 /**
- * Remove the friend tab from the filter menu in the questions context
+ * Change the filter menu for the questions context
  *
- * @param unknown_type $hook
- * @param unknown_type $type
- * @param unknown_type $items
- * @param unknown_type $params
+ * @param string $hook the 'register' hook
+ * @param string $type the 'menu:filter' type
+ * @param array $items the current menu items
+ * @param array $params the supplied parameters
  */
 function questions_filter_menu_handler($hook, $type, $items, $params) {
+	
 	if (!empty($items) && is_array($items) && elgg_in_context("questions")) {
+		$page_owner = elgg_get_page_owner_entity();
+		
+		// change some menu items
 		foreach ($items as $key => $item) {
+			// remove friends
 			if ($item->getName() == "friend") {
 				unset($items[$key]);
 			}
+			
+			// in group context
+			if (elgg_instanceof($page_owner, "group")) {
+				// remove mine
+				if ($item->getName() == "mine") {
+					unset($items[$key]);
+				}
+				
+				// highlight all
+				if ($item->getName() == "all") {
+					$current_page = current_page_url();
+					
+					if (stristr($current_page, "questions/group/" . $page_owner->getGUID() . "/all")) {
+						$item->setHref("questions/group/" . $page_owner->getGUID() . "/all");
+						$item->setSelected(true);
+					}
+				}
+			}
 		}
 		
-		$updated_href = "questions/updated";
-		if (elgg_get_page_owner_entity() instanceof ElggGroup) {
-			$updated_href .= "/" . elgg_get_page_owner_guid();
-		}
+// 		$updated_href = "questions/updated";
+// 		if (elgg_get_page_owner_entity() instanceof ElggGroup) {
+// 			$updated_href .= "/" . elgg_get_page_owner_guid();
+// 		}
 		
 // 		$items[] = ElggMenuItem::factory(array(
 // 			"name" => "updated",
@@ -93,6 +116,7 @@ function questions_filter_menu_handler($hook, $type, $items, $params) {
 // 			"href" => $updated_href,
 // 			"priority" => 600
 // 		));
+
 		if (questions_is_expert()) {
 			$items[] = ElggMenuItem::factory(array(
 				"name" => "todo",
@@ -104,15 +128,15 @@ function questions_filter_menu_handler($hook, $type, $items, $params) {
 		
 		if (questions_experts_enabled()) {
 			$experts_href = "questions/experts";
-			if (elgg_get_page_owner_entity() instanceof ElggGroup) {
+			if (elgg_instanceof($page_owner, "group")) {
 				$experts_href .= "/" . elgg_get_page_owner_guid();
 			}
 			
 			$items[] = ElggMenuItem::factory(array(
-					"name" => "experts",
-					"text" => elgg_echo("questions:menu:filter:experts"),
-					"href" => $experts_href,
-					"priority" => 800
+				"name" => "experts",
+				"text" => elgg_echo("questions:menu:filter:experts"),
+				"href" => $experts_href,
+				"priority" => 800
 			));
 		}
 	}
