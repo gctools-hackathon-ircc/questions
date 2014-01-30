@@ -138,17 +138,20 @@ function questions_user_hover_menu_handler($hook, $type, $returnvalue, $params) 
 				
 				// can the current person edit the page owner, to assign the role
 				// and is the current user not the owner of this page owner
-				if ($page_owner->canEdit() && !$page_owner->canEdit($user->getGUID())) {
+				if ($page_owner->canEdit()) {
 					$text = elgg_echo("questions:menu:user_hover:make_expert");
+					$confirm_text = elgg_echo("questions:menu:user_hover:make_expert:confirm", array($page_owner->name));
+					
 					if (check_entity_relationship($user->getGUID(), QUESTIONS_EXPERT_ROLE, $page_owner->getGUID())) {
 						$text = elgg_echo("questions:menu:user_hover:remove_expert");
+						$confirm_text = elgg_echo("questions:menu:user_hover:remove_expert:confirm", array($page_owner->name));
 					}
 					
 					$result[] = ElggMenuItem::factory(array(
 						"name" => "questions_expert",
 						"text" => $text,
 						"href" => "action/questions/toggle_expert?user_guid=" . $user->getGUID() . "&guid=" . $page_owner->getGUID(),
-						"confirm" => elgg_echo("question:areyousure")
+						"confirm" => $confirm_text
 					));
 				}
 			}

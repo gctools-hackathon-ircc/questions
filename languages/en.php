@@ -13,7 +13,9 @@ add_translation('en', array(
 	 * Menu items
 	 */
 	'questions:menu:user_hover:make_expert' => "Make Questions expert",
+	'questions:menu:user_hover:make_expert:confirm' => "Are you sure you wish to make this user a Questions expert of %s?",
 	'questions:menu:user_hover:remove_expert' => "Remove Questions expert",
+	'questions:menu:user_hover:remove_expert:confirm' => "Are you sure you wish to remove this user form the Questions experts of %s?",
 	
 	'questions:menu:entity:answer:mark' => "This is correct",
 	'questions:menu:entity:answer:unmark' => "No longer correct",
