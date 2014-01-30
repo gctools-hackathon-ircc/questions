@@ -79,7 +79,7 @@ if (!empty($guid)) {
 					foreach ($answers as $answer) {
 						$new_annotation = create_annotation($topic->getGUID(), "group_topic_post", $answer->description, null, $answer->getOwnerGUID(), $answer->access_id);
 						if (!empty($new_annotation)) {
-							questions_backdate_annotation($new_annotation->id, $annotation->time_created);
+							questions_backdate_annotation($new_annotation->id, $answer->time_created);
 						}
 						
 						// copy all comments on the answer to topic replies
