@@ -45,6 +45,8 @@ add_translation('en', array(
 	'questions:edit:question:description' => "Details",
 	'questions:edit:question:container' => "Where should this question be listed",
 	'questions:edit:question:container:select' => "Please select a group",
+	'questions:edit:question:move_to_discussions' => "Move to discussions",
+	'questions:edit:question:move_to_discussions:confirm' => "Are you sure you wish to move this questions to the discussions? This can't be undone!!",
 	
 	/**
 	 * experts page
@@ -135,6 +137,10 @@ To answer the question go here:
 	'questions:action:question:save:error:body' => "A title and description are required: %s, %s, %s",
 	'questions:action:question:save:error:save' => "There was a problem saving your question!",
 	'questions:action:question:save:error:limited_to_groups' => "Questions are limited to group, please select a group",
+	
+	'questions:action:question:move_to_discussions:error:move' => "You're not allowed to move questions to discussions",
+	'questions:action:question:move_to_discussions:error:topic' => "An error occured while creating the discussion topic, please try again",
+	'questions:action:question:move_to_discussions:success' => "The questions was moved to a discussion topic",
 	
 	'questions:action:toggle_expert:success:make' => "%s is now a questions expert for %s",
 	'questions:action:toggle_expert:success:remove' => "%s is no longer a questions expert for %s",

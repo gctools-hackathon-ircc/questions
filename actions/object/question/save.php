@@ -34,7 +34,7 @@ if (questions_limited_to_groups() && ($container_guid == $question->owner_guid))
 	forward(REFERER);
 }
 
-$title = get_input("title", "", false);
+$title = get_input("title");
 $description = get_input("description");
 $tags = string_to_tag_array(get_input("tags", ""));
 $access_id = (int) get_input("access_id");

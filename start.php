@@ -66,6 +66,7 @@ function questions_init() {
 	// question
 	$actions_base = dirname(__FILE__) . '/actions/object/question';
 	elgg_register_action("object/question/save", "$actions_base/save.php");
+	elgg_register_action("object/question/move_to_discussions", "$actions_base/move_to_discussions.php");
 	elgg_register_action("questions/delete", "$actions_base/delete.php");
 	
 	// answer

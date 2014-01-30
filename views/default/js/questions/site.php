@@ -24,6 +24,17 @@ elgg.questions.init = function() {
 
 		return result;
 	});
+
+	$("#questions-move-to-discussions").live("click", function() {
+		var confirm_text = $(this).attr("rel");
+
+		if (confirm(confirm_text)) {
+			var $form = $(this).parents("form");
+
+			$form.attr("action", elgg.get_site_url() + "action/object/question/move_to_discussions");
+			$form.submit();
+		}
+	});
 }
 
 //register init hook

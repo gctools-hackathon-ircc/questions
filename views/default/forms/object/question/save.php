@@ -153,5 +153,16 @@ if (!$container_options) {
 	echo elgg_view("input/hidden", array("name" => "container_guid", "value" => $question->container_guid));
 }
 echo elgg_view("input/hidden", array("name" => "guid", "value" => $question->guid));
+
+if ($editing && questions_can_move_to_discussions($container)) {
+	echo elgg_view("output/url", array(
+		"text" => elgg_echo("questions:edit:question:move_to_discussions"),
+		"href" => false,
+		"class" => "elgg-button elgg-button-action float-alt",
+		"id" => "questions-move-to-discussions",
+		"rel" => elgg_echo("questions:edit:question:move_to_discussions:confirm")
+	));
+}
+
 echo elgg_view("input/submit", array("value" => elgg_echo("submit")));
 echo "</div>";

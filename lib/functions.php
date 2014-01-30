@@ -376,7 +376,7 @@ function questions_limited_to_groups() {
 }
 
 /**
- * Return the GUID from a database row
+ * Return the GUID from a database row.
  *
  * @param stdObject $row the database row
  *
@@ -384,4 +384,61 @@ function questions_limited_to_groups() {
  */
 function questions_row_to_guid($row) {
 	return (int) $row->guid;
+}
+
+/**
+ * Checks if a question can be moved to the discussion in the container.
+ *
+ * @param ElggEntity $container the container where the question should become a discussion
+ * @param ElggUser $user the user trying to move the question, defaults to current user
+ *
+ * @return bool true is can move, false otherwise
+ */
+function questions_can_move_to_discussions(ElggEntity $container, ElggUser $user = null) {
+	$result = false;
+	
+	// make sure we have a user
+	if (empty($user) || !elgg_instanceof($user, "user")) {
+		$user = elgg_get_logged_in_user_entity();
+	}
+	
+	// only if container is a group
+	if (!empty($container) && elgg_instanceof($container, "group") && !empty($user)) {
+		// only experts can move
+		if (questions_is_expert($container, $user)) {
+			// are discussions enabled
+			if ($container->forum_enable != "no") {
+				$result = true;
+			}
+		}
+	}
+	
+	return $result;
+}
+
+/**
+ * Backdate an annotation, since this can't be done by Elgg core functions
+ *
+ * @param int $annotation_id the annotation to update
+ * @param int $time_created the new time_created
+ *
+ * @access private
+ *
+ * @return bool true if the update succeeded
+ */
+function questions_backdate_annotation($annotation_id, $time_created) {
+	$result = false;
+	
+	$annotation_id = sanitise_int($annotation_id, false);
+	$time_created = sanitise_int($time_created);
+	
+	if (!empty($annotation_id)) {
+		$query = "UPDATE " . elgg_get_config("dbprefix") . "annotations
+				SET time_created = " . $time_created . "
+				WHERE id = " . $annotation_id;
+		
+		$result = (bool) update_data($query);
+	}
+	
+	return $result;
 }
