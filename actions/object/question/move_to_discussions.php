@@ -31,7 +31,7 @@ if (!empty($guid)) {
 			// create new discussion
 			$topic = new ElggObject();
 			$topic->subtype = "groupforumtopic";
-			$topic->owner_guid = $entity->owner_guid;
+// 			$topic->owner_guid = $entity->owner_guid;
 			$topic->container_guid = $entity->container_guid;
 			$topic->access_id = $entity->access_id;
 			
@@ -41,10 +41,6 @@ if (!empty($guid)) {
 			$topic->status = "open";
 			
 			if ($topic->save()) {
-				// backdate the discussion
-				$topic->time_created = $entity->time_created;
-				$topic->save();
-				
 				// cleanup sticky form
 				elgg_clear_sticky_form("question");
 				
@@ -95,6 +91,13 @@ if (!empty($guid)) {
 						}
 					}
 				}
+				
+				// last changes to the topic
+				// backdate the discussion
+				$topic->time_created = $entity->time_created;
+				// set correct owner of the topic
+				$topic->owner_guid = $entity->getOwnerGUID();
+				$topic->save();
 				
 				// cleaup the old question
 				$entity->delete();
