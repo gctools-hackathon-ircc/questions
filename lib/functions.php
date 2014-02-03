@@ -286,7 +286,7 @@ function questions_notify_experts(ElggQuestion $entity, $moving = false) {
 			// get experts
 			$options = array(
 				"type" => "user",
-				"site_guid" => false,
+				"site_guids" => false,
 				"limit" => false,
 				"relationship" => QUESTIONS_EXPERT_ROLE,
 				"relationship_guid" => $container->getGUID(),
