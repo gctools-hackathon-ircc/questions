@@ -96,26 +96,23 @@ class ElggQuestion extends ElggObject {
 				case "open":
 					// is it still open, so no marked answer
 					if ($this->getMarkedAnswer()) {
-						$this->close();
+						$result = "closed";
 					}
 					break;
 				case "closed":
+					$result = "closed";
 					// is it still open, so no marked answer
 					if (!$this->getMarkedAnswer()) {
-						$this->reopen();
+						$result = "open";
 					}
 					break;
 				default:
 					// no setting yet
 					if ($this->getMarkedAnswer()) {
-						$this->close();
-					} else {
-						$this->reopen();
+						$result = "closed";
 					}
 					break;
 			}
-			
-			$result = $this->status;
 		}
 		
 		return $result;
