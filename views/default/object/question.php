@@ -82,7 +82,7 @@ if (!elgg_in_context('widgets')) {
 }
 
 $solution_time = $question->solution_time;
-if ($solution_time) {
+if ($solution_time && !$question->getMarkedAnswer()) {
 	$solution_class = "question-solution-time float-alt";
 	if ($solution_time < time()) {
 		$solution_class .= " question-solution-time-late";
