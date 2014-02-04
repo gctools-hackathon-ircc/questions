@@ -124,6 +124,15 @@ function questions_filter_menu_handler($hook, $type, $items, $params) {
 				"href" => "questions/todo",
 				"priority" => 700
 			));
+			
+			if (elgg_instanceof($page_owner, "group")) {
+				$items[] = ElggMenuItem::factory(array(
+					"name" => "todo_group",
+					"text" => elgg_echo("questions:menu:filter:todo_group"),
+					"href" => "questions/todo/" . $page_owner->getGUID(),
+					"priority" => 710
+				));
+			}
 		}
 		
 		if (questions_experts_enabled()) {

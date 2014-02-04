@@ -22,6 +22,7 @@ add_translation('en', array(
 
 	'questions:menu:filter:updated' => "Recently updated",
 	'questions:menu:filter:todo' => "Todo",
+	'questions:menu:filter:todo_group' => "Group Todo",
 	'questions:menu:filter:experts' => "Experts",
 	
 	'river:create:object:question' => '%s asked question %s',
@@ -35,6 +36,7 @@ add_translation('en', array(
 	'questions:everyone' => 'All Questions',
 	'questions:add' => 'Add a Question',
 	'questions:todo' => 'Todo',
+	'questions:todo:none' => 'There is nothing Todo, keep up the good work!',
 	'questions:updated' => 'Recently updated',
 	'questions:owner' => "%s's Questions",
 	'questions:none' => "No questions have been submitted yet.",
