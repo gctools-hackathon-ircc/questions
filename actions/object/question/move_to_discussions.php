@@ -31,8 +31,7 @@ if (!empty($guid)) {
 			// create new discussion
 			$topic = new ElggObject();
 			$topic->subtype = "groupforumtopic";
-// 			$topic->owner_guid = $entity->owner_guid;
-			$topic->container_guid = $entity->container_guid;
+			$topic->container_guid = $entity->getContainerGUID();
 			$topic->access_id = $entity->access_id;
 			
 			$topic->title = $entity->title;
@@ -106,7 +105,7 @@ if (!empty($guid)) {
 				elgg_set_ignore_access($ia);
 				
 				// set correct forward url
-				$forward_url = "questions/todo";
+				$forward_url = "questions/todo/" . $entity->getContainerGUID();
 				system_message(elgg_echo("questions:action:question:move_to_discussions:success"));
 			} else {
 				register_error(elgg_echo("questions:action:question:move_to_discussions:error:topic"));
