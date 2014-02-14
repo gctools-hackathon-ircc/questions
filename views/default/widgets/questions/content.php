@@ -14,7 +14,8 @@ $options = array(
 	"type" => "object",
 	"subtype" => "question",
 	"limit" => $limit,
-	"full_view" => false
+	"full_view" => false,
+	"pagination" => false
 );
 
 switch ($widget->context) {
