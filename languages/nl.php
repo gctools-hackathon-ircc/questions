@@ -80,6 +80,7 @@ Klik hier om de vraag te beantwoorden:
   'questions:group_settings:solution_time:description' => 'Het correcte antwoord moet gegeven worden voordat deze tijd verloopt. Kies 0 voor geen oplostermijn.',
   'widget:questions:title' => 'Vragen',
   'widget:questions:description' => 'Overzicht van vragen',
+  'widget:questions:content_type' => "Welke vragen moeten getoond worden?",
   'questions:action:answer:save:error:container' => 'U heeft geen toestemming om een antwoord te geven op deze vraag',
   'questions:action:answer:save:error:body' => 'Een antwoord is verplicht: %s, %s',
   'questions:action:answer:save:error:save' => 'Er was een probleem met het opslaan van uw antwoord',

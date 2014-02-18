@@ -120,7 +120,8 @@ To answer the question go here:
 
 	'widget:questions:title' => "Questions",
 	'widget:questions:description' => "You can view the status of your questions.",
-	
+	'widget:questions:content_type' => "Which questions to show",
+		
 	/**
 	 * Actions
 	 */

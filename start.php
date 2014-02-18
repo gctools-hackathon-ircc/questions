@@ -33,7 +33,7 @@ function questions_init() {
 	elgg_register_entity_type("object", 'question');
 	
 	// register widget
-	elgg_register_widget_type('questions', elgg_echo("widget:questions:title"), elgg_echo("widget:questions:description"), "index,profile,dashboard,groups");
+	elgg_register_widget_type('questions', elgg_echo("widget:questions:title"), elgg_echo("widget:questions:description"), "index,profile,dashboard,groups", true);
 	
 	// register page handler for nice urls
 	elgg_register_page_handler('questions', 'questions_page_handler');
