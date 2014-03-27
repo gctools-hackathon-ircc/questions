@@ -420,6 +420,10 @@ function questions_daily_cron_handler($hook, $type, $returnvalue, $params) {
 						$container_where[] = "(e.container_guid IN (" . implode(",", $groups) . "))";
 					}
 
+					if (empty($container_where)) {
+						// no groups or site? then skip to next expert
+						continue;
+					}
 					$container_where = "(" . implode(" OR ", $container_where) . ")";
 
 					// get overdue questions
