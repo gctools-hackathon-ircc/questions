@@ -3,8 +3,8 @@ $answer = $vars['entity'];
 
 $image = elgg_view_entity_icon(get_entity($answer->owner_guid), 'small');
 
+// mark this as the correct answer?
 $correct_answer = $answer->getCorrectAnswerMetadata();
-
 if ($correct_answer) {
 	$owner = $correct_answer->getOwnerEntity();
 	$owner_name = htmlspecialchars($owner->name);
@@ -16,6 +16,14 @@ if ($correct_answer) {
 	$image .= "<div class='questions-checkmark' title='$title'></div>";
 }
 
+// create subtitle
+$owner = $answer->getOwnerEntity();
+$owner_link = elgg_view("output/url", array("text" => $owner->name, "href" => $owner->getURL(), "is_trusted" => true));
+
+$friendly_time = elgg_view_friendly_time($answer->time_created);
+$subtitle = $owner_link . " " . $friendly_time;
+
+// build entity menu
 $entity_menu = elgg_view_menu('entity', array(
 	'entity' => $vars['entity'],
 	'handler' => 'answers',
@@ -25,17 +33,17 @@ $entity_menu = elgg_view_menu('entity', array(
 
 $body = elgg_view('output/longtext', array('value' => $answer->description));
 
+// add comments
 $comment_count = $answer->countComments();
-
-$comment_options = array(
+if ($comment_count) {
+	$comment_options = array(
 		'guid' => $answer->getGUID(),
 		'annotation_name' => 'generic_comment',
 		'limit' => false
-);
-
-$comments = elgg_get_annotations($comment_options);
-
-if ($comments) {
+	);
+	
+	$comments = elgg_get_annotations($comment_options);
+	
 	$body .= "<span class='elgg-river-comments-tab'>" . elgg_echo('comments') . "</span>";
 	$body .= elgg_view_annotation_list($comments, array('list_class' => 'elgg-river-comments'));
 }
@@ -49,9 +57,11 @@ $body .= "<div class='elgg-river-item hidden' id='comments-add-" . $answer->getG
 $body .= elgg_view_form('comments/add', array(), $body_vars);
 $body .= "</div>";
 
+// build content
 $params = array(
 	'entity' => $answer,
 	'metadata' => $entity_menu,
+	'subtitle' => $subtitle,
 	'content' => $body
 );
 
