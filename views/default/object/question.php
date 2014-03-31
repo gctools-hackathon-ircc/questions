@@ -50,15 +50,15 @@ if ($num_answers != 0) {
 	if ($correct_answer) {
 		$poster = $correct_answer->getOwnerEntity();
 		$answer_time = elgg_view_friendly_time($correct_answer->time_created);
-		$poster_text = elgg_view("output/url", array("href" => $poster->getURL(), "text" => $poster->name));
-		$answer_text = elgg_echo("questions:answered:correct", array($poster_text, $answer_time));
+		$answer_link = elgg_view("output/url", array("href" => $poster->getURL(), "text" => $poster->name));
+		$answer_text = elgg_echo("questions:answered:correct", array($answer_link, $answer_time));
 	} else {
 		$last_answer = elgg_get_entities($answer_options);
 		
 		$poster = $last_answer[0]->getOwnerEntity();
 		$answer_time = elgg_view_friendly_time($last_answer[0]->time_created);
-		$poster_text = elgg_view("output/url", array("href" => $poster->getURL(), "text" => $poster->name));
-		$answer_text = elgg_echo("questions:answered", array($poster_text, $answer_time));
+		$answer_link = elgg_view("output/url", array("href" => $poster->getURL(), "text" => $poster->name));
+		$answer_text = elgg_echo("questions:answered", array($answer_link, $answer_time));
 	}
 	
 	$answers_link = elgg_view("output/url", array(
