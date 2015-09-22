@@ -54,18 +54,26 @@ if ($topic->save()) {
 	// make sure we can copy all annotations
 	$ia = elgg_set_ignore_access(true);
 	
-	$annotation_options = [
-		'guid' => $entity->getGUID(),
-		'annotation_names' => 'generic_comment',
+	$comment_options = [
+		'type' => 'object',
+		'subtype' => 'comment',
+		'container_guid' => $entity->getGUID(),
 		'limit' => false,
 	];
-	$annotations = new ElggBatch('elgg_get_annotations', $annotation_options);
+	$comments = new ElggBatch('elgg_get_entities', $comment_options);
 	// copy all comments on the question to topic replies
-	foreach ($annotations as $annotation) {
-		$new_annotation = create_annotation($topic->getGUID(), 'group_topic_post', $annotation->value, null, $annotation->getOwnerGUID(), $annotation->access_id);
-		if (!empty($new_annotation)) {
-			questions_backdate_annotation($new_annotation->id, $annotation->time_created);
+	foreach ($comments as $comment) {
+		$reply = new ElggDiscussionReply();
+		$reply->owner_guid = $comment->getOwnerGUID();
+		$reply->container_guid = $topic->getGUID();
+		$reply->access_id = $topic->access_id;
+		$reply->description = $comment->description;
+		
+		if ($reply->save()) {
+			questions_backdate_entity($reply->getGUID(), $comment->time_created);
 		}
+		
+		$comment->delete();
 	}
 	
 	$answer_options = [
@@ -77,20 +85,36 @@ if ($topic->save()) {
 	$answers = new ElggBatch('elgg_get_entities', $answer_options);
 	// copy all answers on the question to topic replies
 	foreach ($answers as $answer) {
-		$new_annotation = create_annotation($topic->getGUID(), 'group_topic_post', $answer->description, null, $answer->getOwnerGUID(), $answer->access_id);
-		if (!empty($new_annotation)) {
-			questions_backdate_annotation($new_annotation->id, $answer->time_created);
+		// move awnser to reply
+		$reply = new ElggDiscussionReply();
+		$reply->owner_guid = $answer->getOwnerGUID();
+		$reply->container_guid = $topic->getGUID();
+		$reply->access_id = $topic->access_id;
+		$reply->description = $answer->description;
+		
+		if ($reply->save()) {
+			questions_backdate_entity($reply->getGUID(), $answer->time_created);
 		}
 		
 		// copy all comments on the answer to topic replies
-		$annotation_options['guid'] = $answer->getGUID();
-		$annotations = new ElggBatch('elgg_get_annotations', $annotation_options);
-		foreach ($annotations as $annotation) {
-			$new_annotation = create_annotation($topic->getGUID(), 'group_topic_post', $annotation->value, null, $annotation->getOwnerGUID(), $annotation->access_id);
-			if (!empty($new_annotation)) {
-				questions_backdate_annotation($new_annotation->id, $annotation->time_created);
+		$comment_options['container_guid'] = $answer->getGUID();
+		
+		$comments = new ElggBatch('elgg_get_entities', $comment_options);
+		foreach ($comments as $comment) {
+			$reply = new ElggDiscussionReply();
+			$reply->owner_guid = $comment->getOwnerGUID();
+			$reply->container_guid = $topic->getGUID();
+			$reply->access_id = $topic->access_id;
+			$reply->description = $comment->description;
+			
+			if ($reply->save()) {
+				questions_backdate_entity($reply->getGUID(), $comment->time_created);
 			}
+			
+			$comment->delete();
 		}
+		
+		$answer->delete();
 	}
 	
 	// last changes to the topic

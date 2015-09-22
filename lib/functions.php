@@ -424,7 +424,7 @@ function questions_can_move_to_discussions(ElggEntity $container, ElggUser $user
 	}
 	
 	// only if container is a group
-	if (empty($container) || !($container instanceof ElggGroup)) {
+	if (!($container instanceof ElggGroup)) {
 		return false;
 	}
 	
@@ -442,27 +442,28 @@ function questions_can_move_to_discussions(ElggEntity $container, ElggUser $user
 }
 
 /**
- * Backdate an annotation, since this can't be done by Elgg core functions
+ * Backdate an entity, since this can't be done by Elgg core functions
  *
- * @param int $annotation_id the annotation to update
- * @param int $time_created  the new time_created
+ * @param int $entity_guid  the entity to update
+ * @param int $time_created the new time_created
  *
  * @access private
  *
  * @return bool
  */
-function questions_backdate_annotation($annotation_id, $time_created) {
+function questions_backdate_entity($entity_guid, $time_created) {
 	
-	$annotation_id = sanitise_int($annotation_id, false);
+	$entity_guid = sanitise_int($entity_guid, false);
 	$time_created = sanitise_int($time_created);
 	
-	if (empty($annotation_id)) {
+	if (empty($entity_guid)) {
 		return false;
 	}
 	
-	$query = 'UPDATE ' . elgg_get_config('dbprefix') . 'annotations
-		SET time_created = ' . $time_created . '
-		WHERE id = ' . $annotation_id;
+	$dbprefix = elgg_get_config('dbprefix');
+	$query = "UPDATE {$dbprefix}entities
+		SET time_created = {$time_created}
+		WHERE guid = {$entity_guid}";
 	
 	return (bool) update_data($query);
 }
