@@ -10,7 +10,7 @@ $adding = !$answer->guid;
 $editing = !$adding;
 
 if ($editing && !$answer->canEdit()) {
-	register_error(elgg_echo("InvalidParameterException:NoEntityFound"));
+	register_error(elgg_echo('InvalidParameterException:NoEntityFound'));
 	forward(REFERER);
 }
 
@@ -18,26 +18,26 @@ $container_guid = (int) get_input('container_guid');
 $description = get_input('description');
 
 if (empty($container_guid) || empty($description)) {
-	register_error(elgg_echo("questions:action:answer:save:error:body", array($container_guid, $description)));
+	register_error(elgg_echo('questions:action:answer:save:error:body', [$container_guid, $description]));
 	forward(REFERER);
 }
 
 if ($adding && !can_write_to_container(0, $container_guid, 'object', 'answer')) {
-	register_error(elgg_echo("questions:action:answer:save:error:container"));
+	register_error(elgg_echo('questions:action:answer:save:error:container'));
 	forward(REFERER);
 }
 
 $question = get_entity($container_guid);
 
-if (empty($question) || !elgg_instanceof($question, "object", "question")){
-	register_error(elgg_echo("ClassException:ClassnameNotClass", array($container_guid, elgg_echo("item:object:question"))));
+if (empty($question) || !($question instanceof ElggQuestion)){
+	register_error(elgg_echo('ClassException:ClassnameNotClass', [$container_guid, elgg_echo('item:object:question')]));
 	forward(REFERER);
 }
 
-if ($question->getStatus() != "open") {
+if ($question->getStatus() != 'open') {
 	elgg_clear_sticky_form('answer');
 	
-	register_error(elgg_echo("questions:action:answer:save:error:question_closed"));
+	register_error(elgg_echo('questions:action:answer:save:error:question_closed'));
 	forward(REFERER);
 }
 
@@ -49,10 +49,16 @@ try {
 	$answer->save();
 	
 	if ($adding) {
-		add_to_river("river/object/answer/create", "create", elgg_get_logged_in_user_guid(), $answer->guid, $answer->access_id);
+		elgg_create_river_item([
+			'view' => 'river/object/answer/create',
+			'action_type' => 'create',
+			'subject_guid' => elgg_get_logged_in_user_guid(),
+			'object_guid' => $answer->getGUID(),
+			'access_id' => $answer->access_id,
+		]);
 	}
 } catch (Exception $e) {
-	register_error(elgg_echo("questions:action:answer:save:error:save"));
+	register_error(elgg_echo('questions:action:answer:save:error:save'));
 	register_error($e->getMessage());
 }
 

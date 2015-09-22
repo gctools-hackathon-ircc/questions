@@ -1,65 +1,95 @@
 <?php
+/**
+ * All plugin hooks are bundled here
+ */
 
+/**
+ * Add menu items to the owner_block menu
+ *
+ * @param string         $hook   the name of the hook
+ * @param string         $type   the type of the hook
+ * @param ElggMenuItem[] $items  current return value
+ * @param array          $params supplied params
+ *
+ * @return void|ElggMenuItem[]
+ */
 function questions_owner_block_menu_handler($hook, $type, $items, $params) {
-	$entity = $params['entity'];
-
-	if ($entity instanceof ElggGroup && $entity->questions_enable == 'yes') {
-		$items[] = ElggMenuItem::factory(array(
-				'name' => 'questions',
-				'href' => "/questions/group/$entity->guid/all",
-				'text' => elgg_echo('questions:group'),
-		));
-	} elseif ($entity instanceof ElggUser) {
-		$items[] = ElggMenuItem::factory(array(
-				'name' => 'questions',
-				'href' => "/questions/owner/$entity->username",
-				'text' => elgg_echo('questions'),
-		));
+	
+	if (empty($params) || !is_array($params)) {
+		return;
 	}
-
+	
+	$entity = elgg_extract('entity', $params);
+	if (($entity instanceof ElggGroup) && ($entity->questions_enable === 'yes')) {
+		$items[] = ElggMenuItem::factory([
+			'name' => 'questions',
+			'href' => "questions/group/{$entity->getGUID()}/all",
+			'text' => elgg_echo('questions:group'),
+		]);
+	} elseif ($entity instanceof ElggUser) {
+		$items[] = ElggMenuItem::factory([
+			'name' => 'questions',
+			'href' => "questions/owner/{$entity->username}",
+			'text' => elgg_echo('questions'),
+		]);
+	}
+	
 	return $items;
 }
 
+/**
+ * Add menu items to the entity menu
+ *
+ * @param string         $hook   the name of the hook
+ * @param string         $type   the type of the hook
+ * @param ElggMenuItem[] $items  current return value
+ * @param array          $params supplied params
+ *
+ * @return void|ElggMenuItem[]
+ */
 function questions_entity_menu_handler($hook, $type, $items, $params) {
 
-	if (!empty($params) && is_array($params)) {
-		$entity = elgg_extract("entity", $params);
+	if (empty($params) || !is_array($params)) {
+		return;
+	}
+	
+	$entity = elgg_extract('entity', $params);
+	if (empty($entity) || (!($entity instanceof ElggQuestion) && !($entity instanceof ElggAnswer))) {
+		return;
+	}
+	
+	if ($entity->canComment()) {
+		if (elgg_extract('full_view', $params, false) || ($entity instanceof ElggAnswer)) {
+			$items[] = ElggMenuItem::factory([
+				'name' => 'comment',
+				'rel' => 'toggle',
+				'link_class' => 'elgg-toggler',
+				'href' => "#comments-add-{$entity->getGUID()}",
+				'text' => elgg_view_icon('speech-bubble'),
+				'priority' => 600,
+			]);
+		}
+	}
+	
+	if (($entity instanceof ElggAnswer) && questions_can_mark_answer($entity)) {
+		$question = $entity->getContainerEntity();
+		$answer = $question->getMarkedAnswer();
 
-		if (!empty($entity) && (elgg_instanceof($entity, "object", "question") || elgg_instanceof($entity, "object", "answer"))) {
-			if ($entity->canAnnotate(0, "generic_comment")) {
-				if (elgg_extract("full_view", $params, false) || elgg_instanceof($entity, "object", "answer")) {
-					$items[] = ElggMenuItem::factory(array(
-							"name" => "comment",
-							"rel" => "toggle",
-							"link_class" => "elgg-toggler",
-							"href" => "#comments-add-$entity->guid",
-							"text" => elgg_view_icon("speech-bubble"),
-							"priority" => 600,
-					));
-				}
-			}
-
-			if (elgg_instanceof($entity, "object", "answer") && questions_can_mark_answer($entity)) {
-				$question = $entity->getContainerEntity();
-				$answer = $question->getMarkedAnswer();
-
-				if (empty($answer)) {
-					$items[] = ElggMenuItem::factory(array(
-						"name" => "questions_mark",
-						"text" => elgg_echo("questions:menu:entity:answer:mark"),
-						"href" => "action/answers/toggle_mark?guid=" . $entity->getGUID(),
-						"is_action" => true
-					));
-				} elseif ($entity->getGUID() == $answer->getGUID()) {
-					// there is an anwser and it's this entity
-					$items[] = ElggMenuItem::factory(array(
-						"name" => "questions_mark",
-						"text" => elgg_echo("questions:menu:entity:answer:unmark"),
-						"href" => "action/answers/toggle_mark?guid=" . $entity->getGUID(),
-						"is_action" => true
-					));
-				}
-			}
+		if (empty($answer)) {
+			$items[] = ElggMenuItem::factory([
+				'name' => 'questions_mark',
+				'text' => elgg_echo('questions:menu:entity:answer:mark'),
+				'href' => "action/answers/toggle_mark?guid={$entity->getGUID()}",
+				'is_action' => true,
+			]);
+		} elseif ($entity->getGUID() === $answer->getGUID()) {
+			// there is an anwser and it's this entity
+			$items[] = ElggMenuItem::factory([
+				'name' => 'questions_mark',
+				'text' => elgg_echo('questions:menu:entity:answer:unmark'),
+				'href' => "action/answers/toggle_mark?guid={$entity->getGUID()}",
+				'is_action' => true,
+			]);
 		}
 	}
 
@@ -67,451 +97,503 @@ function questions_entity_menu_handler($hook, $type, $items, $params) {
 }
 
 /**
- * Change the filter menu for the questions context
+ * Add menu items to the filter menu
  *
- * @param string $hook the 'register' hook
- * @param string $type the 'menu:filter' type
- * @param array $items the current menu items
- * @param array $params the supplied parameters
+ * @param string         $hook   the name of the hook
+ * @param string         $type   the type of the hook
+ * @param ElggMenuItem[] $items  current return value
+ * @param array          $params supplied params
+ *
+ * @return void|ElggMenuItem[]
  */
 function questions_filter_menu_handler($hook, $type, $items, $params) {
 
-	if (!empty($items) && is_array($items) && elgg_in_context("questions")) {
-		$page_owner = elgg_get_page_owner_entity();
-
-		// change some menu items
-		foreach ($items as $key => $item) {
-			// remove friends
-			if ($item->getName() == "friend") {
+	if (empty($items) || !is_array($items) || !elgg_in_context('questions')) {
+		return;
+	}
+	
+	$page_owner = elgg_get_page_owner_entity();
+	
+	// change some menu items
+	foreach ($items as $key => $item) {
+		// remove friends
+		if ($item->getName() == 'friend') {
+			unset($items[$key]);
+		}
+		
+		// in group context
+		if ($page_owner instanceof ElggGroup) {
+			// remove mine
+			if ($item->getName() == 'mine') {
 				unset($items[$key]);
 			}
 
-			// in group context
-			if (elgg_instanceof($page_owner, "group")) {
-				// remove mine
-				if ($item->getName() == "mine") {
-					unset($items[$key]);
-				}
+			// highlight all
+			if ($item->getName() === 'all') {
+				$current_page = current_page_url();
 
-				// highlight all
-				if ($item->getName() == "all") {
-					$current_page = current_page_url();
-
-					if (stristr($current_page, "questions/group/" . $page_owner->getGUID() . "/all")) {
-						$item->setHref("questions/group/" . $page_owner->getGUID() . "/all");
-						$item->setSelected(true);
-					}
+				if (stristr($current_page, 'questions/group/' . $page_owner->getGUID() . '/all')) {
+					$item->setHref('questions/group/' . $page_owner->getGUID() . '/all');
+					$item->setSelected(true);
 				}
 			}
 		}
+	}
+	
+	if (questions_is_expert()) {
+		$items[] = ElggMenuItem::factory([
+			'name' => 'todo',
+			'text' => elgg_echo('questions:menu:filter:todo'),
+			'href' => 'questions/todo',
+			'priority' => 700,
+		]);
 
-// 		$updated_href = "questions/updated";
-// 		if (elgg_get_page_owner_entity() instanceof ElggGroup) {
-// 			$updated_href .= "/" . elgg_get_page_owner_guid();
-// 		}
+		if ($page_owner instanceof ElggGroup) {
+			$items[] = ElggMenuItem::factory([
+				'name' => 'todo_group',
+				'text' => elgg_echo('questions:menu:filter:todo_group'),
+				'href' => "questions/todo/{$page_owner->getGUID()}",
+				'priority' => 710,
+			]);
+		}
+	}
 
-// 		$items[] = ElggMenuItem::factory(array(
-// 			"name" => "updated",
-// 			"text" => elgg_echo("questions:menu:filter:updated"),
-// 			"href" => $updated_href,
-// 			"priority" => 600
-// 		));
-
-		if (questions_is_expert()) {
-			$items[] = ElggMenuItem::factory(array(
-				"name" => "todo",
-				"text" => elgg_echo("questions:menu:filter:todo"),
-				"href" => "questions/todo",
-				"priority" => 700
-			));
-
-			if (elgg_instanceof($page_owner, "group")) {
-				$items[] = ElggMenuItem::factory(array(
-					"name" => "todo_group",
-					"text" => elgg_echo("questions:menu:filter:todo_group"),
-					"href" => "questions/todo/" . $page_owner->getGUID(),
-					"priority" => 710
-				));
-			}
+	if (questions_experts_enabled()) {
+		$experts_href = 'questions/experts';
+		if ($page_owner instanceof ElggGroup) {
+			$experts_href .= "/{$page_owner->getGUID()}";
 		}
 
-		if (questions_experts_enabled()) {
-			$experts_href = "questions/experts";
-			if (elgg_instanceof($page_owner, "group")) {
-				$experts_href .= "/" . elgg_get_page_owner_guid();
-			}
-
-			$items[] = ElggMenuItem::factory(array(
-				"name" => "experts",
-				"text" => elgg_echo("questions:menu:filter:experts"),
-				"href" => $experts_href,
-				"priority" => 800
-			));
-		}
+		$items[] = ElggMenuItem::factory([
+			'name' => 'experts',
+			'text' => elgg_echo('questions:menu:filter:experts'),
+			'href' => $experts_href,
+			'priority' => 800,
+		]);
 	}
 
 	return $items;
 }
 
-function questions_user_hover_menu_handler($hook, $type, $returnvalue, $params) {
-	$result = $returnvalue;
-
-	// are experts enabled
-	if (questions_experts_enabled()) {
-		if (!empty($params) && is_array($params)) {
-			// get the user for this menu
-			$user = elgg_extract("entity", $params);
-
-			if (!empty($user) && elgg_instanceof($user, "user")) {
-				// get page owner
-				$page_owner = elgg_get_page_owner_entity();
-				if (!elgg_instanceof($page_owner, "group")) {
-					$page_owner = elgg_get_site_entity();
-				}
-
-				// can the current person edit the page owner, to assign the role
-				// and is the current user not the owner of this page owner
-				if ($page_owner->canEdit()) {
-					$text = elgg_echo("questions:menu:user_hover:make_expert");
-					$confirm_text = elgg_echo("questions:menu:user_hover:make_expert:confirm", array($page_owner->name));
-
-					if (check_entity_relationship($user->getGUID(), QUESTIONS_EXPERT_ROLE, $page_owner->getGUID())) {
-						$text = elgg_echo("questions:menu:user_hover:remove_expert");
-						$confirm_text = elgg_echo("questions:menu:user_hover:remove_expert:confirm", array($page_owner->name));
-					}
-
-					$result[] = ElggMenuItem::factory(array(
-						"name" => "questions_expert",
-						"text" => $text,
-						"href" => "action/questions/toggle_expert?user_guid=" . $user->getGUID() . "&guid=" . $page_owner->getGUID(),
-						"confirm" => $confirm_text
-					));
-				}
-			}
-		}
+/**
+ * Add menu items to the user_hover menu
+ *
+ * @param string         $hook   the name of the hook
+ * @param string         $type   the type of the hook
+ * @param ElggMenuItem[] $items  current return value
+ * @param array          $params supplied params
+ *
+ * @return void|ElggMenuItem[]
+ */
+function questions_user_hover_menu_handler($hook, $type, $items, $params) {
+	
+	if (empty($params) || !is_array($params)) {
+		return;
 	}
-
-	return $result;
+	
+	// are experts enabled
+	if (!questions_experts_enabled()) {
+		return;
+	}
+	
+	// get the user for this menu
+	$user = elgg_extract('entity', $params);
+	if (empty($user) || !($user instanceof ElggUser)) {
+		return;
+	}
+	
+	// get page owner
+	$page_owner = elgg_get_page_owner_entity();
+	if (!($page_owner instanceof ElggGroup)) {
+		$page_owner = elgg_get_site_entity();
+	}
+	
+	// can the current person edit the page owner, to assign the role
+	// and is the current user not the owner of this page owner
+	if (!$page_owner->canEdit()) {
+		return;
+	}
+	
+	$text = elgg_echo('questions:menu:user_hover:make_expert');
+	$confirm_text = elgg_echo('questions:menu:user_hover:make_expert:confirm', [$page_owner->name]);
+	if (check_entity_relationship($user->getGUID(), QUESTIONS_EXPERT_ROLE, $page_owner->getGUID())) {
+		$text = elgg_echo('questions:menu:user_hover:remove_expert');
+		$confirm_text = elgg_echo('questions:menu:user_hover:remove_expert:confirm', [$page_owner->name]);
+	}
+	
+	$items[] = ElggMenuItem::factory([
+		'name' => 'questions_expert',
+		'text' => $text,
+		'href' => "action/questions/toggle_expert?user_guid={$user->getGUID()}&guid={$page_owner->getGUID()}",
+		'confirm' => $confirm_text,
+	]);
+	
+	return $items;
 }
 
+/**
+ * Check if a user has permissions on a container
+ *
+ * @param string $hook        the name of the hook
+ * @param string $type        the type of the hook
+ * @param bool   $returnvalue current return value
+ * @param array  $params      supplied params
+ *
+ * @return void|bool
+ */
 function questions_container_permissions_handler($hook, $type, $returnvalue, $params) {
-	$result = $returnvalue;
 	static $experts_only;
 
-	if (!$result && !empty($params) && is_array($params)) {
-		$question = elgg_extract("container", $params);
-		$user = elgg_extract("user", $params);
-		$subtype = elgg_extract("subtype", $params);
-
-		if (($subtype == "answer") && !empty($user) && elgg_instanceof($question, "object", "question")) {
-			// check expert setting
-			if (!isset($experts_only)) {
-				$experts_only = false;
-
-				$setting = elgg_get_plugin_setting("experts_answer", "questions");
-				if ($setting == "yes") {
-					$experts_only = true;
-				}
-			}
-
-			// get the container of the question
-			$container = $question->getContainerEntity();
-
-			if (!$experts_only) {
-				if (elgg_instanceof($container, "user")) {
-					$result = true;
-				} elseif (elgg_instanceof($container, "group")) {
-					// if the user can ask a question in the group, he should be able to answer one too
-					$result = $container->canWriteToContainer($user->getGUID(), "object", "question");
-				}
-			} else {
-				$result = questions_is_expert($container, $user);
-			}
+	if ($returnvalue || empty($params) || !is_array($params)) {
+		return;
+	}
+	
+	$question = elgg_extract('container', $params);
+	$user = elgg_extract('user', $params);
+	$subtype = elgg_extract('subtype', $params);
+	
+	if (($subtype !== 'answer') || !($user instanceof ElggUser) || !($question instanceof ElggQuestion)) {
+		return;
+	}
+	
+	// check expert setting
+	if (!isset($experts_only)) {
+		$experts_only = false;
+		
+		$setting = elgg_get_plugin_setting('experts_answer', 'questions');
+		if ($setting === 'yes') {
+			$experts_only = true;
 		}
 	}
-
-	return $result;
+	
+	// get the container of the question
+	$container = $question->getContainerEntity();
+	if (!$experts_only) {
+		if ($container instanceof ElggUser) {
+			$returnvalue = true;
+		} elseif ($container instanceof ElggGroup) {
+			// if the user can ask a question in the group, he should be able to answer one too
+			$returnvalue = $container->canWriteToContainer($user->getGUID(), 'object', 'question');
+		}
+	} else {
+		$returnvalue = questions_is_expert($container, $user);
+	}
+	
+	return $returnvalue;
 }
 
+/**
+ * Check if a user has permissions
+ *
+ * @param string $hook        the name of the hook
+ * @param string $type        the type of the hook
+ * @param bool   $returnvalue current return value
+ * @param array  $params      supplied params
+ *
+ * @return void|bool
+ */
 function questions_permissions_handler($hook, $type, $returnvalue, $params) {
-	$result = $returnvalue;
-
-	if (!empty($params) && is_array($params)) {
-		// get the provided data
-		$entity = elgg_extract("entity", $params);
-		$user = elgg_extract("user", $params);
-
-		// expert only changes
-		if (questions_experts_enabled()) {
-			// check if an expert can edit a question
-			if (!$result && !empty($user) && elgg_instanceof($user, "user") && !empty($entity) && elgg_instanceof($entity, "object", "question")) {
-				$container = $entity->getContainerEntity();
-				if (!elgg_instanceof($container, "group")) {
-					$container = elgg_get_site_entity();
-				}
-
-				if (questions_is_expert($container, $user)) {
-					$result = true;
-				}
+	
+	if (empty($params) || !is_array($params)) {
+		return;
+	}
+	
+	// get the provided data
+	$entity = elgg_extract('entity', $params);
+	$user = elgg_extract('user', $params);
+	
+	if (!($user instanceof ElggUser)) {
+		return;
+	}
+	
+	if (!($entity instanceof ElggQuestion) && !($entity instanceof ElggAnswer)) {
+		return;
+	}
+	
+	// expert only changes
+	if (questions_experts_enabled()) {
+		// check if an expert can edit a question
+		if (!$returnvalue && ($entity instanceof ElggQuestion)) {
+			$container = $entity->getContainerEntity();
+			if (!($container instanceof ElggGroup)) {
+				$container = elgg_get_site_entity();
 			}
-
-			// an expert should be able to edit an answer, so fix this
-			if ($result && !empty($user) && elgg_instanceof($user, "user") && !empty($entity) && elgg_instanceof($entity, "object", "answer")) {
-				// user is not the owner
-				if ($entity->getOwnerGUID() != $user->getGUID()) {
-					$question = $entity->getContainerEntity();
-
-					if (!empty($question) && elgg_instanceof($question, "object", "question")) {
-						$container = $question->getContainerEntity();
-						if (!elgg_instanceof($container, "group")) {
-							$container = elgg_get_site_entity();
-						}
-
-						// if the user is an expert
-						if (check_entity_relationship($user->getGUID(), QUESTIONS_EXPERT_ROLE, $container->getGUID())) {
-							$result = false;
-						}
+			
+			if (questions_is_expert($container, $user)) {
+				$returnvalue = true;
+			}
+		}
+		
+		// an expert should be able to edit an answer, so fix this
+		if ($returnvalue && ($entity instanceof ElggAnswer)) {
+			// user is not the owner
+			if ($entity->getOwnerGUID() !== $user->getGUID()) {
+				$question = $entity->getContainerEntity();
+				
+				if ($question instanceof ElggQuestion) {
+					$container = $question->getContainerEntity();
+					if (!($container instanceof ElggGroup)) {
+						$container = elgg_get_site_entity();
+					}
+					
+					// if the user is an expert
+					if (check_entity_relationship($user->getGUID(), QUESTIONS_EXPERT_ROLE, $container->getGUID())) {
+						$returnvalue = false;
 					}
 				}
 			}
 		}
-
-		// questions can't be editted by owner if it is closed
-		if ($result && !empty($user) && elgg_instanceof($user, "user") && !empty($entity) && elgg_instanceof($entity, "object", "question")) {
-			// is the question closed
-			if ($entity->getStatus() == "closed") {
-				// are you the owner
-				if ($user->getGUID() == $entity->getOwnerGUID()) {
-					$result = false;
-				}
+	}
+	
+	// questions can't be editted by owner if it is closed
+	if ($returnvalue && ($entity instanceof ElggQuestion)) {
+		// is the question closed
+		if ($entity->getStatus() === 'closed') {
+			// are you the owner
+			if ($user->getGUID() === $entity->getOwnerGUID()) {
+				$returnvalue = false;
 			}
 		}
 	}
 
-	return $result;
+	return $returnvalue;
 }
 
+/**
+ * Return the widget title url
+ *
+ * @param string $hook        the name of the hook
+ * @param string $type        the type of the hook
+ * @param string $returnvalue current return value
+ * @param array  $params      supplied params
+ *
+ * @return void|string
+ */
 function questions_widget_url_handler($hook, $type, $returnvalue, $params) {
-	$result = $returnvalue;
-
-	if (!$result && !empty($params) && is_array($params)) {
-		$widget = elgg_extract("entity", $params);
-
-		if (!empty($widget) && elgg_instanceof($widget, "object", "widget")) {
-			// only handle questions widget
-			if ($widget->handler == "questions") {
-				// who owns the widget
-				$owner = $widget->getOwnerEntity();
-
-				if (elgg_instanceof($owner, "user")) {
-					// user
-					$result = "questions/owner/" . $owner->username;
-					if ($widget->context == "dashboard") {
-						switch($widget->content_type) {
-							case "all":
-								$result = "questions/all";
-								break;
-							case "todo":
-								if (questions_is_expert()) {
-									$result = "questions/todo";
-									break;
-								}
-							case "mine":
-							default:
-								$result = "questions/owner/" . $owner->username;
-						}
+	
+	if (!empty($returnvalue)) {
+		// someone already set an url
+		return;
+	}
+	
+	if (empty($params) || !is_array($params)) {
+		return;
+	}
+	
+	$widget = elgg_extract('entity', $params);
+	if (!($widget instanceof ElggWidget)) {
+		return;
+	}
+	
+	// only handle questions widget
+	if ($widget->handler !== 'questions') {
+		return;
+	}
+	
+	// who owns the widget
+	$owner = $widget->getOwnerEntity();
+	if ($owner instanceof ElggUser) {
+		// user
+		$returnvalue = "questions/owner/{$owner->username}";
+		if ($widget->context === 'dashboard') {
+			switch ($widget->content_type) {
+				case 'all':
+					$returnvalue = 'questions/all';
+					break;
+				case 'todo':
+					if (questions_is_expert()) {
+						$returnvalue = 'questions/todo';
 					}
-				} elseif (elgg_instanceof($owner, "group")) {
-					// group
-					$result = "questions/group/" . $owner->getGUID() . "/all";
-				} elseif (elgg_instanceof($owner, "site")) {
-					// site
-					$result = "questions/all";
-				}
+					break;
 			}
 		}
+	} elseif ($owner instanceof ElggGroup) {
+		// group
+		$returnvalue = "questions/group/{$owner->getGUID()}/all";
+	} elseif ($owner instanceof ElggSite) {
+		// site
+		$returnvalue = 'questions/all';
 	}
-
-	return $result;
+	
+	return $returnvalue;
 }
 
 /**
  * A plugin hook for the CRON, so we can send out notifications to the experts about there workload
  *
- * @param string $hook the 'cron' hook
- * @param string $type the 'daily' interval
- * @param unknown_type $returnvalue default return value
- * @param array $params supplied params
+ * @param string $hook        the name of the hook
+ * @param string $type        the type of the hook
+ * @param string $returnvalue current return value
+ * @param array  $params      supplied params
  *
  * @return void
  */
 function questions_daily_cron_handler($hook, $type, $returnvalue, $params) {
 
+	if (empty($params) || !is_array($params)) {
+		return;
+	}
+	
 	// are experts enabled
-	if (questions_experts_enabled()) {
+	if (!questions_experts_enabled()) {
+		return;
+	}
+		
+	$time = (int) elgg_extract('time', $params, time());
+	$dbprefix = elgg_get_config('dbprefix');
+	$site = elgg_get_site_entity();
 
-		// validate input
-		if (!empty($params) && is_array($params)) {
-			$time = elgg_extract("time", $params, time());
-			$dbprefix = elgg_get_config("dbprefix");
-			$site = elgg_get_site_entity();
+	// get all experts
+	$expert_options = [
+		'type' => 'user',
+		'site_guids' => false,
+		'limit' => false,
+		'joins' => ["JOIN {$dbprefix}entity_relationships re2 ON e.guid = re2.guid_one"],
+		'wheres' =>["(re2.guid_two = {$site->getGUID()} AND re2.relationship = 'member_of_site')"],
+		'relationship' => QUESTIONS_EXPERT_ROLE,
+		'inverse_relationship' => true,
+	];
+	$experts = new ElggBatch('elgg_get_entities_from_relationship', $expert_options);
+	
+	// sending could take a while
+	set_time_limit(0);
+	
+	$status_id = elgg_get_metastring_id('status');
+	$closed_id = elgg_get_metastring_id('closed');
+	
+	$status_where = "NOT EXISTS (
+		SELECT 1
+		FROM {$dbprefix}metadata md
+		WHERE md.entity_guid = e.guid
+		AND md.name_id = {$status_id}
+		AND md.value_id = {$closed_id})";
 
-			// get all experts
-			$expert_options = array(
-				"type" => "user",
-				"site_guids" => false,
-				"limit" => false,
-				"joins" => array("JOIN " . $dbprefix . "entity_relationships re2 ON e.guid = re2.guid_one"),
-				"wheres" => array("(re2.guid_two = " . $site->getGUID() . " AND re2.relationship = 'member_of_site')"),
-				"relationship" => QUESTIONS_EXPERT_ROLE,
-				"inverse_relationship" => true
-			);
-			$experts = elgg_get_entities_from_relationship($expert_options);
-
-			if (!empty($experts)) {
-				// sending could take a while
-				set_time_limit(0);
-
-				$status_id = add_metastring("status");
-				$closed_id = add_metastring("closed");
-
-				$status_where = "NOT EXISTS (
-					SELECT 1
-					FROM " . $dbprefix . "metadata md
-					WHERE md.entity_guid = e.guid
-					AND md.name_id = " . $status_id . "
-					AND md.value_id = " . $closed_id . ")";
-
-				$question_options = array(
-					"type" => "object",
-					"subtype" => "question",
-					"limit" => 3,
-				);
-
-				// loop through all experts
-				foreach ($experts as $expert) {
-					// fake a logged in user
-					$backup_user = elgg_extract("user", $_SESSION);
-					$_SESSION["user"] = $expert;
-
-					$subject = elgg_echo("questions:daily:notification:subject", array(), get_current_language());
-					$message = "";
-
-					$container_where = array();
-					if (check_entity_relationship($expert->getGUID(), QUESTIONS_EXPERT_ROLE, $site->getGUID())) {
-						$container_where[] = "(e.container_guid NOT IN (
-							SELECT ge.guid
-							FROM " . $dbprefix . "entities ge
-							WHERE ge.type = 'group'
-							AND ge.site_guid = " . $site->getGUID() . "
-							AND ge.enabled = 'yes'
-						))";
-					}
-
-					$group_options = array(
-						"type" => "group",
-						"limit" => false,
-						"relationship" => QUESTIONS_EXPERT_ROLE,
-						"relationship_guid" => $expert->getGUID(),
-						"callback" => "questions_row_to_guid"
-					);
-					$groups = elgg_get_entities_from_relationship($group_options);
-					if (!empty($groups)) {
-						$container_where[] = "(e.container_guid IN (" . implode(",", $groups) . "))";
-					}
-
-					if (empty($container_where)) {
-						// no groups or site? then skip to next expert
-						continue;
-					}
-					$container_where = "(" . implode(" OR ", $container_where) . ")";
-
-					// get overdue questions
-					// eg: solution_time < $time && status != closed
-					$question_options["metadata_name_value_pairs"] = array(
-						"name" => "solution_time",
-						"value" => $time,
-						"operand" => "<",
-					);
-					$question_options["wheres"] = array(
-						$status_where,
-						$container_where
-					);
-					$question_options["order_by_metadata"] = array(
-						"name" => "solution_time",
-						"direction" => "ASC",
-						"as" => "integer"
-					);
-					$questions = elgg_get_entities_from_metadata($question_options);
-					if (!empty($questions)) {
-						$message .= elgg_echo("questions:daily:notification:message:overdue", array(), get_current_language()) . PHP_EOL;
-
-						foreach ($questions as $question) {
-							$message .= " - " . $question->title . " (" . $question->getURL() . ")" . PHP_EOL;
-						}
-
-						$message .= elgg_echo("questions:daily:notification:message:more", array(), get_current_language());
-						$message .= " " . $site->url . "questions/todo" . PHP_EOL . PHP_EOL;
-					}
-
-					// get due questions
-					// eg: solution_time >= $time && solution_time < ($time + 1 day) && status != closed
-					$question_options["metadata_name_value_pairs"] = array(
-						array(
-							"name" => "solution_time",
-							"value" => $time,
-							"operand" => ">=",
-						),
-						array(
-							"name" => "solution_time",
-							"value" => $time + (24 * 60 * 60),
-							"operand" => "<",
-						),
-					);
-
-					$questions = elgg_get_entities_from_metadata($question_options);
-					if (!empty($questions)) {
-						$message .= elgg_echo("questions:daily:notification:message:due", array(), get_current_language()) . PHP_EOL;
-
-						foreach ($questions as $question) {
-							$message .= " - " . $question->title . " (" . $question->getURL() . ")" . PHP_EOL;
-						}
-
-						$message .= elgg_echo("questions:daily:notification:message:more", array(), get_current_language());
-						$message .= " " . $site->url . "questions/todo" . PHP_EOL . PHP_EOL;
-					}
-
-					// get new questions
-					// eg: time_created >= ($time - 1 day)
-					unset($question_options["metadata_name_value_pairs"]);
-					unset($question_options["order_by_metadata"]);
-					$question_options["wheres"] = array(
-						$container_where,
-						"(e.time_created > " . ($time - (24 * 60 *60)) . ")"
-					);
-					$questions = elgg_get_entities_from_metadata($question_options);
-					if (!empty($questions)) {
-						$message .= elgg_echo("questions:daily:notification:message:new", array(), get_current_language()) . PHP_EOL;
-
-						foreach ($questions as $question) {
-							$message .= " - " . $question->title . " (" . $question->getURL() . ")" . PHP_EOL;
-						}
-
-						$message .= elgg_echo("questions:daily:notification:message:more", array(), get_current_language());
-						$message .= " " . $site->url . "questions/all" . PHP_EOL . PHP_EOL;
-					}
-
-					// is there content in the message
-					if (!empty($message)) {
-						// force to email
-						notify_user($expert->getGUID(), $site->getGUID(), $subject, $message, null, "email");
-					}
-
-					// restore user
-					$_SESSION["user"] = $backup_user;
-				}
-			}
+	$question_options = [
+		'type' => 'object',
+		'subtype' => 'question',
+		'limit' => 3,
+	];
+	
+	// loop through all experts
+	foreach ($experts as $expert) {
+		// fake a logged in user
+		$backup_user = elgg_extract('user', $_SESSION);
+		$_SESSION['user'] = $expert;
+		
+		$subject = elgg_echo('questions:daily:notification:subject', [], get_current_language());
+		$message = '';
+		
+		$container_where = [];
+		if (check_entity_relationship($expert->getGUID(), QUESTIONS_EXPERT_ROLE, $site->getGUID())) {
+			$container_where[] = "(e.container_guid NOT IN (
+				SELECT ge.guid
+				FROM {$dbprefix}entities ge
+				WHERE ge.type = 'group'
+				AND ge.site_guid = {$site->getGUID()}
+				AND ge.enabled = 'yes'
+			))";
 		}
+		
+		$group_options = [
+			'type' => 'group',
+			'limit' => false,
+			'relationship' => QUESTIONS_EXPERT_ROLE,
+			'relationship_guid' => $expert->getGUID(),
+			'callback' => 'questions_row_to_guid',
+		];
+		$groups = elgg_get_entities_from_relationship($group_options);
+		if (!empty($groups)) {
+			$container_where[] = '(e.container_guid IN (' . implode(',', $groups) . '))';
+		}
+		
+		if (empty($container_where)) {
+			// no groups or site? then skip to next expert
+			continue;
+		}
+		$container_where = '(' . implode(' OR ', $container_where) . ')';
+		
+		// get overdue questions
+		// eg: solution_time < $time && status != closed
+		$question_options['metadata_name_value_pairs'] = [
+			'name' => 'solution_time',
+			'value' => $time,
+			'operand' => '<',
+		];
+		$question_options['wheres'] = [
+			$status_where,
+			$container_where
+		];
+		$question_options['order_by_metadata'] = [
+			'name' => 'solution_time',
+			'direction' => 'ASC',
+			'as' => 'integer'
+		];
+		$questions = elgg_get_entities_from_metadata($question_options);
+		if (!empty($questions)) {
+			$message .= elgg_echo('questions:daily:notification:message:overdue', [], get_current_language()) . PHP_EOL;
+			
+			foreach ($questions as $question) {
+				$message .= " - {$question->title} ({$question->getURL()})" . PHP_EOL;
+			}
+			
+			$message .= elgg_echo('questions:daily:notification:message:more', [], get_current_language());
+			$message .= " {$site->url}questions/todo" . PHP_EOL . PHP_EOL;
+		}
+		
+		// get due questions
+		// eg: solution_time >= $time && solution_time < ($time + 1 day) && status != closed
+		$question_options['metadata_name_value_pairs'] = [
+			[
+				'name' => 'solution_time',
+				'value' => $time,
+				'operand' => '>=',
+			],
+			[
+				'name' => 'solution_time',
+				'value' => $time + (24 * 60 * 60),
+				'operand' => '<',
+			],
+		];
+		
+		$questions = elgg_get_entities_from_metadata($question_options);
+		if (!empty($questions)) {
+			$message .= elgg_echo('questions:daily:notification:message:due', [], get_current_language()) . PHP_EOL;
+			
+			foreach ($questions as $question) {
+				$message .= " - {$question->title} ({$question->getURL()})" . PHP_EOL;
+			}
+			
+			$message .= elgg_echo('questions:daily:notification:message:more', [], get_current_language());
+			$message .= " {$site->url}questions/todo" . PHP_EOL . PHP_EOL;
+		}
+		
+		// get new questions
+		// eg: time_created >= ($time - 1 day)
+		unset($question_options['metadata_name_value_pairs']);
+		unset($question_options['order_by_metadata']);
+		$question_options['wheres'] = [
+			$container_where,
+			'(e.time_created > ' . ($time - (24 * 60 *60)) . ')'
+		];
+		$questions = elgg_get_entities_from_metadata($question_options);
+		if (!empty($questions)) {
+			$message .= elgg_echo('questions:daily:notification:message:new', [], get_current_language()) . PHP_EOL;
+			
+			foreach ($questions as $question) {
+				$message .= " - {$question->title} ({$question->getURL()})" . PHP_EOL;
+			}
+			
+			$message .= elgg_echo('questions:daily:notification:message:more', array(), get_current_language());
+			$message .= " {$site->url}questions/all" . PHP_EOL . PHP_EOL;
+		}
+		
+		// is there content in the message
+		if (!empty($message)) {
+			// force to email
+			notify_user($expert->getGUID(), $site->getGUID(), $subject, $message, null, 'email');
+		}
+		
+		// restore user
+		$_SESSION['user'] = $backup_user;
 	}
 }
-

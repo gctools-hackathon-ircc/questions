@@ -1,5 +1,6 @@
 <?php
-add_translation('en', array(
+
+return [
 	'answers' => 'Answers',
 	'answers:addyours' => 'Add Your Answer',
 	
@@ -149,4 +150,4 @@ To answer the question go here:
 	'questions:action:toggle_expert:success:remove' => "%s is no longer a questions expert for %s",
 	
 	'questions:action:group_settings:success' => "The group settings were saved",
-));
+];

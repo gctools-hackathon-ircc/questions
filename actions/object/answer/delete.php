@@ -3,13 +3,13 @@
 $guid = (int) get_input('guid');
 $answer = get_entity($guid);
 
-if (!$answer instanceof ElggAnswer) {
-	register_error(elgg_echo("ClassException:ClassnameNotClass", array($guid, elgg_echo("item:object:answer"))));
+if (!($answer instanceof ElggAnswer)) {
+	register_error(elgg_echo('ClassException:ClassnameNotClass', [$guid, elgg_echo('item:object:answer')]));
 	forward(REFERER);
 }
 
 if (!$answer->canEdit()) {
-	register_error(elgg_echo("InvalidParameterException:NoEntityFound"));
+	register_error(elgg_echo('InvalidParameterException:NoEntityFound'));
 	forward(REFERER);
 }
 

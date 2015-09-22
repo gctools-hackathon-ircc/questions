@@ -6,26 +6,27 @@
  */
 
 $answer_guid = get_input('guid');
-$answer = get_entity($answer_guid);
+elgg_entity_gatekeeper($answer_guid, 'object', 'answer');
 
-if (!elgg_instanceof($answer, 'object', 'answer') || !$answer->canEdit()) {
+$answer = get_entity($answer_guid);
+if (!$answer->canEdit()) {
 	register_error(elgg_echo('questions:answer:unknown'));
 	forward(REFERRER);
 }
 
 $question = $answer->getContainerEntity();
 
-$title = elgg_echo("questions:answer:edit");
+$title = elgg_echo('questions:answer:edit');
 
 elgg_push_breadcrumb($question->title, $question->getURL());
 elgg_push_breadcrumb($title);
 
-$content = elgg_view_form('object/answer/edit', array(), array('entity' => $answer));
+$content = elgg_view_form('object/answer/edit', [], ['entity' => $answer]);
 
-$body = elgg_view_layout('content', array(
+$body = elgg_view_layout('content', [
 	'title' => $title,
 	'content' => $content,
-	'filter' => ''
-));
+	'filter' => '',
+]);
 
 echo elgg_view_page($title, $body);

@@ -1,13 +1,14 @@
 <?php
 /**
- *	QUESTIONS PLUGIN
- *	@package questions
- *	@author Javier Luces jluces@df-digital.com
- *	@license GNU General Public License (GPL) version 2
- *	@copyright (c) DF-Digital 2009
- *	@link http://www.df-digital.com
+ * River entry for new questions
  */
 
-echo elgg_view('river/elements/layout', array(
-		'item' => $vars['item']
-));
+$item = elgg_extract('item', $vars);
+$question = $item->getObjectEntity();
+if (!($question instanceof ElggQuestion)) {
+	return;
+}
+
+$vars['message'] = elgg_get_excerpt($question->description);
+
+echo elgg_view('river/elements/layout', $vars);

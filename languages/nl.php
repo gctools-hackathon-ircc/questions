@@ -1,5 +1,6 @@
 <?php
-$language = array (
+
+return [
   'questions:menu:user_hover:make_expert:confirm' => 'Weet je zeker dat je deze gebruiker een Vragen expert wilt maken van %s?',
   'questions:menu:user_hover:remove_expert:confirm' => 'Weet je zeker dat je deze gebruiker wilt verwijderen als Vragen expert van %s?',
   'questions:edit:question:move_to_discussions' => 'Verplaats naar discussies',
@@ -96,5 +97,4 @@ Klik hier om de vraag te beantwoorden:
   'questions:action:toggle_expert:success:make' => '%s is nu een vraag expert voor %s',
   'questions:action:toggle_expert:success:remove' => '%s is nu geen vraag expert meer voor %s',
   'questions:action:group_settings:success' => 'De instellingen zijn opgeslagen',
-);
-add_translation("nl", $language);
+];

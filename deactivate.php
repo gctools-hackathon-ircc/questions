@@ -4,5 +4,5 @@
  */
 
 // restore class handlers to default
-update_subtype("object", 'question');
-update_subtype("object", 'answer');
+update_subtype('object', 'question');
+update_subtype('object', 'answer');

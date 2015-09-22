@@ -9,25 +9,27 @@ class ElggQuestion extends ElggObject {
 	}
 
 	public function getAnswers(array $options = array()) {
-		$defaults = array(
+		$defaults = [
 			'order_by' => 'time_created asc',
-		);
+		];
 
-		$overrides = array(
+		$overrides = [
 			'type' => 'object',
 			'subtype' => 'answer',
-			'container_guid' => $this->guid,
-		);
+			'container_guid' => $this->getGUID(),
+		];
+		
+		$options = array_merge($defaults, $options, $overrides);
 
-		return elgg_get_entities(array_merge($defaults, $options, $overrides));
+		return elgg_get_entities($options);
 	}
 
-	public function listAnswers(array $options = array()) {
-		return elgg_list_entities($options, array($this, 'getAnswers'));
+	public function listAnswers(array $options = []) {
+		return elgg_list_entities($options, [$this, 'getAnswers']);
 	}
 	
 	public function getURL() {
-		$url = "questions/view/" . $this->guid . "/" . elgg_get_friendly_title($this->title);
+		$url = "questions/view/{$this->getGUID()}/" . elgg_get_friendly_title($this->title);
 		
 		return elgg_normalize_url($url);
 	}
@@ -40,16 +42,16 @@ class ElggQuestion extends ElggObject {
 	public function getMarkedAnswer() {
 		$result = false;
 		
-		$options = array(
-			"type" => "object",
-			"subtype" => "answer",
-			"limit" => 1,
-			"container_guid" => $this->getGUID(),
-			"metadata_name_value_pairs" => array(
-				"name" => "correct_answer",
-				"value" => true
+		$options = [
+			'type' => 'object',
+			'subtype' => 'answer',
+			'limit' => 1,
+			'container_guid' => $this->getGUID(),
+			'metadata_name_value_pairs' => array(
+				'name' => 'correct_answer',
+				'value' => true
 			)
-		);
+		];
 		
 		$answers = elgg_get_entities_from_metadata($options);
 		if (!empty($answers)) {
@@ -65,7 +67,7 @@ class ElggQuestion extends ElggObject {
 	 * @return void
 	 */
 	public function close() {
-		$this->status = "closed";
+		$this->status = 'closed';
 	}
 	
 	/**
@@ -74,7 +76,7 @@ class ElggQuestion extends ElggObject {
 	 * @return void
 	 */
 	public function reopen() {
-		$this->status = "open";
+		$this->status = 'open';
 	}
 	
 	/**
@@ -87,29 +89,29 @@ class ElggQuestion extends ElggObject {
 	 * @return string the current status
 	 */
 	public function getStatus() {
-		$result = "open";
+		$result = 'open';
 		
 		// do we even support status
 		if (questions_close_on_marked_answer()) {
 			// make sure the status is correct
 			switch ($this->status) {
-				case "open":
+				case 'open':
 					// is it still open, so no marked answer
 					if ($this->getMarkedAnswer()) {
-						$result = "closed";
+						$result = 'closed';
 					}
 					break;
-				case "closed":
-					$result = "closed";
+				case 'closed':
+					$result = 'closed';
 					// is it still open, so no marked answer
 					if (!$this->getMarkedAnswer()) {
-						$result = "open";
+						$result = 'open';
 					}
 					break;
 				default:
 					// no setting yet
 					if ($this->getMarkedAnswer()) {
-						$result = "closed";
+						$result = 'closed';
 					}
 					break;
 			}

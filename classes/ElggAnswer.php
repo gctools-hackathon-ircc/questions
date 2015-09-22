@@ -11,7 +11,7 @@ class ElggAnswer extends ElggObject {
 	public function getURL() {
 		$container_entity = $this->getContainerEntity();
 		
-		$url = $container_entity->getURL() . "#answer-" . $this->guid;
+		$url = $container_entity->getURL() . "#elgg-object-{$this->getGUID()}";
 		
 		return $url;
 	}
@@ -19,10 +19,10 @@ class ElggAnswer extends ElggObject {
 	public function getCorrectAnswerMetadata() {
 		$result = false;
 		
-		$options = array(
-			"metadata_name" => "correct_answer",
-			"guid" => $this->guid
-		);
+		$options = [
+			'metadata_name' => 'correct_answer',
+			'guid' => $this->getGUID(),
+		];
 		
 		$metadata = elgg_get_metadata($options);
 		if ($metadata) {
