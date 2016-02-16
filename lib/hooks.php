@@ -61,7 +61,7 @@ function questions_entity_menu_handler($hook, $type, $items, $params) {
 	if ($entity->canComment()) {
 		if (elgg_extract('full_view', $params, false) || ($entity instanceof ElggAnswer)) {
 			$items[] = ElggMenuItem::factory([
-				'name' => 'comment',
+				'name' => 'comments',
 				'rel' => 'toggle',
 				'link_class' => 'elgg-toggler',
 				'href' => "#comments-add-{$entity->getGUID()}",
