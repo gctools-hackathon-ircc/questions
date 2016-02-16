@@ -1,6 +1,13 @@
 <?php
+/**
+ * This file was created by Translation Editor v4.0.1
+ * On 2016-02-16 16:25
+ */
 
-return [
+return array (
+  'questions:menu:filter:todo_group' => 'Groep Todo',
+  'questions:todo:none' => 'Er zijn geen openstaande vragen, blijf zo doorgaan!',
+  'questions:search:answer:title' => 'Antwoord',
   'questions:menu:user_hover:make_expert:confirm' => 'Weet je zeker dat je deze gebruiker een Vragen expert wilt maken van %s?',
   'questions:menu:user_hover:remove_expert:confirm' => 'Weet je zeker dat je deze gebruiker wilt verwijderen als Vragen expert van %s?',
   'questions:edit:question:move_to_discussions' => 'Verplaats naar discussies',
@@ -81,7 +88,7 @@ Klik hier om de vraag te beantwoorden:
   'questions:group_settings:solution_time:description' => 'Het correcte antwoord moet gegeven worden voordat deze tijd verloopt. Kies 0 voor geen oplostermijn.',
   'widget:questions:title' => 'Vragen',
   'widget:questions:description' => 'Overzicht van vragen',
-  'widget:questions:content_type' => "Welke vragen moeten getoond worden?",
+  'widget:questions:content_type' => 'Welke vragen moeten getoond worden?',
   'questions:action:answer:save:error:container' => 'U heeft geen toestemming om een antwoord te geven op deze vraag',
   'questions:action:answer:save:error:body' => 'Een antwoord is verplicht: %s, %s',
   'questions:action:answer:save:error:save' => 'Er was een probleem met het opslaan van uw antwoord',
@@ -97,4 +104,4 @@ Klik hier om de vraag te beantwoorden:
   'questions:action:toggle_expert:success:make' => '%s is nu een vraag expert voor %s',
   'questions:action:toggle_expert:success:remove' => '%s is nu geen vraag expert meer voor %s',
   'questions:action:group_settings:success' => 'De instellingen zijn opgeslagen',
-];
+);
