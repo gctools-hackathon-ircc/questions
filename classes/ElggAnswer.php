@@ -2,10 +2,12 @@
 
 class ElggAnswer extends ElggObject {
 	
+	const SUBTYPE = 'answer';
+	
 	function initializeAttributes() {
 		parent::initializeAttributes();
 		
-		$this->attributes['subtype'] = 'answer';
+		$this->attributes['subtype'] = self::SUBTYPE;
 	}
 
 	public function getURL() {

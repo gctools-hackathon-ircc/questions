@@ -2,10 +2,12 @@
 
 class ElggQuestion extends ElggObject {
 	
+	const SUBTYPE = 'question';
+	
 	protected function initializeAttributes() {
 		parent::initializeAttributes();
 		
-		$this->attributes['subtype'] = 'question';
+		$this->attributes['subtype'] = self::SUBTYPE;
 	}
 
 	public function getAnswers(array $options = array()) {

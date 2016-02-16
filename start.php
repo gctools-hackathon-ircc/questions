@@ -31,6 +31,8 @@ function questions_init() {
 	
 	// make question searchable
 	elgg_register_entity_type('object', 'question');
+	elgg_register_plugin_hook_handler('search', 'object:question', '\ColdTrick\Questions\Search::handleQuestionsSearch');
+	elgg_register_plugin_hook_handler('search_params', 'search:combined', '\ColdTrick\Questions\SearchAdvanced::combinedParams');
 	
 	// register widget
 	elgg_register_widget_type('questions', elgg_echo('widget:questions:title'), elgg_echo('widget:questions:description'), ['index', 'profile', 'dashboard', 'groups'], true);
@@ -54,6 +56,8 @@ function questions_init() {
 	elgg_register_plugin_hook_handler('permissions_check', 'object', 'questions_permissions_handler');
 	elgg_register_plugin_hook_handler('widget_url', 'widget_manager', 'questions_widget_url_handler');
 	elgg_register_plugin_hook_handler('cron', 'daily', 'questions_daily_cron_handler');
+	
+	elgg_register_plugin_hook_handler('index_entity_type_subtypes', 'elasticsearch', '\ColdTrick\Questions\Elasticsearch::indexTypes');
 	
 	// events
 	elgg_register_event_handler('leave', 'group', 'questions_leave_group_handler');

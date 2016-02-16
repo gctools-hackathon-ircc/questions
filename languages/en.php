@@ -85,7 +85,9 @@ To answer the question go here:
 	 */
 	'questions:answer:edit' => "Update answer",
 	'questions:answer:checkmark:title' => "%s marked this as the correct answer on %s",
-		
+	
+	'questions:search:answer:title' => "Answer",
+	
 	/**
 	 * plugin settings
 	 */
