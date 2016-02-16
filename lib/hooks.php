@@ -71,7 +71,7 @@ function questions_entity_menu_handler($hook, $type, $items, $params) {
 		}
 	}
 	
-	if (($entity instanceof ElggAnswer) && questions_can_mark_answer($entity)) {
+	if (elgg_in_context('questions') && ($entity instanceof ElggAnswer) && questions_can_mark_answer($entity)) {
 		$question = $entity->getContainerEntity();
 		$answer = $question->getMarkedAnswer();
 
