@@ -37,6 +37,19 @@ class ElggQuestion extends ElggObject {
 	}
 	
 	/**
+	 * (non-PHPdoc)
+	 * @see ElggObject::canComment()
+	 */
+	public function canComment($user_guid = 0) {
+		
+		if ($this->comments_enabled === 'off') {
+			return false;
+		}
+		
+		return parent::canComment($user_guid);
+	}
+	
+	/**
 	 * Get the answer that was marked as the correct answer.
 	 *
 	 * @return bool|ElggAnswer the answer or false if non are marked

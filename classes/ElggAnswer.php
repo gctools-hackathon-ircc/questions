@@ -18,6 +18,15 @@ class ElggAnswer extends ElggObject {
 		return $url;
 	}
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see ElggObject::canComment()
+	 */
+	public function canComment($user_guid = 0) {
+		
+		return $this->getContainerEntity()->canComment($user_guid);
+	}
+	
 	public function getCorrectAnswerMetadata() {
 		$result = false;
 		

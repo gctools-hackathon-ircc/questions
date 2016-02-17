@@ -39,6 +39,17 @@ $tags = [
 	'value' => elgg_get_sticky_value('question', 'tags', $question->tags),
 ];
 
+$comment_options = [
+	'name' => 'comments_enabled',
+	'id' => 'questions-comments',
+	'value' => elgg_get_sticky_value('question', 'comments_enabled', $question->comments_enabled),
+	'options_values' => [
+		'on' => elgg_echo('on'),
+		'off' => elgg_echo('off'),
+	],
+	'class' => 'mls',
+];
+
 if ($container instanceof ElggUser) {
 	$access_setting = questions_get_personal_access_level();
 	if ($access_setting !== false) {
@@ -79,12 +90,18 @@ if (elgg_view_exists('input/categories')) {
 	echo elgg_view('input/categories', $vars);
 }
 
+// comments
+$comments = elgg_format_element('label', ['for' => 'questions-comments'], elgg_echo('comments'));
+$comments .= elgg_view('input/select', $comment_options);
+echo elgg_format_element('div', [], $comments);
+
 // access options
 if ($show_access_options) {
-	echo '<div>';
-	echo '<label for="question_access_id">' . elgg_echo('access') . '</label><br />';
-	echo elgg_view('input/access', $access_id);
-	echo '</div>';
+	$access = elgg_format_element('label', ['for' => 'question_access_id'], elgg_echo('access'));
+	$access .= '<br />';
+	$access .= elgg_view('input/access', $access_id);
+	
+	echo elgg_format_element('div', [], $access);
 } else {
 	echo elgg_view('input/hidden', ['name' => 'access_id', 'value' => $access_setting]);
 }
@@ -115,8 +132,7 @@ if (!$editing || (questions_experts_enabled() && questions_is_expert(elgg_get_pa
 		$groups = elgg_get_entities_from_relationship($group_options);
 		if (!empty($groups)) {
 			$container_options = true;
-			
-			$select = '<select name="container_guid" class="elgg-input-dropdown" id="questions-container-guid">';
+			$select_options = [];
 			
 			// add user to the list
 			$selected = [
@@ -129,13 +145,13 @@ if (!$editing || (questions_experts_enabled() && questions_is_expert(elgg_get_pa
 			if (!questions_limited_to_groups()) {
 				$selected['value'] = $owner->getGUID();
 				
-				$select .= elgg_format_element('option', $selected, $owner->name);
+				$select_options[] = elgg_format_element('option', $selected, $owner->name);
 			} else {
-				$select .= elgg_format_element('option', $selected, elgg_echo('questions:edit:question:container:select'));
+				$select_options[] = elgg_format_element('option', $selected, elgg_echo('questions:edit:question:container:select'));
 			}
 			
 			// add groups
-			$select .= '<optgroup label="' . htmlspecialchars(elgg_echo('groups'), ENT_QUOTES, 'UTF-8', false) . '">';
+			$group_optgroup = [];
 			foreach ($groups as $group) {
 				$selected = [
 					'value' => $group->getGUID(),
@@ -143,29 +159,38 @@ if (!$editing || (questions_experts_enabled() && questions_is_expert(elgg_get_pa
 				if ($group->getGUID() == $question->getContainerGUID()) {
 					$selected['selected'] = true;
 				}
-				$select .= elgg_format_element('option', $selected, $group->name);
+				$group_optgroup[] = elgg_format_element('option', $selected, $group->name);
 			}
-			$select .= '</optgroup>';
+			$select_options[] = elgg_format_element('optgroup', ['label' => elgg_echo('groups')], implode('', $group_optgroup));
 			
-			$select .= '</select>';
+			// format select
+			$select_attr = [
+				'name' => 'containe_guid',
+				'class' => 'elgg-input-dropdown',
+				'id' => 'questions-container-guid',
+			];
+			$select = elgg_format_element('select', $select_attr, implode('', $select_options));
 			
-			echo '<div>';
-			echo '<label for="questions-container-guid">' . elgg_echo('questions:edit:question:container') . '</label><br />';
-			echo $select;
-			echo '</div>';
+			// build output
+			$container_selector = elgg_format_element('label', ['for' => 'questions-container-guid'], elgg_echo('questions:edit:question:container'));
+			$container_selector .= '<br />';
+			$container_selector .= $select;
+			
+			echo elgg_format_element('div', [], $container_selector);
 		}
 	}
 }
 
 // end of the form
-echo '<div class="elgg-foot">';
+$footer = [];
+
 if (!$container_options) {
-	echo elgg_view('input/hidden', ['name' => 'container_guid', 'value' => $question->container_guid]);
+	$footer[] = elgg_view('input/hidden', ['name' => 'container_guid', 'value' => $question->container_guid]);
 }
-echo elgg_view('input/hidden', ['name' => 'guid', 'value' => $question->getGUID()]);
+$footer[] = elgg_view('input/hidden', ['name' => 'guid', 'value' => $question->getGUID()]);
 
 if ($editing && questions_can_move_to_discussions($container)) {
-	echo elgg_view('output/url', [
+	$footer[] = elgg_view('output/url', [
 		'text' => elgg_echo('questions:edit:question:move_to_discussions'),
 		'href' => false,
 		'class' => 'elgg-button elgg-button-action float-alt',
@@ -174,5 +199,6 @@ if ($editing && questions_can_move_to_discussions($container)) {
 	]);
 }
 
-echo elgg_view('input/submit', ['value' => elgg_echo('submit')]);
-echo '</div>';
+$footer[] = elgg_view('input/submit', ['value' => elgg_echo('submit')]);
+
+echo elgg_format_element('div', ['class' => 'elgg-foot'], implode('', $footer));

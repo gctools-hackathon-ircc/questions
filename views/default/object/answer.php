@@ -1,6 +1,7 @@
 <?php
 
 $answer = elgg_extract('entity', $vars);
+$question = $answer->getContainerEntity();
 
 $image = elgg_view_entity_icon($answer->getOwnerEntity(), 'small');
 
@@ -38,30 +39,34 @@ $entity_menu = elgg_view_menu('entity', [
 
 $body = elgg_view('output/longtext', ['value' => $answer->description]);
 
-// add comments
-$comment_count = $answer->countComments();
-if ($comment_count) {
-	$comment_options = [
-		'type' => 'object',
-		'subtype' => 'comment',
-		'container_guid' => $answer->getGUID(),
-		'limit' => false,
-		'list_class' => 'elgg-river-comments',
-		'distinct' => false,
-		'full_view' => true,
-	];
+// show comments?
+if ($question->comments_enabled !== 'off') {
+	$comment_count = $answer->countComments();
+	if ($comment_count) {
+		$comment_options = [
+			'type' => 'object',
+			'subtype' => 'comment',
+			'container_guid' => $answer->getGUID(),
+			'limit' => false,
+			'list_class' => 'elgg-river-comments',
+			'distinct' => false,
+			'full_view' => true,
+		];
+		
+		$body .= elgg_format_element('h3', ['class' => 'elgg-river-comments-tab mtm'], elgg_echo('comments'));
+		$body .= elgg_list_entities($comment_options);
+	}
 	
-	$body .= elgg_format_element('h3', ['class' => 'elgg-river-comments-tab mtm'], elgg_echo('comments'));
-	$body .= elgg_list_entities($comment_options);
+	if ($answer->canComment()) {
+		// show a comment form like in the river
+		$body_vars = [
+			'entity' => $answer,
+			'inline' => true,
+		];
+		$form = elgg_view_form('comment/save', [], $body_vars);
+		$body .= elgg_format_element('div', ['class' => ['elgg-river-item', 'hidden'], 'id' => "comments-add-{$answer->getGUID()}"], $form);
+	}
 }
-
-// show a comment form like in the river
-$body_vars = [
-	'entity' => $answer,
-	'inline' => true,
-];
-$form = elgg_view_form('comment/save', [], $body_vars);
-$body .= elgg_format_element('div', ['class' => ['elgg-river-item', 'hidden'], 'id' => "comments-add-{$answer->getGUID()}"], $form);
 
 // build content
 $params = [

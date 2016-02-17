@@ -117,37 +117,42 @@ if ($full) {
 	
 	$list_body .= elgg_view('output/longtext', ['value' => $question->description]);
 	
-	$comment_count = $question->countComments();
-	if ($comment_count) {
-		$comment_options = [
-			'type' => 'object',
-			'subtype' => 'comment',
-			'container_guid' => $question->getGUID(),
-			'limit' => false,
-			'list_class' => 'elgg-river-comments',
-			'distinct' => false,
-			'full_view' => true,
-		];
+	// show comments?
+	if ($question->comments_enabled !== 'off') {
+		$comment_count = $question->countComments();
+		if ($comment_count) {
+			$comment_options = [
+				'type' => 'object',
+				'subtype' => 'comment',
+				'container_guid' => $question->getGUID(),
+				'limit' => false,
+				'list_class' => 'elgg-river-comments',
+				'distinct' => false,
+				'full_view' => true,
+			];
+			
+			$list_body .= elgg_format_element('h3', [
+					'class' => ['elgg-river-comments-tab', 'mtm']
+				], elgg_echo('comments')
+			);
+			$list_body .= elgg_list_entities($comment_options);
+		}
 		
-		$list_body .= elgg_format_element('h3', [
-				'class' => ['elgg-river-comments-tab', 'mtm']
-			], elgg_echo('comments')
-		);
-		$list_body .= elgg_list_entities($comment_options);
+		if ($question->canComment()) {
+			// show a comment form like in the river
+			$body_vars = [
+				'entity' => $question,
+				'inline' => true,
+			];
+			
+			$form = elgg_view_form('comment/save', [], $body_vars);
+			$list_body .= elgg_format_element('div', [
+					'class' => ['elgg-river-item', 'hidden'],
+					'id' => "comments-add-{$question->getGUID()}"
+				], $form
+			);
+		}
 	}
-	
-	// show a comment form like in the river
-	$body_vars = [
-		'entity' => $question,
-		'inline' => true,
-	];
-	
-	$form = elgg_view_form('comment/save', [], $body_vars);
-	$list_body .= elgg_format_element('div', [
-			'class' => ['elgg-river-item', 'hidden'],
-			'id' => "comments-add-{$question->getGUID()}"
-		], $form
-	);
 	
 	echo elgg_view_image_block($poster_icon, $list_body);
 

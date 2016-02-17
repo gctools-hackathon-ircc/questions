@@ -42,6 +42,7 @@ $title = get_input('title');
 $description = get_input('description');
 $tags = string_to_tag_array(get_input('tags', ''));
 $access_id = (int) get_input('access_id');
+$comments_enabled = get_input('comments_enabled');
 
 if (empty($container_guid) || empty($title)) {
 	register_error(elgg_echo('questions:action:question:save:error:body', [$container_guid, $title]));
@@ -53,9 +54,12 @@ $access_id = questions_validate_access_id($access_id, $container_guid);
 
 $question->title = $title;
 $question->description = $description;
-$question->tags = $tags;
+
 $question->access_id = $access_id;
 $question->container_guid = $container_guid;
+
+$question->tags = $tags;
+$question->comments_enabled = $comments_enabled;
 
 try {
 	$question->save();
