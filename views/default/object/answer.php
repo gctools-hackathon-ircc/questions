@@ -1,6 +1,10 @@
 <?php
 
 $answer = elgg_extract('entity', $vars);
+if (!($answer instanceof ElggAnswer)) {
+	return;
+}
+
 $question = $answer->getContainerEntity();
 
 $image = elgg_view_entity_icon($answer->getOwnerEntity(), 'small');

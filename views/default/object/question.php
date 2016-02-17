@@ -5,12 +5,12 @@
  * @package Questions
 */
 
-$full = elgg_extract('full_view', $vars, false);
 $question = elgg_extract('entity', $vars, false);
-
-if (!$question) {
+if (!($question instanceof ElggQuestion)) {
 	return true;
 }
+
+$full = (bool) elgg_extract('full_view', $vars, false);
 
 $subtitle = [];
 
