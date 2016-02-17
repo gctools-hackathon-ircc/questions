@@ -169,13 +169,22 @@ if ($full) {
 		'is_trusted' => true,
 	]);
 	
+	$excerpt = '';
+	if (!empty($question->description)) {
+		$excerpt = elgg_format_element('div', ['class' => 'mbm'], elgg_get_excerpt($question->description));
+	}
+	
+	if (!empty($answer_text)) {
+		$answer_text = elgg_format_element('div', [], $answer_text);
+	}
+	
 	$params = [
 		'entity' => $question,
 		'title' => $title,
 		'metadata' => $metadata,
 		'subtitle' => implode(' ', $subtitle),
 		'tags' => $tags,
-		'content' => $answer_text
+		'content' => $excerpt . $answer_text,
 	];
 	$list_body = elgg_view('object/elements/summary', $params);
 
