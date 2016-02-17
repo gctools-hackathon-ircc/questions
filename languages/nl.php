@@ -1,10 +1,13 @@
 <?php
 /**
  * This file was created by Translation Editor v4.0.1
- * On 2016-02-17 11:04
+ * On 2016-02-17 16:05
  */
 
 return array (
+  'questions:group_settings:who_can_ask' => 'Wie mogen vragen stellen in deze groep',
+  'questions:group_settings:who_can_ask:members' => 'Alle leden',
+  'questions:group_settings:who_can_ask:experts' => 'Alleen experts',
   'questions:experts:description:group' => 'Hieronder zie je een lijst met de experts van %s. Deze mensen zullen assisteren in het beantwoorden van de vragen.',
   'questions:experts:description:site' => 'Hieronder zie je een lijst met de site experts. Deze mensen zullen assisteren in het beantwoorden van vragen, zowel op de site als in de groepen.',
   'questions:menu:filter:todo_group' => 'Groep Todo',
@@ -25,7 +28,6 @@ return array (
   'questions:menu:user_hover:remove_expert' => 'Verwijder Vragen Expert',
   'questions:menu:entity:answer:mark' => 'Dit is correct',
   'questions:menu:entity:answer:unmark' => 'Dit is niet correct',
-  'questions:menu:filter:updated' => 'Recent bijgewerkt',
   'questions:menu:filter:todo' => 'Todo',
   'questions:menu:filter:experts' => 'Experts',
   'river:create:object:question' => '%s stelde vraag %s',
@@ -37,7 +39,6 @@ return array (
   'questions:everyone' => 'Alle Vragen',
   'questions:add' => 'Stel een vraag',
   'questions:todo' => 'Todo',
-  'questions:updated' => 'Recent bijgewerkt',
   'questions:owner' => '%s\'s Vragen',
   'questions:none' => 'Er zijn nog geen vragen gesteld.',
   'questions:group' => 'Groep vragen',
