@@ -24,6 +24,7 @@ $title = [
 	'name' => 'title',
 	'id' => 'question_title',
 	'value' => elgg_get_sticky_value('question', 'title', $question->title),
+	'required' => true,
 ];
 
 $description = [

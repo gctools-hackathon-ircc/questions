@@ -43,8 +43,8 @@ $description = get_input('description');
 $tags = string_to_tag_array(get_input('tags', ''));
 $access_id = (int) get_input('access_id');
 
-if (empty($container_guid) || empty($title) || empty($description)) {
-	register_error(elgg_echo('questions:action:question:save:error:body', array($container_guid, $title, $description)));
+if (empty($container_guid) || empty($title)) {
+	register_error(elgg_echo('questions:action:question:save:error:body', [$container_guid, $title]));
 	forward(REFERER);
 }
 

@@ -142,7 +142,7 @@ To answer the question go here:
 	'questions:action:answer:toggle_mark:success:unmark' => "The answer is no longer marked as the correct answer",
 	
 	'questions:action:question:save:error:container' => "You do not have permission to answer that question!",
-	'questions:action:question:save:error:body' => "A title and description are required: %s, %s, %s",
+	'questions:action:question:save:error:body' => "A title and description are required: %s, %s",
 	'questions:action:question:save:error:save' => "There was a problem saving your question!",
 	'questions:action:question:save:error:limited_to_groups' => "Questions are limited to group, please select a group",
 	

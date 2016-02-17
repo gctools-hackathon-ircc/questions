@@ -100,7 +100,7 @@ Klik hier om de vraag te beantwoorden:
   'questions:action:answer:toggle_mark:success:mark' => 'Het antwoord is gemarkeerd als het juiste antwoord',
   'questions:action:answer:toggle_mark:success:unmark' => 'Dit antwoord is niet langer het juiste antwoord',
   'questions:action:question:save:error:container' => 'U heeft geen toestemming om hier een vraag te stellen',
-  'questions:action:question:save:error:body' => 'Een vraag en toelichting is verplicht: %s, %s, %s',
+  'questions:action:question:save:error:body' => 'Een vraag en toelichting is verplicht: %s, %s',
   'questions:action:question:save:error:save' => 'Er was een probleem met het opslaan van uw vraag',
   'questions:action:question:save:error:limited_to_groups' => 'Vragen kunnen alleen in groepen worden gesteld. Selecteer aub een groep.',
   'questions:action:toggle_expert:success:make' => '%s is nu een vraag expert voor %s',
