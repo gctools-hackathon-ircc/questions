@@ -128,12 +128,14 @@ function questions_filter_menu_handler($hook, $type, $items, $params) {
 				unset($items[$key]);
 			}
 
-			// highlight all
+			// check if all is correct
 			if ($item->getName() === 'all') {
+				// set correct url
+				$item->setHref("questions/group/{$page_owner->getGUID()}/all");
+				
+				// highlight all
 				$current_page = current_page_url();
-
-				if (stristr($current_page, 'questions/group/' . $page_owner->getGUID() . '/all')) {
-					$item->setHref('questions/group/' . $page_owner->getGUID() . '/all');
+				if (stristr($current_page, "questions/group/{$page_owner->getGUID()}/all")) {
 					$item->setSelected(true);
 				}
 			}
