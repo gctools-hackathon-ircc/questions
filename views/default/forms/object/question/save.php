@@ -1,6 +1,8 @@
 <?php
 
 $question = elgg_extract('entity', $vars);
+$show_group_selector = (bool) elgg_extract('show_group_selector', $vars, true);
+
 $editing = true;
 $container_options = false;
 $show_access_options = true;
@@ -108,7 +110,7 @@ if ($show_access_options) {
 
 // container selection options
 if (!$editing || (questions_experts_enabled() && questions_is_expert(elgg_get_page_owner_entity()))) {
-	if (elgg_is_active_plugin('groups')) {
+	if ($show_group_selector && elgg_is_active_plugin('groups')) {
 		$group_options = [
 			'type' => 'group',
 			'limit' => false,
@@ -129,8 +131,27 @@ if (!$editing || (questions_experts_enabled() && questions_is_expert(elgg_get_pa
 			$owner = $question->getOwnerEntity();
 		}
 		
-		$groups = elgg_get_entities_from_relationship($group_options);
-		if (!empty($groups)) {
+		// group selector
+		$groups = new ElggBatch('elgg_get_entities_from_relationship', $group_options);
+		// build group optgroup
+		$group_optgroup = [];
+		foreach ($groups as $group) {
+			
+			// can questions be asked in this group
+			if (!questions_can_ask_question($group)) {
+				continue;
+			}
+			
+			$selected = [
+				'value' => $group->getGUID(),
+			];
+			if ($group->getGUID() == $question->getContainerGUID()) {
+				$selected['selected'] = true;
+			}
+			$group_optgroup[] = elgg_format_element('option', $selected, $group->name);
+		}
+		
+		if (!empty($group_optgroup)) {
 			$container_options = true;
 			$select_options = [];
 			
@@ -150,17 +171,7 @@ if (!$editing || (questions_experts_enabled() && questions_is_expert(elgg_get_pa
 				$select_options[] = elgg_format_element('option', $selected, elgg_echo('questions:edit:question:container:select'));
 			}
 			
-			// add groups
-			$group_optgroup = [];
-			foreach ($groups as $group) {
-				$selected = [
-					'value' => $group->getGUID(),
-				];
-				if ($group->getGUID() == $question->getContainerGUID()) {
-					$selected['selected'] = true;
-				}
-				$group_optgroup[] = elgg_format_element('option', $selected, $group->name);
-			}
+			
 			$select_options[] = elgg_format_element('optgroup', ['label' => elgg_echo('groups')], implode('', $group_optgroup));
 			
 			// format select
@@ -185,7 +196,7 @@ if (!$editing || (questions_experts_enabled() && questions_is_expert(elgg_get_pa
 $footer = [];
 
 if (!$container_options) {
-	$footer[] = elgg_view('input/hidden', ['name' => 'container_guid', 'value' => $question->container_guid]);
+	$footer[] = elgg_view('input/hidden', ['name' => 'container_guid', 'value' => $question->getContainerGUID()]);
 }
 $footer[] = elgg_view('input/hidden', ['name' => 'guid', 'value' => $question->getGUID()]);
 

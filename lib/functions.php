@@ -467,3 +467,51 @@ function questions_backdate_entity($entity_guid, $time_created) {
 	
 	return (bool) update_data($query);
 }
+
+/**
+ * Check if a user can ask a question in a container
+ *
+ * @param ElggEntity $container the container to check (default: page_owner)
+ * @param ElggUser   $user      the user askting the question (default: current user)
+ *
+ * @return bool
+ */
+function questions_can_ask_question(ElggEntity $container = null, ElggUser $user = null) {
+	
+	// default to page owner
+	if (!($container instanceof ElggEntity)) {
+		$container = elgg_get_page_owner_entity();
+	}
+	
+	// default to current user
+	if (!($user instanceof ElggUser)) {
+		$user = elgg_get_logged_in_user_entity();
+	}
+	
+	if (empty($user)) {
+		// not logged in
+		return false;
+	}
+	
+	if (!($container instanceof ElggGroup)) {
+		// personal questions
+		return !questions_limited_to_groups();
+	}
+	
+	if ($container->questions_enable !== 'yes') {
+		// group option not enabled
+		return false;
+	}
+	
+	if (!questions_experts_enabled() || ($container->getPrivateSetting('questions_who_can_ask') !== 'experts')) {
+		// no experts enabled, or not limited to experts
+		return can_write_to_container($user->getGUID(), $container->getGUID(), 'object', ElggQuestion::SUBTYPE);
+	}
+	
+	if (!questions_is_expert($container, $user)) {
+		// limited to expert, and user isn't one
+		return false;
+	}
+	
+	return can_write_to_container($user->getGUID(), $container->getGUID(), 'object', ElggQuestion::SUBTYPE);
+}

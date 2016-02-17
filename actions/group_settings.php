@@ -2,8 +2,7 @@
 
 $group_guid = (int) get_input('group_guid');
 $solution_time = (int) get_input('solution_time');
-
-$forward_url = REFERER;
+$who_can_ask = get_input('who_can_ask');
 
 if (empty($group_guid)) {
 	register_error(elgg_echo('InvalidParameterException:MissingParameter'));
@@ -17,10 +16,10 @@ if (!$group->canEdit()) {
 	forward(REFERER);
 }
 
-// save the setting
+// save the settings
 $group->setPrivateSetting('questions_solution_time', $solution_time);
+$group->setPrivateSetting('questions_who_can_ask', $who_can_ask);
 
 system_message(elgg_echo('questions:action:group_settings:success'));
-$forward_url = $group->getURL();
 
-forward($forward_url);
+forward($group->getURL());

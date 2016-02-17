@@ -117,7 +117,12 @@ To answer the question go here:
 	 * group settings
 	 */
 	'questions:group_settings:title' => "Questions settings",
+	
 	'questions:group_settings:solution_time:description' => "Questions should be answered before this time expires. 0 for no limit.",
+	
+	'questions:group_settings:who_can_ask' => "Who can ask questions in this group",
+	'questions:group_settings:who_can_ask:members' => "All members",
+	'questions:group_settings:who_can_ask:experts' => "Only experts",
 	
 	/**
 	 * Widgets
@@ -141,7 +146,7 @@ To answer the question go here:
 	'questions:action:answer:toggle_mark:success:mark' => "The answer is marked as the correct answer",
 	'questions:action:answer:toggle_mark:success:unmark' => "The answer is no longer marked as the correct answer",
 	
-	'questions:action:question:save:error:container' => "You do not have permission to answer that question!",
+	'questions:action:question:save:error:container' => "You don't have permission to ask a question here",
 	'questions:action:question:save:error:body' => "A title and description are required: %s, %s",
 	'questions:action:question:save:error:save' => "There was a problem saving your question!",
 	'questions:action:question:save:error:limited_to_groups' => "Questions are limited to group, please select a group",

@@ -10,7 +10,7 @@ if (empty($guid)) {
 	$question = get_entity($guid);
 }
 
-$adding = !$question->guid;
+$adding = !$question->getGUID();
 $editing = !$adding;
 $moving = false;
 
@@ -21,19 +21,20 @@ if ($editing && !$question->canEdit()) {
 
 $container_guid = (int) get_input('container_guid');
 if (empty($container_guid)) {
-	$container_guid = (int) $question->owner_guid;
+	$container_guid = (int) $question->getOwnerGUID();
 }
 
 if ($editing && ($container_guid != $question->getContainerGUID())) {
 	$moving = true;
 }
 
-if ($adding && !can_write_to_container(0, $container_guid, 'object', 'question')) {
+$container = get_entity($container_guid);
+if ($adding && !questions_can_ask_question($container)) {
 	register_error(elgg_echo('questions:action:question:save:error:container'));
 	forward(REFERER);
 }
 
-if (questions_limited_to_groups() && ($container_guid == $question->owner_guid)) {
+if (questions_limited_to_groups() && ($container_guid == $question->getOwnerGUID())) {
 	register_error(elgg_echo('questions:action:question:save:error:limited_to_groups'));
 	forward(REFERER);
 }
@@ -92,13 +93,12 @@ try {
 
 elgg_clear_sticky_form('question');
 
-$container = $question->getContainerEntity();
 if (!$adding) {
 	$forward_url = $question->getURL();
 } elseif ($container instanceof ElggUser) {
-	$forward_url = 'questions/owner/' . $container->username;
+	$forward_url = "questions/owner/{$container->username}";
 } else {
-	$forward_url = 'questions/group/' . $container->getGUID() . '/all';
+	$forward_url = "questions/group/{$container->getGUID()}/all";
 }
 
 forward($forward_url);
