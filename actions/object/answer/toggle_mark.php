@@ -7,7 +7,7 @@
 $guid = (int) get_input('guid');
 
 if (empty($guid)) {
-	register_error(elgg_echo('InvalidParameterException:MissingParameter'));
+	register_error(elgg_echo('error:missing_data'));
 	forward(REFERER);
 }
 

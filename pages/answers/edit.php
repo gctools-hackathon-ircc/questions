@@ -6,11 +6,11 @@
  */
 
 $answer_guid = get_input('guid');
-elgg_entity_gatekeeper($answer_guid, 'object', 'answer');
+elgg_entity_gatekeeper($answer_guid, 'object', ElggAnswer::SUBTYPE);
 
 $answer = get_entity($answer_guid);
 if (!$answer->canEdit()) {
-	register_error(elgg_echo('questions:answer:unknown'));
+	register_error(elgg_echo('actionunauthorized'));
 	forward(REFERRER);
 }
 

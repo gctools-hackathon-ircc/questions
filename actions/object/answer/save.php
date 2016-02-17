@@ -10,7 +10,7 @@ $adding = !$answer->guid;
 $editing = !$adding;
 
 if ($editing && !$answer->canEdit()) {
-	register_error(elgg_echo('InvalidParameterException:NoEntityFound'));
+	register_error(elgg_echo('actionunauthorized'));
 	forward(REFERER);
 }
 
@@ -27,12 +27,8 @@ if ($adding && !can_write_to_container(0, $container_guid, 'object', 'answer')) 
 	forward(REFERER);
 }
 
+elgg_entity_gatekeeper($container_guid, 'object', ElggQuestion::SUBTYPE);
 $question = get_entity($container_guid);
-
-if (empty($question) || !($question instanceof ElggQuestion)){
-	register_error(elgg_echo('ClassException:ClassnameNotClass', [$container_guid, elgg_echo('item:object:question')]));
-	forward(REFERER);
-}
 
 if ($question->getStatus() != 'open') {
 	elgg_clear_sticky_form('answer');

@@ -5,14 +5,14 @@ $solution_time = (int) get_input('solution_time');
 $who_can_ask = get_input('who_can_ask');
 
 if (empty($group_guid)) {
-	register_error(elgg_echo('InvalidParameterException:MissingParameter'));
+	register_error(elgg_echo('error:missing_data'));
 	forward(REFERER);
 }
 
 elgg_entity_gatekeeper($group_guid, 'group');
 $group = get_entity($group_guid);
 if (!$group->canEdit()) {
-	register_error(elgg_echo('InvalidParameterException:NoEntityFound'));
+	register_error(elgg_echo('actionunauthorized'));
 	forward(REFERER);
 }
 

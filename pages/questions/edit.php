@@ -11,7 +11,7 @@ elgg_entity_gatekeeper($question_guid, 'object', 'question');
 $question = get_entity($question_guid);
 
 if (!$question->canEdit()) {
-	register_error(elgg_echo('questions:unknown'));
+	register_error(elgg_echo('actionunauthorized'));
 	forward(REFERRER);
 }
 

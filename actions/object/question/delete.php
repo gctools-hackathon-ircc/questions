@@ -1,15 +1,12 @@
 <?php
 
 $guid = (int) get_input('guid');
+
+elgg_entity_gatekeeper($guid, 'object', ElggQuestion::SUBTYPE);
 $question = get_entity($guid);
 
-if (!($question instanceof ElggQuestion)) {
-	register_error(elgg_echo('ClassException:ClassnameNotClass', [$guid, elgg_echo('item:object:question')]));
-	forward(REFERER);
-}
-
 if (!$question->canEdit()) {
-	register_error(elgg_echo('InvalidParameterException:NoEntityFound'));
+	register_error(elgg_echo('actionunauthorized'));
 	forward(REFERER);
 }
 

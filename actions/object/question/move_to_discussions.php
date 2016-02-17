@@ -12,7 +12,7 @@ $access_id = (int) get_input('access_id');
 $forward_url = REFERER;
 
 if (empty($guid)) {
-	register_error(elgg_echo('InvalidParameterException:MissingParameter'));
+	register_error(elgg_echo('error:missing_data'));
 	forward(REFERER);
 }
 
