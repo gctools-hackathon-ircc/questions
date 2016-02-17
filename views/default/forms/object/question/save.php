@@ -165,7 +165,7 @@ if (!$editing || (questions_experts_enabled() && questions_is_expert(elgg_get_pa
 			
 			// format select
 			$select_attr = [
-				'name' => 'containe_guid',
+				'name' => 'container_guid',
 				'class' => 'elgg-input-dropdown',
 				'id' => 'questions-container-guid',
 			];
