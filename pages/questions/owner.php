@@ -41,7 +41,7 @@ $content = elgg_list_entities($options);
 $vars = [
 	'title' => $title,
 	'content' => $content,
-	'filter_context' => 'mine',
+	'filter_context' => ($page_owner->getGUID() === elgg_get_logged_in_user_guid()) ? 'mine' : '',
 ];
 
 $body = elgg_view_layout('content', $vars);
