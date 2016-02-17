@@ -4,32 +4,20 @@ class ElggQuestion extends ElggObject {
 	
 	const SUBTYPE = 'question';
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see ElggObject::initializeAttributes()
+	 */
 	protected function initializeAttributes() {
 		parent::initializeAttributes();
 		
 		$this->attributes['subtype'] = self::SUBTYPE;
 	}
-
-	public function getAnswers(array $options = array()) {
-		$defaults = [
-			'order_by' => 'time_created asc',
-		];
-
-		$overrides = [
-			'type' => 'object',
-			'subtype' => 'answer',
-			'container_guid' => $this->getGUID(),
-		];
-		
-		$options = array_merge($defaults, $options, $overrides);
-
-		return elgg_get_entities($options);
-	}
-
-	public function listAnswers(array $options = []) {
-		return elgg_list_entities($options, [$this, 'getAnswers']);
-	}
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see ElggEntity::getURL()
+	 */
 	public function getURL() {
 		$url = "questions/view/{$this->getGUID()}/" . elgg_get_friendly_title($this->title);
 		
@@ -50,16 +38,50 @@ class ElggQuestion extends ElggObject {
 	}
 	
 	/**
+	 * Get the answers on this question
+	 *
+	 * @param array $options accepts all elgg_get_entities options
+	 *
+	 * @return false|int|ElggAnswer[]
+	 */
+	public function getAnswers(array $options = array()) {
+		$defaults = [
+			'order_by' => 'time_created asc',
+		];
+		
+		$overrides = [
+			'type' => 'object',
+			'subtype' => 'answer',
+			'container_guid' => $this->getGUID(),
+		];
+		
+		$options = array_merge($defaults, $options, $overrides);
+		
+		return elgg_get_entities($options);
+	}
+	
+	/**
+	 * List the answers on this question
+	 *
+	 * @param array $options accepts all elgg_list_entities options
+	 *
+	 * @return string
+	 */
+	public function listAnswers(array $options = []) {
+		return elgg_list_entities($options, [$this, 'getAnswers']);
+	}
+	
+	/**
 	 * Get the answer that was marked as the correct answer.
 	 *
-	 * @return bool|ElggAnswer the answer or false if non are marked
+	 * @return fasle|ElggAnswer
 	 */
 	public function getMarkedAnswer() {
 		$result = false;
 		
 		$options = [
 			'type' => 'object',
-			'subtype' => 'answer',
+			'subtype' => ElggAnswer::SUBTYPE,
 			'limit' => 1,
 			'container_guid' => $this->getGUID(),
 			'metadata_name_value_pairs' => array(

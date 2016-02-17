@@ -4,12 +4,20 @@ class ElggAnswer extends ElggObject {
 	
 	const SUBTYPE = 'answer';
 	
+	/**
+	 * (non-PHPdoc)
+	 * @see ElggObject::initializeAttributes()
+	 */
 	function initializeAttributes() {
 		parent::initializeAttributes();
 		
 		$this->attributes['subtype'] = self::SUBTYPE;
 	}
-
+	
+	/**
+	 * (non-PHPdoc)
+	 * @see ElggEntity::getURL()
+	 */
 	public function getURL() {
 		$container_entity = $this->getContainerEntity();
 		
@@ -27,6 +35,11 @@ class ElggAnswer extends ElggObject {
 		return $this->getContainerEntity()->canComment($user_guid);
 	}
 	
+	/**
+	 * Get the metadata object for the correct answer
+	 *
+	 * @return false|ElggMetadata
+	 */
 	public function getCorrectAnswerMetadata() {
 		$result = false;
 		
@@ -45,6 +58,8 @@ class ElggAnswer extends ElggObject {
 	
 	/**
 	 * Mark an answer as the correct answer for this question
+	 *
+	 * @return void
 	 */
 	public function markAsCorrect() {
 		// first set the mark
@@ -59,7 +74,9 @@ class ElggAnswer extends ElggObject {
 	}
 	
 	/**
-	 * This answer is nog longer the correct answer for this question
+	 * This answer is no longer the correct answer for this question
+	 *
+	 * @return void
 	 */
 	public function undoMarkAsCorrect() {
 		unset($this->correct_answer);
