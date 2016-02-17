@@ -12,9 +12,22 @@ if ($container instanceof ElggGroup) {
 	$container = elgg_get_site_entity();
 }
 
+// build page elements
 $title_text = elgg_echo('questions:experts:title');
 elgg_push_breadcrumb($title_text);
 
+// expert description
+if ($container instanceof ElggGroup) {
+	$desciption = elgg_view('output/longtext', [
+		'value' => elgg_echo('questions:experts:description:group', [$container->name]),
+	]);
+} else {
+	$desciption = elgg_view('output/longtext', [
+		'value' => elgg_echo('questions:experts:description:site'),
+	]);
+}
+
+// expert listing
 $options = [
 	'type' => 'user',
 	'relationship' => QUESTIONS_EXPERT_ROLE,
@@ -32,7 +45,7 @@ if (empty($user_list)) {
 // build page
 $page_data = elgg_view_layout('content', [
 	'title' => $title_text,
-	'content' => $user_list,
+	'content' => $desciption . $user_list,
 	'filter_context' => '',
 ]);
 

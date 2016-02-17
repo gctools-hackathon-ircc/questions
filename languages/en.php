@@ -56,6 +56,8 @@ return [
 	 */
 	'questions:experts:title' => "Experts",
 	'questions:experts:none' => "No experts have been assigned for %s yet.",
+	'questions:experts:description:group' => "Below is a list of the experts for %s. These people will assist in answering questions.",
+	'questions:experts:description:site' => "Below is a list of the site experts. These people will assist in answering questions, both on the site and in the groups.",
 	
 	/**
 	 * expert notifications

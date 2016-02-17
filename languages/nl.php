@@ -1,10 +1,12 @@
 <?php
 /**
  * This file was created by Translation Editor v4.0.1
- * On 2016-02-16 16:25
+ * On 2016-02-17 11:04
  */
 
 return array (
+  'questions:experts:description:group' => 'Hieronder zie je een lijst met de experts van %s. Deze mensen zullen assisteren in het beantwoorden van de vragen.',
+  'questions:experts:description:site' => 'Hieronder zie je een lijst met de site experts. Deze mensen zullen assisteren in het beantwoorden van vragen, zowel op de site als in de groepen.',
   'questions:menu:filter:todo_group' => 'Groep Todo',
   'questions:todo:none' => 'Er zijn geen openstaande vragen, blijf zo doorgaan!',
   'questions:search:answer:title' => 'Antwoord',
