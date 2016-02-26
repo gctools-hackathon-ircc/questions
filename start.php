@@ -59,6 +59,12 @@ function questions_init() {
 	
 	elgg_register_plugin_hook_handler('index_entity_type_subtypes', 'elasticsearch', '\ColdTrick\Questions\Elasticsearch::indexTypes');
 	
+	// notifications
+	elgg_register_notification_event('object', ElggQuestion::SUBTYPE, ['create', 'move']);
+	elgg_register_plugin_hook_handler('prepare', 'notification:create:object:' . ElggQuestion::SUBTYPE, '\ColdTrick\Questions\Notifications::createQuestion');
+	elgg_register_plugin_hook_handler('prepare', 'notification:move:object:' . ElggQuestion::SUBTYPE, '\ColdTrick\Questions\Notifications::moveQuestion');
+	elgg_register_plugin_hook_handler('get', 'subscriptions', '\ColdTrick\Questions\Notifications::addExpertsToSubscribers');
+	
 	// events
 	elgg_register_event_handler('leave', 'group', 'questions_leave_group_handler');
 	elgg_register_event_handler('delete', 'member_of_site', 'questions_leave_site_handler');

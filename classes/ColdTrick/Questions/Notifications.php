@@ -1,0 +1,165 @@
+<?php
+
+namespace ColdTrick\Questions;
+
+class Notifications {
+	
+	/**
+	 * Set the correct message content for when a question is created
+	 *
+	 * @param string                           $hook         the name of the hook
+	 * @param string                           $type         the type of the hook
+	 * @param \Elgg\Notifications\Notification $return_value current return value
+	 * @param array                            $params       supplied params
+	 *
+	 * @return void|\Elgg\Notifications\Notification
+	 */
+	public static function createQuestion($hook, $type, $return_value, $params) {
+		
+		if (!($return_value instanceof \Elgg\Notifications\Notification)) {
+			return;
+		}
+		
+		$event = elgg_extract('event', $params);
+		$recipient = elgg_extract('recipient', $params);
+		$language = elgg_extract('language', $params);
+		
+		if (!($event instanceof \Elgg\Notifications\Event) || !($recipient instanceof \ElggUser)) {
+			return;
+		}
+		
+		$actor = $event->getActor();
+		$question = $event->getObject();
+		
+		$return_value->subject = elgg_echo('questions:notifications:create:subject', [], $language);
+		$return_value->summary = elgg_echo('questions:notifications:create:summary', [], $language);
+		$return_value->body = elgg_echo('questions:notifications:create:message', [
+			$recipient->name,
+			$question->title,
+			$question->getURL(),
+		], $language);
+		
+		return $return_value;
+	}
+	
+	/**
+	 * Set the correct message content for when a question is moved
+	 *
+	 * @param string                           $hook         the name of the hook
+	 * @param string                           $type         the type of the hook
+	 * @param \Elgg\Notifications\Notification $return_value current return value
+	 * @param array                            $params       supplied params
+	 *
+	 * @return void|\Elgg\Notifications\Notification
+	 */
+	public static function moveQuestion($hook, $type, $return_value, $params) {
+		
+		if (!($return_value instanceof \Elgg\Notifications\Notification)) {
+			return;
+		}
+		
+		$event = elgg_extract('event', $params);
+		$recipient = elgg_extract('recipient', $params);
+		$language = elgg_extract('language', $params);
+		
+		if (!($event instanceof \Elgg\Notifications\Event) || !($recipient instanceof \ElggUser)) {
+			return;
+		}
+		
+		$actor = $event->getActor();
+		$question = $event->getObject();
+		
+		$return_value->subject = elgg_echo('questions:notifications:move:subject', [], $language);
+		$return_value->summary = elgg_echo('questions:notifications:move:summary', [], $language);
+		$return_value->body = elgg_echo('questions:notifications:move:message', [
+			$recipient->name,
+			$question->title,
+			$question->getURL(),
+		], $language);
+		
+		return $return_value;
+	}
+	
+	/**
+	 * Add experts to the subscribers for a question
+	 *
+	 * @param string $hook         the name of the hook
+	 * @param string $type         the type of the hook
+	 * @param array  $return_value current return value
+	 * @param array  $params       supplied params
+	 *
+	 * @return void|array
+	 */
+	public static function addExpertsToSubscribers($hook, $type, $return_value, $params) {
+		
+		$event = elgg_extract('event', $params);
+		if (!($event instanceof \Elgg\Notifications\Event)) {
+			return;
+		}
+		
+		$question = $event->getObject();
+		if (!($question instanceof \ElggQuestion)) {
+			return;
+		}
+		
+		$moving = ($event->getAction() === 'moving');
+		// when moving only notify experts
+		if ($moving) {
+			$return_value = [];
+		}
+		
+		if (!questions_experts_enabled()) {
+			// experts isn't enabled
+			return $return_value;
+		}
+		
+		$container = $question->getContainerEntity();
+		if (!($container instanceof \ElggGroup)) {
+			$container = elgg_get_site_entity();
+		}
+		
+		$experts = [];
+		$options = [
+			'type' => 'user',
+			'site_guids' => false,
+			'limit' => false,
+			'relationship' => QUESTIONS_EXPERT_ROLE,
+			'relationship_guid' => $container->getGUID(),
+			'inverse_relationship' => true,
+		];
+		$users = elgg_get_entities_from_relationship($options);
+		if (!empty($users)) {
+			$experts = $users;
+		}
+		
+		// trigger a hook so others can extend the list
+		$params = [
+			'entity' => $question,
+			'experts' => $experts,
+			'moving' => $moving,
+		];
+		$experts = elgg_trigger_plugin_hook('notify_experts', 'questions', $params, $experts);
+		if (empty($experts) || !is_array($experts)) {
+			return;
+		}
+		
+		foreach ($experts as $expert) {
+			if (!isset($return_value[$expert->getGUID()])) {
+				// no notification for this user, so add email notification
+				$return_value[$expert->getGUID()] = ['email'];
+				continue;
+			}
+			
+			if (!in_array('email', $return_value[$expert->getGUID()])) {
+				// user already got a notification, but not email so add that
+				$return_value[$expert->getGUID()][] = 'email';
+				continue;
+			}
+		}
+		
+		// small bit of cleanup
+		unset($experts);
+		
+		return $return_value;
+	}
+}

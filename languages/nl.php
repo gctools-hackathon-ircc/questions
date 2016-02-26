@@ -54,15 +54,17 @@ return array (
   'questions:edit:question:container:select' => 'Selecteer een groep',
   'questions:experts:title' => 'Experts',
   'questions:experts:none' => 'Er zijn nog geen experts toegekend aan %s.',
-  'questions:notify_experts:create:subject' => 'Er is een nieuwe vraag gesteld',
-  'questions:notify_experts:create:message' => 'Beste %s,
+  'questions:notifications:create:subject' => 'Er is een nieuwe vraag gesteld',
+  'questions:notifications:create:summary' => 'Er is een nieuwe vraag gesteld',
+  'questions:notifications:create:message' => 'Beste %s,
 
 De vraag: %s is gesteld.
 
 Klik hier om de vraag te beantwoorden:
 %s',
-  'questions:notify_experts:moving:subject' => 'Een vraag is verplaatst',
-  'questions:notify_experts:moving:message' => 'Beste %s,
+  'questions:notifications:move:subject' => 'Een vraag is verplaatst',
+  'questions:notifications:move:summary' => 'Een vraag is verplaatst',
+  'questions:notifications:move:message' => 'Beste %s,
 
 De vraag: %s is verplaatst. U moet hem nu beantwoorden.
 

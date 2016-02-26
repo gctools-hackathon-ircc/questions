@@ -75,15 +75,14 @@ try {
 			'access_id' => $question->access_id,
 		]);
 		
-		// notify experts
-		questions_notify_experts($question, $moving);
-		
 		// check for a solution time limit
 		$solution_time = questions_get_solution_time($question->getContainerEntity());
 		if ($solution_time) {
 			// add x number of days when the question should be solved
 			$question->solution_time = (time() + ($solution_time * 24 * 60 * 60));
 		}
+	} elseif ($moving) {
+		elgg_trigger_event('move', 'object', $question);
 	}
 } catch (Exception $e) {
 	register_error(elgg_echo('questions:action:question:save:error:save'));

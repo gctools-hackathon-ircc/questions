@@ -58,17 +58,19 @@ return [
 	'questions:experts:description:site' => "Below is a list of the site experts. These people will assist in answering questions, both on the site and in the groups.",
 	
 	/**
-	 * expert notifications
+	 * notifications
 	 */
-	'questions:notify_experts:create:subject' => "A new question was asked",
-	'questions:notify_experts:create:message' => "Hi %s
+	'questions:notifications:create:subject' => "A new question was asked",
+	'questions:notifications:create:summary' => "A new question was asked",
+	'questions:notifications:create:message' => "Hi %s
 
 The question: %s was asked.
 
 To answer the question go here:
 %s",
-	'questions:notify_experts:moving:subject' => "A question was moved",
-	'questions:notify_experts:moving:message' => "Hi %s
+	'questions:notifications:move:subject' => "A question was moved",
+	'questions:notifications:move:summary' => "A question was moved",
+	'questions:notifications:move:message' => "Hi %s
 
 The question: %s was moved so you'll have to answer it.
 
