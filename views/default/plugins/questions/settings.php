@@ -48,6 +48,17 @@ $general_settings .= '<div class="elgg-subtext">' . elgg_echo('questions:setting
 $general_settings .= '</div>';
 
 $general_settings .= '<div>';
+$general_settings .= elgg_echo('questions:settings:general:solution_time_group');
+$general_settings .= elgg_view('input/select', [
+	'name' => 'params[solution_time_group]',
+	'value' => $plugin->solution_time_group,
+	'options_values' => array_reverse($noyes_options),
+	'class' => 'mls',
+]);
+$general_settings .= '<div class="elgg-subtext">' . elgg_echo('questions:settings:general:solution_time_group:description') . '</div>';
+$general_settings .= '</div>';
+
+$general_settings .= '<div>';
 $general_settings .= elgg_echo('questions:settings:general:limit_to_groups');
 $general_settings .= elgg_view('input/select',[
 	'name' => 'params[limit_to_groups]',

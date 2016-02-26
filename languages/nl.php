@@ -1,10 +1,12 @@
 <?php
 /**
  * This file was created by Translation Editor v4.0.1
- * On 2016-02-17 16:05
+ * On 2016-02-26 11:04
  */
 
 return array (
+  'questions:settings:general:solution_time_group' => 'Groepseigenaren mogen de standaard oplostijd aanpassen',
+  'questions:settings:general:solution_time_group:description' => 'Als dit niet is toegestaan zullen de groepen de standaard oplostijd gebruiken zoals hierboven gedefinieerd.',
   'questions:group_settings:who_can_ask' => 'Wie mogen vragen stellen in deze groep',
   'questions:group_settings:who_can_ask:members' => 'Alle leden',
   'questions:group_settings:who_can_ask:experts' => 'Alleen experts',

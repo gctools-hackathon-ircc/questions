@@ -360,14 +360,13 @@ function questions_get_solution_time(ElggEntity $container) {
 	$result = $plugin_setting;
 	
 	// check is group
-	if ($container instanceof ElggGroup) {
+	if (($container instanceof ElggGroup) && questions_can_groups_set_solution_time()) {
 		// get group setting
 		$group_setting = $container->getPrivateSetting('questions_solution_time');
 		if (($group_setting !== false) && ($group_setting !== null)) {
 			// we have a valid group setting
 			$result = (int) $group_setting;
 		}
-		
 	}
 	
 	return $result;
@@ -514,4 +513,24 @@ function questions_can_ask_question(ElggEntity $container = null, ElggUser $user
 	}
 	
 	return can_write_to_container($user->getGUID(), $container->getGUID(), 'object', ElggQuestion::SUBTYPE);
+}
+
+/**
+ * Can group owners set the solution time
+ *
+ * @return bool
+ */
+function questions_can_groups_set_solution_time() {
+	static $result;
+	
+	if (isset($result)) {
+		return $result;
+	}
+	
+	$result = true;
+	if (elgg_get_plugin_setting('solution_time_group', 'questions') === 'no') {
+		$result = false;
+	}
+	
+	return $result;
 }

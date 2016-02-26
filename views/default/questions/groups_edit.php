@@ -14,17 +14,19 @@ if ($group->questions_enable !== 'yes') {
 }
 
 // default solution time
-$solution_time = questions_get_solution_time($group);
-$solution = [];
-$solution[] = elgg_echo('questions:settings:general:solution_time');
-$solution[] = elgg_view('input/select', [
-	'name' => 'solution_time',
-	'value' => $solution_time,
-	'options' => range(0, 30),
-	'class' => 'mls',
-]);
-$solution[] = elgg_format_element('div', ['class' => 'elgg-subtext'], elgg_echo('questions:group_settings:solution_time:description'));
-$content .= elgg_format_element('div', [], implode('', $solution));
+if (questions_can_groups_set_solution_time()) {
+	$solution_time = questions_get_solution_time($group);
+	$solution = [];
+	$solution[] = elgg_echo('questions:settings:general:solution_time');
+	$solution[] = elgg_view('input/select', [
+		'name' => 'solution_time',
+		'value' => $solution_time,
+		'options' => range(0, 30),
+		'class' => 'mls',
+	]);
+	$solution[] = elgg_format_element('div', ['class' => 'elgg-subtext'], elgg_echo('questions:group_settings:solution_time:description'));
+	$content .= elgg_format_element('div', [], implode('', $solution));
+}
 
 // who can ask questions
 if (questions_experts_enabled()) {

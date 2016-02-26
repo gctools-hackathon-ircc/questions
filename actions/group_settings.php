@@ -17,8 +17,13 @@ if (!$group->canEdit()) {
 }
 
 // save the settings
-$group->setPrivateSetting('questions_solution_time', $solution_time);
-$group->setPrivateSetting('questions_who_can_ask', $who_can_ask);
+if (questions_can_groups_set_solution_time()) {
+	$group->setPrivateSetting('questions_solution_time', $solution_time);
+}
+
+if (questions_experts_enabled()) {
+	$group->setPrivateSetting('questions_who_can_ask', $who_can_ask);
+}
 
 system_message(elgg_echo('questions:action:group_settings:success'));
 
