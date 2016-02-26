@@ -621,3 +621,44 @@ function questions_can_groups_set_solution_time() {
 	
 	return $result;
 }
+
+/**
+ * Automaticly mark an answer as the correct answer, when created by an expert
+ *
+ * NOTE: for now this is only supported in groups
+ *
+ * @param ElggEntity $container the container of the questions (group or user)
+ * @param ElggUser   $user      the user doing the action (default: current user)
+ *
+ * @return bool
+ */
+function questions_auto_mark_answer_correct(ElggEntity $container, ElggUser $user = null) {
+	
+	if (!($container instanceof ElggGroup)) {
+		// for now only supported in groups
+		return false;
+	}
+	
+	if (!($user instanceof ElggUser)) {
+		$user = elgg_get_logged_in_user_entity();
+	}
+	
+	if (!($user instanceof ElggUser)) {
+		return false;
+	}
+	
+	if (!questions_experts_enabled()) {
+		// only applies to experts
+		return false;
+	}
+	
+	if (!questions_is_expert($container, $user)) {
+		// not an expert
+		return false;
+	}
+	
+	// check group setting
+	$group_setting = $container->getPrivateSetting('questions_auto_mark_correct');
+	
+	return ($group_setting === 'yes');
+}

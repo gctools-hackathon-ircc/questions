@@ -45,6 +45,10 @@ try {
 	$answer->save();
 	
 	if ($adding) {
+		// check for auto mark as correct
+		$answer->checkAutoMarkCorrect($adding);
+		
+		// create river event
 		elgg_create_river_item([
 			'view' => 'river/object/answer/create',
 			'action_type' => 'create',

@@ -127,6 +127,8 @@ To answer the question go here:
 	'questions:group_settings:who_can_answer' => "Who can answer questions in this group",
 	'questions:group_settings:who_can_answer:experts_only' => "The site administrator has configured that only experts can answer questions.",
 	
+	'questions:group_settings:auto_mark_correct' => "When an expert creates an answer, automaticly mark it as the correct answer",
+	
 	/**
 	 * Widgets
 	 */

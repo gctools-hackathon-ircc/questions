@@ -86,4 +86,29 @@ class ElggAnswer extends ElggObject {
 			
 		$question->reopen();
 	}
+	
+	/**
+	 * Check if we can auto mark this as the correct answer
+	 *
+	 * @param bool $creating new answer or editing (default: editing)
+	 *
+	 * @return void
+	 */
+	public function checkAutoMarkCorrect($creating = false) {
+		
+		$creating = (bool) $creating;
+		if (empty($creating)) {
+			// only on new entities
+			return;
+		}
+		
+		$question = $this->getContainerEntity();
+		$container = $question->getContainerEntity();
+		
+		$user = $this->getOwnerEntity();
+		
+		if (questions_auto_mark_answer_correct($container, $user)) {
+			$this->markAsCorrect();
+		}
+	}
 }

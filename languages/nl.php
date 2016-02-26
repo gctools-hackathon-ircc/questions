@@ -1,10 +1,11 @@
 <?php
 /**
  * This file was created by Translation Editor v4.0.1
- * On 2016-02-26 13:38
+ * On 2016-02-26 14:07
  */
 
 return array (
+  'questions:group_settings:auto_mark_correct' => 'Als een expert een antwoord geeft, deze direct aanmerken als het juiste antwoord',
   'questions:group_settings:who_can_answer' => 'Wie kunnen de vragen beantwoorden in deze groep',
   'questions:group_settings:who_can_answer:experts_only' => 'De site beheerder heeft ingesteld dat alleen experts vragen mogen beantwoorden.',
   'questions:settings:general:solution_time_group' => 'Groepseigenaren mogen de standaard oplostijd aanpassen',

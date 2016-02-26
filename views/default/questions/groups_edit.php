@@ -28,11 +28,15 @@ if (questions_can_groups_set_solution_time()) {
 	$content .= elgg_format_element('div', [], implode('', $solution));
 }
 
-// who can ask questions
 if (questions_experts_enabled()) {
-	$asker_options = [
+	$expert_options = [
 		'members' => elgg_echo('questions:group_settings:who_can_ask:members'),
 		'experts' => elgg_echo('questions:group_settings:who_can_ask:experts'),
+	];
+	
+	$noyes_options = [
+		'no' => elgg_echo('option:no'),
+		'yes' => elgg_echo('option:yes'),
 	];
 	
 	// who can ask?
@@ -41,7 +45,7 @@ if (questions_experts_enabled()) {
 	$who_can_ask[] = elgg_view('input/select', [
 		'name' => 'who_can_ask',
 		'value' => $group->getPrivateSetting('questions_who_can_ask'),
-		'options_values' => $asker_options,
+		'options_values' => $expert_options,
 		'class' => 'mls',
 	]);
 	$content .= elgg_format_element('div', [], implode('', $who_can_ask));
@@ -53,7 +57,7 @@ if (questions_experts_enabled()) {
 		$who_can_answer[] = elgg_view('input/select', [
 			'name' => 'who_can_answer',
 			'value' => $group->getPrivateSetting('questions_who_can_answer'),
-			'options_values' => $asker_options,
+			'options_values' => $expert_options,
 			'class' => 'mls',
 		]);
 	} else {
@@ -62,6 +66,17 @@ if (questions_experts_enabled()) {
 		]);
 	}
 	$content .= elgg_format_element('div', [], implode('', $who_can_answer));
+	
+	// auto mark answer
+	$auto_mark = [];
+	$auto_mark[] = elgg_echo('questions:group_settings:auto_mark_correct');
+	$auto_mark[] = elgg_view('input/select', [
+		'name' => 'auto_mark_correct',
+		'value' => $group->getPrivateSetting('questions_auto_mark_correct'),
+		'options_values' => $noyes_options,
+		'class' => 'mls',
+	]);
+	$content .= elgg_format_element('div', [], implode('', $auto_mark));
 }
 
 // form footer
