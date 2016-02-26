@@ -124,6 +124,9 @@ To answer the question go here:
 	'questions:group_settings:who_can_ask:members' => "All members",
 	'questions:group_settings:who_can_ask:experts' => "Only experts",
 	
+	'questions:group_settings:who_can_answer' => "Who can answer questions in this group",
+	'questions:group_settings:who_can_answer:experts_only' => "The site administrator has configured that only experts can answer questions.",
+	
 	/**
 	 * Widgets
 	 */

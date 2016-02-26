@@ -11,13 +11,38 @@
 function questions_experts_enabled() {
 	static $result;
 	
-	if (!isset($result)) {
-		$result = false;
-		
-		$setting = elgg_get_plugin_setting('experts_enabled', 'questions');
-		if ($setting == 'yes') {
-			$result = true;
-		}
+	if (isset($result)) {
+		return $result;
+	}
+	
+	$result = false;
+	if (elgg_get_plugin_setting('experts_enabled', 'questions') === 'yes') {
+		$result = true;
+	}
+	
+	return $result;
+}
+
+/**
+ * This function checks if only experts are allowed to answer in the plugin settings
+ *
+ * @return bool
+ */
+function questions_experts_only_answer() {
+	static $result;
+	
+	if (isset($result)) {
+		return $result;
+	}
+	
+	$result = false;
+	if (!questions_experts_enabled()) {
+		return $result;
+	}
+	
+	$setting = elgg_get_plugin_setting('experts_answer', 'questions');
+	if ($setting === 'yes') {
+		$result = true;
 	}
 	
 	return $result;
@@ -513,6 +538,68 @@ function questions_can_ask_question(ElggEntity $container = null, ElggUser $user
 	}
 	
 	return can_write_to_container($user->getGUID(), $container->getGUID(), 'object', ElggQuestion::SUBTYPE);
+}
+
+/**
+ * Check if a user can answer a question
+ *
+ * @param ElggQuestion $question the question that needs answer
+ * @param ElggUser     $user     the user askting the question (default: current user)
+ *
+ * @return bool
+ */
+function questions_can_answer_question(ElggQuestion $question, ElggUser $user = null) {
+	static $general_experts_only;
+	
+	// default to page owner
+	if (!($question instanceof ElggQuestion)) {
+		return false;
+	}
+	
+	// default to current user
+	if (!($user instanceof ElggUser)) {
+		$user = elgg_get_logged_in_user_entity();
+	}
+	
+	if (empty($user)) {
+		// not logged in
+		return false;
+	}
+	
+	$container = $question->getContainerEntity();
+	
+	if (!questions_experts_enabled()) {
+		return questions_can_ask_question($container, $user);
+	}
+	
+	// get plugin setting
+	if (!isset($general_experts_only)) {
+		$general_experts_only = questions_experts_only_answer();
+	}
+	
+	$is_expert = questions_is_expert($container, $user);
+	
+	// check general setting
+	if ($general_experts_only && !$is_expert) {
+		return false;
+	}
+	
+	if (!($container instanceof ElggGroup)) {
+		return true;
+	}
+	
+	// check group settings
+	$group_experts_only = false;
+	if ($container->getPrivateSetting('questions_who_can_answer') === 'experts') {
+		$group_experts_only = true;
+	}
+	
+	if ($group_experts_only && !$is_expert) {
+		return false;
+	}
+	
+	// are you a group member or can you edit the group
+	return ($container->isMember($user) || $container->canEdit($user->getGUID()));
 }
 
 /**

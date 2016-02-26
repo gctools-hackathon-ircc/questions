@@ -234,7 +234,7 @@ function questions_user_hover_menu_handler($hook, $type, $items, $params) {
 }
 
 /**
- * Check if a user has permissions on a container
+ * Check if a user can write an answer
  *
  * @param string $hook        the name of the hook
  * @param string $type        the type of the hook
@@ -258,30 +258,7 @@ function questions_container_permissions_handler($hook, $type, $returnvalue, $pa
 		return;
 	}
 	
-	// check expert setting
-	if (!isset($experts_only)) {
-		$experts_only = false;
-		
-		$setting = elgg_get_plugin_setting('experts_answer', 'questions');
-		if ($setting === 'yes') {
-			$experts_only = true;
-		}
-	}
-	
-	// get the container of the question
-	$container = $question->getContainerEntity();
-	if (!$experts_only) {
-		if ($container instanceof ElggUser) {
-			$returnvalue = true;
-		} elseif ($container instanceof ElggGroup) {
-			// if the user can ask a question in the group, he should be able to answer one too
-			$returnvalue = $container->canWriteToContainer($user->getGUID(), 'object', 'question');
-		}
-	} else {
-		$returnvalue = questions_is_expert($container, $user);
-	}
-	
-	return $returnvalue;
+	return questions_can_answer_question($question, $user);
 }
 
 /**

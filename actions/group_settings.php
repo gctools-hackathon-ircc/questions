@@ -3,6 +3,7 @@
 $group_guid = (int) get_input('group_guid');
 $solution_time = (int) get_input('solution_time');
 $who_can_ask = get_input('who_can_ask');
+$who_can_answer = get_input('who_can_answer');
 
 if (empty($group_guid)) {
 	register_error(elgg_echo('error:missing_data'));
@@ -23,6 +24,10 @@ if (questions_can_groups_set_solution_time()) {
 
 if (questions_experts_enabled()) {
 	$group->setPrivateSetting('questions_who_can_ask', $who_can_ask);
+	
+	if (!questions_experts_only_answer()) {
+		$group->setPrivateSetting('questions_who_can_answer', $who_can_answer);
+	}
 }
 
 system_message(elgg_echo('questions:action:group_settings:success'));

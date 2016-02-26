@@ -1,10 +1,12 @@
 <?php
 /**
  * This file was created by Translation Editor v4.0.1
- * On 2016-02-26 11:04
+ * On 2016-02-26 13:38
  */
 
 return array (
+  'questions:group_settings:who_can_answer' => 'Wie kunnen de vragen beantwoorden in deze groep',
+  'questions:group_settings:who_can_answer:experts_only' => 'De site beheerder heeft ingesteld dat alleen experts vragen mogen beantwoorden.',
   'questions:settings:general:solution_time_group' => 'Groepseigenaren mogen de standaard oplostijd aanpassen',
   'questions:settings:general:solution_time_group:description' => 'Als dit niet is toegestaan zullen de groepen de standaard oplostijd gebruiken zoals hierboven gedefinieerd.',
   'questions:group_settings:who_can_ask' => 'Wie mogen vragen stellen in deze groep',
