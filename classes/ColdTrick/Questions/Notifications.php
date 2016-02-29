@@ -163,6 +163,51 @@ class Notifications {
 	}
 	
 	/**
+	 * Change the notification message for comments on answers
+	 *
+	 * @param string                           $hook         the name of the hook
+	 * @param stirng                           $type         the type of the hook
+	 * @param \Elgg\Notifications\Notification $return_value the current return value
+	 * @param array                            $params       supplied values
+	 *
+	 * @return void|\Elgg\Notifications\Notification
+	 */
+	public static function createCommentOnAnswer($hook, $type, $return_value, $params) {
+		
+		if (!($return_value instanceof \Elgg\Notifications\Notification)) {
+			return;
+		}
+		
+		$event = elgg_extract('event', $params);
+		if (!($event instanceof \Elgg\Notifications\Event)) {
+			return;
+		}
+		
+		$comment = $event->getObject();
+		$object = $comment->getContainerEntity();
+		if (!($object instanceof \ElggAnswer)) {
+			return;
+		}
+		
+		$actor = $event->getActor();
+		$question = $object->getContainerEntity();
+		$language = elgg_extract('language', $params, get_current_language());
+		$recipient = elgg_extract('recipient', $params);
+	
+		$return_value->subject = elgg_echo('questions:notifications:answer:comment:subject', [], $language);
+		$return_value->summary = elgg_echo('questions:notifications:answer:comment:summary', [], $language);
+		$return_value->body = elgg_echo('questions:notifications:answer:comment:message', [
+			$recipient->name,
+			$actor->name,
+			$question->title,
+			$comment->description,
+			$object->getURL(),
+		], $language);
+		
+		return $return_value;
+	}
+	
+	/**
 	 * Add experts to the subscribers for a question
 	 *
 	 * @param string $hook         the name of the hook
@@ -255,7 +300,7 @@ class Notifications {
 	 *
 	 * @return void|array
 	 */
-	public static function answerToQuestionOwner($hook, $type, $return_value, $params) {
+	public static function addQuestionOwnerToAnswerSubscribers($hook, $type, $return_value, $params) {
 		
 		$event = elgg_extract('event', $params);
 		if (!($event instanceof \Elgg\Notifications\Event)) {
@@ -302,7 +347,7 @@ class Notifications {
 	 *
 	 * @return void|array
 	 */
-	public static function answerToAnswerOwner($hook, $type, $return_value, $params) {
+	public static function addAnswerOwnerToAnswerSubscribers($hook, $type, $return_value, $params) {
 		
 		$event = elgg_extract('event', $params);
 		if (!($event instanceof \Elgg\Notifications\Event)) {
@@ -336,5 +381,37 @@ class Notifications {
 		$return_value[$owner->getGUID()] = $filtered_methods;
 		
 		return $return_value;
+	}
+	
+	/**
+	 * Add question subscribers to the subscribers for an answer
+	 *
+	 * @param string $hook         the name of the hook
+	 * @param string $type         the type of the hook
+	 * @param array  $return_value current return value
+	 * @param array  $params       supplied params
+	 *
+	 * @return void|array
+	 */
+	public static function addQuestionSubscribersToAnswerSubscribers($hook, $type, $return_value, $params) {
+		
+		$event = elgg_extract('event', $params);
+		if (!($event instanceof \Elgg\Notifications\Event)) {
+			return;
+		}
+		
+		$object = $event->getObject();
+		$container = $object->getContainerEntity();
+		if (!($container instanceof \ElggAnswer)) {
+			return;
+		}
+		
+		$question = $container->getContainerEntity();
+		$subscribers = elgg_get_subscriptions_for_container($question->getGUID());
+		if (empty($subscribers)) {
+			return;
+		}
+		
+		return ($return_value + $subscribers);
 	}
 }

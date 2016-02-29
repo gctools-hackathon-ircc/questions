@@ -19,4 +19,14 @@
 		<name>likes</name>
 	</suggests>
 	
+	<suggests>
+		<type>plugin</type>
+		<name>content_subscriptions</name>
+	</suggests>
+	<requires>
+		<type>priority</type>
+		<plugin>content_subscriptions</plugin>
+		<priority>after</priority>
+	</requires>
+	
 </plugin_manifest>

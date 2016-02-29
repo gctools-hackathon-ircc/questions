@@ -49,6 +49,8 @@ return [
 	'questions:edit:question:move_to_discussions' => "Move to discussions",
 	'questions:edit:question:move_to_discussions:confirm' => "Are you sure you wish to move this questions to the discussions? This can't be undone!!",
 	
+	'questions:object:answer:title' => "Answer to question %s",
+	
 	/**
 	 * experts page
 	 */
@@ -96,6 +98,16 @@ To view the answer click here:
 %s
 
 To view the answer click here:
+%s",
+	'questions:notifications:answer:comment:subject' => "New comment on an answer",
+	'questions:notifications:answer:comment:summary' => "New comment on an answer",
+	'questions:notifications:answer:comment:message' => "Hi %s
+
+%s commented on an answer to the question '%s'.
+
+%s
+
+To view the comment click here:
 %s",
 	
 	'questions:daily:notification:subject' => "Daily questions workload overview",

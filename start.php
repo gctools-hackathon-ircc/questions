@@ -66,9 +66,15 @@ function questions_init() {
 	elgg_register_plugin_hook_handler('prepare', 'notification:move:object:' . ElggQuestion::SUBTYPE, '\ColdTrick\Questions\Notifications::moveQuestion');
 	elgg_register_plugin_hook_handler('prepare', 'notification:create:object:' . ElggAnswer::SUBTYPE, '\ColdTrick\Questions\Notifications::createAnswer');
 	elgg_register_plugin_hook_handler('prepare', 'notification:correct:object:' . ElggAnswer::SUBTYPE, '\ColdTrick\Questions\Notifications::correctAnswer');
+	elgg_register_plugin_hook_handler('prepare', 'notification:create:object:comment', '\ColdTrick\Questions\Notifications::createCommentOnAnswer');
 	elgg_register_plugin_hook_handler('get', 'subscriptions', '\ColdTrick\Questions\Notifications::addExpertsToSubscribers');
-	elgg_register_plugin_hook_handler('get', 'subscriptions', '\ColdTrick\Questions\Notifications::answerToQuestionOwner');
-	elgg_register_plugin_hook_handler('get', 'subscriptions', '\ColdTrick\Questions\Notifications::answerToAnswerOwner');
+	elgg_register_plugin_hook_handler('get', 'subscriptions', '\ColdTrick\Questions\Notifications::addQuestionOwnerToAnswerSubscribers');
+	elgg_register_plugin_hook_handler('get', 'subscriptions', '\ColdTrick\Questions\Notifications::addAnswerOwnerToAnswerSubscribers');
+	elgg_register_plugin_hook_handler('get', 'subscriptions', '\ColdTrick\Questions\Notifications::addQuestionSubscribersToAnswerSubscribers');
+	
+	elgg_register_plugin_hook_handler('entity_types', 'content_subscriptions', '\ColdTrick\Questions\ContentSubscriptions::getEntityTypes');
+	elgg_register_event_handler('create', 'object', '\ColdTrick\Questions\ContentSubscriptions::createAnswer');
+	elgg_register_event_handler('create', 'object', '\ColdTrick\Questions\ContentSubscriptions::createCommentOnAnswer');
 	
 	// events
 	elgg_register_event_handler('leave', 'group', 'questions_leave_group_handler');
