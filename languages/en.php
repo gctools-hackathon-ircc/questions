@@ -87,6 +87,16 @@ To answer the question go here:
 
 To view the answer click here:
 %s",
+	'questions:notifications:answer:correct:subject' => "An answer was marked as the correct answer on %s",
+	'questions:notifications:answer:correct:summary' => "An answer was marked as the correct answer on %s",
+	'questions:notifications:answer:correct:message' => "Hi %s
+
+%s marked an answer as the correct answer on the question '%s'.
+
+%s
+
+To view the answer click here:
+%s",
 	
 	'questions:daily:notification:subject' => "Daily questions workload overview",
 	'questions:daily:notification:message:more' => "View more",

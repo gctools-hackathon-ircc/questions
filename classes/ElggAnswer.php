@@ -65,6 +65,9 @@ class ElggAnswer extends ElggObject {
 		// first set the mark
 		$this->correct_answer = true;
 		
+		// trigger event for notifications
+		elgg_trigger_event('correct', 'object', $this);
+		
 		// depending of the plugin settings, we also need to close the question
 		if (questions_close_on_marked_answer()) {
 			$question = $this->getContainerEntity();
