@@ -75,6 +75,7 @@ if ($question->comments_enabled !== 'off') {
 // build content
 $params = [
 	'entity' => $answer,
+	'title' => false,
 	'metadata' => $entity_menu,
 	'subtitle' => $subtitle,
 	'content' => $body,
