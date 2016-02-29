@@ -81,6 +81,47 @@ class Notifications {
 	}
 	
 	/**
+	 * Set the correct message content for when a answer is created
+	 *
+	 * @param string                           $hook         the name of the hook
+	 * @param string                           $type         the type of the hook
+	 * @param \Elgg\Notifications\Notification $return_value current return value
+	 * @param array                            $params       supplied params
+	 *
+	 * @return void|\Elgg\Notifications\Notification
+	 */
+	public static function createAnswer($hook, $type, $return_value, $params) {
+		
+		if (!($return_value instanceof \Elgg\Notifications\Notification)) {
+			return;
+		}
+		
+		$event = elgg_extract('event', $params);
+		$recipient = elgg_extract('recipient', $params);
+		$language = elgg_extract('language', $params);
+		
+		if (!($event instanceof \Elgg\Notifications\Event) || !($recipient instanceof \ElggUser)) {
+			return;
+		}
+		
+		$actor = $event->getActor();
+		$answer = $event->getObject();
+		$question = $answer->getContainerEntity();
+		
+		$return_value->subject = elgg_echo('questions:notifications:answer:create:subject', [$question->title], $language);
+		$return_value->summary = elgg_echo('questions:notifications:answer:create:summary', [$question->title], $language);
+		$return_value->body = elgg_echo('questions:notifications:answer:create:message', [
+			$recipient->name,
+			$actor->name,
+			$question->title,
+			$answer->description,
+			$answer->getURL(),
+		], $language);
+		
+		return $return_value;
+	}
+	
+	/**
 	 * Add experts to the subscribers for a question
 	 *
 	 * @param string $hook         the name of the hook
@@ -159,6 +200,53 @@ class Notifications {
 		
 		// small bit of cleanup
 		unset($experts);
+		
+		return $return_value;
+	}
+	
+	/**
+	 * Add question owner to the subscribers for an answer
+	 *
+	 * @param string $hook         the name of the hook
+	 * @param string $type         the type of the hook
+	 * @param array  $return_value current return value
+	 * @param array  $params       supplied params
+	 *
+	 * @return void|array
+	 */
+	public static function answerToQuestionOwner($hook, $type, $return_value, $params) {
+		
+		$event = elgg_extract('event', $params);
+		if (!($event instanceof \Elgg\Notifications\Event)) {
+			return;
+		}
+		
+		$answer = $event->getObject();
+		if (!($answer instanceof \ElggAnswer)) {
+			return;
+		}
+		
+		$question = $answer->getContainerEntity();
+		$owner = $question->getOwnerEntity();
+		
+		$methods = get_user_notification_settings($owner->getGUID());
+		if (empty($methods)) {
+			return;
+		}
+		
+		$filtered_methods = [];
+		foreach ($methods as $method => $value) {
+			if (empty($value)) {
+				continue;
+			}
+			$filtered_methods[] = $method;
+		}
+		
+		if (empty($filtered_methods)) {
+			return;
+		}
+		
+		$return_value[$owner->getGUID()] = $filtered_methods;
 		
 		return $return_value;
 	}

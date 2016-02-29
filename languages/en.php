@@ -77,6 +77,17 @@ The question: %s was moved so you'll have to answer it.
 To answer the question go here:
 %s",
 	
+	'questions:notifications:answer:create:subject' => "An answer was provided on %s",
+	'questions:notifications:answer:create:summary' => "An answer was provided on %s",
+	'questions:notifications:answer:create:message' => "Hi %s
+
+%s provided an answer to the question '%s'.
+
+%s
+
+To view the answer click here:
+%s",
+	
 	'questions:daily:notification:subject' => "Daily questions workload overview",
 	'questions:daily:notification:message:more' => "View more",
 	'questions:daily:notification:message:overdue' => "The following questions are overdue",

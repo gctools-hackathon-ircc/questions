@@ -61,9 +61,12 @@ function questions_init() {
 	
 	// notifications
 	elgg_register_notification_event('object', ElggQuestion::SUBTYPE, ['create', 'move']);
+	elgg_register_notification_event('object', ElggAnswer::SUBTYPE, ['create']);
 	elgg_register_plugin_hook_handler('prepare', 'notification:create:object:' . ElggQuestion::SUBTYPE, '\ColdTrick\Questions\Notifications::createQuestion');
 	elgg_register_plugin_hook_handler('prepare', 'notification:move:object:' . ElggQuestion::SUBTYPE, '\ColdTrick\Questions\Notifications::moveQuestion');
+	elgg_register_plugin_hook_handler('prepare', 'notification:create:object:' . ElggAnswer::SUBTYPE, '\ColdTrick\Questions\Notifications::createAnswer');
 	elgg_register_plugin_hook_handler('get', 'subscriptions', '\ColdTrick\Questions\Notifications::addExpertsToSubscribers');
+	elgg_register_plugin_hook_handler('get', 'subscriptions', '\ColdTrick\Questions\Notifications::answerToQuestionOwner');
 	
 	// events
 	elgg_register_event_handler('leave', 'group', 'questions_leave_group_handler');
