@@ -59,6 +59,9 @@ function questions_init() {
 	
 	elgg_register_plugin_hook_handler('index_entity_type_subtypes', 'elasticsearch', '\ColdTrick\Questions\Elasticsearch::indexTypes');
 	
+	elgg_register_plugin_hook_handler('likes:is_likable', 'object:' . \ElggQuestion::SUBTYPE, '\Elgg\Values::getTrue');
+	elgg_register_plugin_hook_handler('likes:is_likable', 'object:' . \ElggAnswer::SUBTYPE, '\Elgg\Values::getTrue');
+	
 	// notifications
 	elgg_register_notification_event('object', ElggQuestion::SUBTYPE, ['create', 'move']);
 	elgg_register_notification_event('object', ElggAnswer::SUBTYPE, ['create', 'correct']);
