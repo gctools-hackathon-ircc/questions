@@ -175,7 +175,7 @@ if ($full) {
 	}
 	
 	if (!empty($answer_text)) {
-		$answer_text = elgg_format_element('div', [], $answer_text);
+		$answer_text = elgg_format_element('div', ['class' => 'elgg-subtext'], $answer_text);
 	}
 	
 	$params = [
