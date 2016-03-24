@@ -304,7 +304,7 @@ function questions_permissions_handler($hook, $type, $returnvalue, $params) {
 		}
 		
 		// an expert should be able to edit an answer, so fix this
-		if ($returnvalue && ($entity instanceof ElggAnswer)) {
+		if (!$returnvalue && ($entity instanceof ElggAnswer)) {
 			// user is not the owner
 			if ($entity->getOwnerGUID() !== $user->getGUID()) {
 				$question = $entity->getContainerEntity();
@@ -316,8 +316,8 @@ function questions_permissions_handler($hook, $type, $returnvalue, $params) {
 					}
 					
 					// if the user is an expert
-					if (check_entity_relationship($user->getGUID(), QUESTIONS_EXPERT_ROLE, $container->getGUID())) {
-						$returnvalue = false;
+					if (questions_is_expert($container, $user)) {
+						$returnvalue = true;
 					}
 				}
 			}
