@@ -1,6 +1,12 @@
 Version history
 ===============
 
+2.0.1 (2016-04-14):
+
+- changed: questions listing styling
+- fixed: experts can't correctly edit answers
+- fixed: questions and answers can't be liked
+
 2.0 (2016-03-10):
 
 - added: answers will be search when searching for questions
