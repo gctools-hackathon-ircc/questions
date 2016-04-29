@@ -401,6 +401,9 @@ class Notifications {
 		}
 		
 		$object = $event->getObject();
+		if (!($object instanceof \ElggEntity)) {
+			return;
+		}
 		$container = $object->getContainerEntity();
 		if (!($container instanceof \ElggAnswer)) {
 			return;
