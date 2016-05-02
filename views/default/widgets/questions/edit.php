@@ -34,3 +34,8 @@ echo '<div>';
 echo elgg_echo('widget:numbertodisplay');
 echo elgg_view('input/text', ['name' => 'params[limit]', 'value' => $limit]);
 echo '</div>';
+
+echo '<div>';
+echo elgg_echo('tags');
+echo elgg_view('input/text', ['name' => 'params[filter_tags]', 'value' => $widget->filter_tags]);
+echo '</div>';

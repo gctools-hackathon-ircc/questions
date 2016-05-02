@@ -171,6 +171,7 @@ To view the comment click here:
 	'widget:questions:title' => "Questions",
 	'widget:questions:description' => "You can view the status of your questions.",
 	'widget:questions:content_type' => "Which questions to show",
+	'widget:questions:more' => "View more questions",
 		
 	/**
 	 * Actions

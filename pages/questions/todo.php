@@ -89,14 +89,29 @@ if ($page_owner instanceof ElggGroup) {
 	$options['wheres'][] = $container_where;
 }
 
-$content = elgg_list_entities_from_metadata($options);
+$tags = get_input('tags');
+if (!empty($tags)) {
+	if (is_string($tags)) {
+		$tags = string_to_tag_array($tags);
 
+	}
+	$options['metadata_name_value_pairs'] = [
+		'name' => 'tags',
+		'value' => $tags,
+	];
+}
+
+// build page elements
 $title = elgg_echo('questions:todo');
 
+$content = elgg_list_entities_from_metadata($options);
+
+// build page
 $body = elgg_view_layout('content', [
 	'title' => $title,
 	'content' => $content,
 	'filter_context' => '',
 ]);
 
+// draw page
 echo elgg_view_page($title, $body);

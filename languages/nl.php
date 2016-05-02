@@ -99,6 +99,7 @@ Klik hier om de vraag te beantwoorden:
   'widget:questions:title' => 'Vragen',
   'widget:questions:description' => 'Overzicht van vragen',
   'widget:questions:content_type' => 'Welke vragen moeten getoond worden?',
+  'widget:questions:more' => "Meer vragen bekijken",
   'questions:action:answer:save:error:container' => 'U heeft geen toestemming om een antwoord te geven op deze vraag',
   'questions:action:answer:save:error:body' => 'Een antwoord is verplicht: %s, %s',
   'questions:action:answer:save:error:save' => 'Er was een probleem met het opslaan van uw antwoord',

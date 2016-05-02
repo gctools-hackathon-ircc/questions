@@ -18,13 +18,16 @@ $options = [
 	'pagination' => false,
 ];
 
-$getter = 'elgg_get_entities';
+$base_url = 'questions/all';
 
 switch ($widget->context) {
 	case 'profile':
+		$base_url = "questions/owner/{$widget->getOwnerEntity()->username}";
+		
 		$options['owner_guid'] = $widget->getOwnerGUID();
 		break;
 	case 'dashboard':
+		$base_url = "questions/owner/{$widget->getOwnerEntity()->username}";
 		
 		$type = $widget->content_type;
 		if (($type == 'todo') && !questions_is_expert()) {
@@ -34,7 +37,7 @@ switch ($widget->context) {
 		// user shows owned
 		switch ($type) {
 			case 'todo':
-				$getter = 'elgg_get_entities_from_metadata';
+				$base_url = 'questions/todo';
 				
 				// prepare options
 				$dbprefix = elgg_get_config('dbprefix');
@@ -92,14 +95,36 @@ switch ($widget->context) {
 		
 		break;
 	case 'groups':
+		$base_url = "questions/group/{$widget->getOwnerGUID()}/all";
+		
 		// only in this container
 		$options['container_guid'] = $widget->getOwnerGUID();
 		break;
 }
 
-$content = elgg_list_entities($options, $getter);
+// add tags filter
+$filter_tags = $widget->filter_tags;
+if (!empty($filter_tags)) {
+	$filter_tags = string_to_tag_array($filter_tags);
+	
+	$options['metadata_name_value_pairs'] = [
+		'name' => 'tags',
+		'value' => $filter_tags,
+	];
+} else {
+	$filter_tags = null;
+}
+
+$content = elgg_list_entities_from_metadata($options);
 if (empty($content)) {
 	$content = elgg_view('output/longtext', ['value' => elgg_echo('questions:none')]);
+} else {
+	
+	$content .= elgg_format_element('div', ['class' => 'elgg-widget-more'], elgg_view('output/url', [
+		'text' => elgg_echo('widget:questions:more'),
+		'href' => elgg_http_add_url_query_elements($base_url, ['tags' => $filter_tags]),
+		'is_trusted' => true,
+	]));
 }
 
 echo $content;

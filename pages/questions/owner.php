@@ -19,8 +19,7 @@ elgg_push_breadcrumb($page_owner->name);
 
 elgg_register_title_button();
 
-$title = elgg_echo('questions:owner', [$page_owner->name]);
-
+// prepare options
 $options = [
 	'type' => 'object',
 	'subtype' => 'question',
@@ -36,14 +35,29 @@ if ($page_owner instanceof ElggGroup) {
 	$options['owner_guid'] = $page_owner->getGUID();
 }
 
-$content = elgg_list_entities($options);
+$tags = get_input('tags');
+if (!empty($tags)) {
+	if (is_string($tags)) {
+		$tags = string_to_tag_array($tags);
 
-$vars = [
+	}
+	$options['metadata_name_value_pairs'] = [
+		'name' => 'tags',
+		'value' => $tags,
+	];
+}
+
+// build page elements
+$title = elgg_echo('questions:owner', [$page_owner->name]);
+
+$content = elgg_list_entities_from_metadata($options);
+
+// build page
+$body = elgg_view_layout('content', [
 	'title' => $title,
 	'content' => $content,
 	'filter_context' => ($page_owner->getGUID() === elgg_get_logged_in_user_guid()) ? 'mine' : '',
-];
+]);
 
-$body = elgg_view_layout('content', $vars);
-
+// draw page
 echo elgg_view_page($title, $body);
