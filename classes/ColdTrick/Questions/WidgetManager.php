@@ -35,8 +35,8 @@ class WidgetManager {
 		if ($owner instanceof \ElggUser) {
 			// user
 			$return_value = "questions/owner/{$owner->username}";
-			if ($widget->context === 'dashboard') {
-				switch ($widget->content_type) {
+			if ($entity->context === 'dashboard') {
+				switch ($entity->content_type) {
 					case 'all':
 						$return_value = 'questions/all';
 						break;
