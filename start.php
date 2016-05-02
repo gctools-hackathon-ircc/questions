@@ -54,7 +54,7 @@ function questions_init() {
 	elgg_register_plugin_hook_handler('register', 'menu:filter', 'questions_filter_menu_handler');
 	elgg_register_plugin_hook_handler('container_permissions_check', 'object', 'questions_container_permissions_handler');
 	elgg_register_plugin_hook_handler('permissions_check', 'object', 'questions_permissions_handler');
-	elgg_register_plugin_hook_handler('widget_url', 'widget_manager', 'questions_widget_url_handler');
+	elgg_register_plugin_hook_handler('entity:url', 'object', '\ColdTrick\Questions\WidgetManager::widgetURL');
 	elgg_register_plugin_hook_handler('cron', 'daily', 'questions_daily_cron_handler');
 	
 	elgg_register_plugin_hook_handler('index_entity_type_subtypes', 'elasticsearch', '\ColdTrick\Questions\Elasticsearch::indexTypes');

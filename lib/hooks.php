@@ -339,65 +339,6 @@ function questions_permissions_handler($hook, $type, $returnvalue, $params) {
 }
 
 /**
- * Return the widget title url
- *
- * @param string $hook        the name of the hook
- * @param string $type        the type of the hook
- * @param string $returnvalue current return value
- * @param array  $params      supplied params
- *
- * @return void|string
- */
-function questions_widget_url_handler($hook, $type, $returnvalue, $params) {
-	
-	if (!empty($returnvalue)) {
-		// someone already set an url
-		return;
-	}
-	
-	if (empty($params) || !is_array($params)) {
-		return;
-	}
-	
-	$widget = elgg_extract('entity', $params);
-	if (!($widget instanceof ElggWidget)) {
-		return;
-	}
-	
-	// only handle questions widget
-	if ($widget->handler !== 'questions') {
-		return;
-	}
-	
-	// who owns the widget
-	$owner = $widget->getOwnerEntity();
-	if ($owner instanceof ElggUser) {
-		// user
-		$returnvalue = "questions/owner/{$owner->username}";
-		if ($widget->context === 'dashboard') {
-			switch ($widget->content_type) {
-				case 'all':
-					$returnvalue = 'questions/all';
-					break;
-				case 'todo':
-					if (questions_is_expert()) {
-						$returnvalue = 'questions/todo';
-					}
-					break;
-			}
-		}
-	} elseif ($owner instanceof ElggGroup) {
-		// group
-		$returnvalue = "questions/group/{$owner->getGUID()}/all";
-	} elseif ($owner instanceof ElggSite) {
-		// site
-		$returnvalue = 'questions/all';
-	}
-	
-	return $returnvalue;
-}
-
-/**
  * A plugin hook for the CRON, so we can send out notifications to the experts about there workload
  *
  * @param string $hook        the name of the hook
