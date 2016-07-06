@@ -42,7 +42,11 @@ function questions_leave_group_handler($event, $type, $params) {
  */
 function questions_leave_site_handler($event, $type, $relationship) {
 	
-	if (empty($relationship) || !($relationship instanceof ElggRelationship)) {
+	if (!($relationship instanceof ElggRelationship)) {
+		return;
+	}
+	
+	if ($relationship->relationship !== 'member_of_site') {
 		return;
 	}
 	
