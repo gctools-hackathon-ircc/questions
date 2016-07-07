@@ -1,6 +1,10 @@
 Version history
 ===============
 
+2.1.1 (2016-07-07):
+
+- fixed: deprecated notice of relationship delete
+
 2.1 (2016-05-04):
 
 - added: tags filtering in the widget and listing pages
