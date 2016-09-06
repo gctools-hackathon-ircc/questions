@@ -19,9 +19,16 @@ class ElggAnswer extends ElggObject {
 	 * @see ElggEntity::getURL()
 	 */
 	public function getURL() {
+		// make sure we can get the container
+		$ia = elgg_set_ignore_access(true);
+		
+		// get the container/question
 		$container_entity = $this->getContainerEntity();
 		
 		$url = $container_entity->getURL() . "#elgg-object-{$this->getGUID()}";
+		
+		// restore access
+		elgg_set_ignore_access($ia);
 		
 		return $url;
 	}
