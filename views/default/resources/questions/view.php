@@ -35,7 +35,7 @@ $answers = '';
 
 // add the answer marked as the correct answer first
 $marked_answer = $question->getMarkedAnswer();
-if ($marked_answer) {
+if (!empty($marked_answer)) {
 	$answers .= elgg_view_entity($marked_answer);
 }
 
@@ -48,7 +48,7 @@ $options = [
 	'limit' => false,
 ];
 
-if ($marked_answer) {
+if (!empty($marked_answer)) {
 	// do not include the marked answer as it already  added to the output before
 	$options['wheres'] = ["e.guid <> {$marked_answer->getGUID()}"];
 }
@@ -70,11 +70,16 @@ if (elgg_is_active_plugin('likes')) {
 $answers .= elgg_list_entities($options);
 
 $count = elgg_get_entities($options);
-if ($marked_answer) {
+if (!empty($marked_answer)) {
 	$count++;
 }
 
-$content .= elgg_view_module('info', "{$count} " . elgg_echo('answers'), $answers, ['class' => 'mtm', 'id' => 'question-answers']);
+if (!empty($answers)) {
+	$content .= elgg_view_module('info', "{$count} " . elgg_echo('answers'), $answers, [
+		'class' => 'mtm',
+		'id' => 'question-answers',
+	]);
+}
 
 // add answer form
 if (($question->getStatus() === 'open') && $question->canWriteToContainer(0, 'object', 'answer')) {
