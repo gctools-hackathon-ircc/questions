@@ -34,8 +34,6 @@ if (($container instanceof ElggGroup) && (elgg_get_page_owner_guid() !== $contai
 	$subtitle[] = elgg_echo('river:ingroup', [$group_link]);
 }
 
-$tags = elgg_view('output/tags', ['tags' => $question->tags]);
-
 $subtitle[] = elgg_view_friendly_time($question->time_created);
 
 $answer_options = [
@@ -109,7 +107,6 @@ if ($full) {
 		'title' => false,
 		'metadata' => $metadata,
 		'subtitle' => implode(' ', $subtitle),
-		'tags' => $tags,
 	];
 	$list_body = elgg_view('object/elements/summary', $params);
 	
@@ -181,7 +178,6 @@ if ($full) {
 		'title' => $title,
 		'metadata' => $metadata,
 		'subtitle' => implode(' ', $subtitle),
-		'tags' => $tags,
 		'content' => $excerpt . $answer_text,
 	];
 	$list_body = elgg_view('object/elements/summary', $params);
