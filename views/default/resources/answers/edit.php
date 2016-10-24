@@ -5,7 +5,9 @@
  * @package ElggQuestions
  */
 
-$answer_guid = get_input('guid');
+elgg_gatekeeper();
+
+$answer_guid = (int) elgg_extract('guid', $vars);
 elgg_entity_gatekeeper($answer_guid, 'object', ElggAnswer::SUBTYPE);
 
 $answer = get_entity($answer_guid);

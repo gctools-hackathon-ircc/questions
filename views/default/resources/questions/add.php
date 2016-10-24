@@ -5,6 +5,8 @@
  * @package ElggQuestions
  */
 
+elgg_gatekeeper();
+
 $title = elgg_echo('questions:add');
 
 elgg_push_breadcrumb($title);

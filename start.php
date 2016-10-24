@@ -8,7 +8,6 @@ define('QUESTIONS_EXPERT_ROLE', 'questions_expert');
 require_once(dirname(__FILE__) . '/lib/functions.php');
 require_once(dirname(__FILE__) . '/lib/events.php');
 require_once(dirname(__FILE__) . '/lib/hooks.php');
-require_once(dirname(__FILE__) . '/lib/page_handlers.php');
 
 elgg_register_event_handler('init', 'system', 'questions_init');
 
@@ -38,8 +37,8 @@ function questions_init() {
 	elgg_register_widget_type('questions', elgg_echo('widget:questions:title'), elgg_echo('widget:questions:description'), ['index', 'profile', 'dashboard', 'groups'], true);
 	
 	// register page handler for nice urls
-	elgg_register_page_handler('questions', 'questions_page_handler');
-	elgg_register_page_handler('answers', 'answers_page_handler');
+	elgg_register_page_handler('questions', '\ColdTrick\Questions\PageHandler::questions');
+	elgg_register_page_handler('answers', '\ColdTrick\Questions\PageHandler::answers');
 	
 	// register group options
 	add_group_tool_option('questions', elgg_echo('questions:enable'), false);
