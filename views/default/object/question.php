@@ -47,25 +47,6 @@ $num_answers = elgg_get_entities($answer_options);
 $answer_text = '';
 
 if ($num_answers != 0) {
-	$answer_options['limit'] = 1;
-	$answer_options['count'] = false;
-	
-	$correct_answer = $question->getMarkedAnswer();
-
-	if ($correct_answer) {
-		$poster = $correct_answer->getOwnerEntity();
-		$answer_time = elgg_view_friendly_time($correct_answer->time_created);
-		$answer_link = elgg_view('output/url', ['href' => $poster->getURL(), 'text' => $poster->name]);
-		$answer_text = elgg_echo('questions:answered:correct', [$answer_link, $answer_time]);
-	} else {
-		$last_answer = elgg_get_entities($answer_options);
-		
-		$poster = $last_answer[0]->getOwnerEntity();
-		$answer_time = elgg_view_friendly_time($last_answer[0]->time_created);
-		$answer_link = elgg_view('output/url', ['href' => $poster->getURL(), 'text' => $poster->name]);
-		$answer_text = elgg_echo('questions:answered', [$answer_link, $answer_time]);
-	}
-	
 	$subtitle[] = elgg_view('output/url', [
 		'href' => "{$question->getURL()}#question-answers",
 		'text' => elgg_echo('answers') . " ({$num_answers})",
