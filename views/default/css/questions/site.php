@@ -3,8 +3,8 @@
 /* questions css */
 
 .questions-checkmark {
-	width: 40px;
-	height: 40px;
+	width: 25px;
+	height: 25px;
 	background:transparent url(<?php echo elgg_get_site_url(); ?>mod/questions/_graphics/checkmark.png) no-repeat;
 }
 

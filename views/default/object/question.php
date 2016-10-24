@@ -16,7 +16,7 @@ $subtitle = [];
 
 $poster = $question->getOwnerEntity();
 
-$poster_icon = elgg_view_entity_icon($poster, 'small');
+$poster_icon = elgg_view_entity_icon($poster, 'tiny');
 $poster_link = elgg_view('output/url', [
 	'text' => $poster->name,
 	'href' => $poster->getURL(),

@@ -7,7 +7,7 @@ if (!($answer instanceof ElggAnswer)) {
 
 $question = $answer->getContainerEntity();
 
-$image = elgg_view_entity_icon($answer->getOwnerEntity(), 'small');
+$image = elgg_view_entity_icon($answer->getOwnerEntity(), 'tiny');
 
 // mark this as the correct answer?
 $correct_answer = $answer->getCorrectAnswerMetadata();
