@@ -102,8 +102,6 @@ if ($solution_time && !$question->getMarkedAnswer()) {
 	$answer_text .= elgg_format_element('span', ['class' => $solution_class], $solution_date);
 }
 
-$subtitle[] = elgg_view('output/categories', $vars);
-
 if ($full) {
 	
 	$params = [

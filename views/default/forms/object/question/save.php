@@ -87,10 +87,6 @@ elgg_clear_sticky_form('question');
 </div>
 
 <?php
-// categories support
-if (elgg_view_exists('input/categories')) {
-	echo elgg_view('input/categories', $vars);
-}
 
 // comments
 $comments = elgg_format_element('label', ['for' => 'questions-comments'], elgg_echo('comments'));
