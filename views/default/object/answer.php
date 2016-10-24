@@ -23,15 +23,7 @@ if ($correct_answer) {
 }
 
 // create subtitle
-$owner = $answer->getOwnerEntity();
-$owner_link = elgg_view('output/url', [
-	'text' => $owner->name,
-	'href' => $owner->getURL(),
-	'is_trusted' => true
-]);
-
-$friendly_time = elgg_view_friendly_time($answer->time_created);
-$subtitle = $owner_link . ' ' . $friendly_time;
+$subtitle = elgg_view('page/elements/by_line', $vars);
 
 // build entity menu
 $entity_menu = elgg_view_menu('entity', [
