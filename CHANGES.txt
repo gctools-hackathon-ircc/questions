@@ -1,6 +1,15 @@
 Version history
 ===============
 
+3.0 (2016-10-27):
+
+- changed: don't show answer text in listing
+- changed: icon size of the owner
+- changed: moved pages to resource views
+- fixed: don't show empty answer header in full view
+- fixed: php fatal error when checking canComment on an answer
+- removed: categories support
+
 2.1.2 (2016-09-15):
 
 - fixed: php fatal error when getting answer url
