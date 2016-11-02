@@ -78,9 +78,12 @@ function questions_init() {
 	elgg_register_event_handler('create', 'object', '\ColdTrick\Questions\ContentSubscriptions::createAnswer');
 	elgg_register_event_handler('create', 'object', '\ColdTrick\Questions\ContentSubscriptions::createCommentOnAnswer');
 	
+	elgg_register_plugin_hook_handler('supported_types', 'entity_tools', '\ColdTrick\Questions\MigrateQuestions::supportedSubtypes');
+	
 	// events
 	elgg_register_event_handler('leave', 'group', 'questions_leave_group_handler');
 	elgg_register_event_handler('delete', 'relationship', 'questions_leave_site_handler');
+	elgg_register_event_handler('update:after', 'object', '\ColdTrick\Questions\Access::updateQuestion');
 	
 	// actions
 	elgg_register_action('questions/toggle_expert', dirname(__FILE__) . '/actions/toggle_expert.php');
