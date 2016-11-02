@@ -454,7 +454,7 @@ function questions_can_ask_question(ElggEntity $container = null, ElggUser $user
 	
 	if (!questions_experts_enabled() || ($container->getPrivateSetting('questions_who_can_ask') !== 'experts')) {
 		// no experts enabled, or not limited to experts
-		return can_write_to_container($user->getGUID(), $container->getGUID(), 'object', ElggQuestion::SUBTYPE);
+		return $container->canWriteToContainer($user->getGUID(), 'object', ElggQuestion::SUBTYPE);
 	}
 	
 	if (!questions_is_expert($container, $user)) {
@@ -462,7 +462,7 @@ function questions_can_ask_question(ElggEntity $container = null, ElggUser $user
 		return false;
 	}
 	
-	return can_write_to_container($user->getGUID(), $container->getGUID(), 'object', ElggQuestion::SUBTYPE);
+	return $container->canWriteToContainer($user->getGUID(), 'object', ElggQuestion::SUBTYPE);
 }
 
 /**
