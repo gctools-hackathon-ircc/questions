@@ -1,6 +1,11 @@
 Version history
 ===============
 
+4.0 (2016-11-18):
+
+- added: support for entity_tools
+- changed: increased Elgg version requirement
+
 3.0 (2016-10-27):
 
 - changed: don't show answer text in listing
