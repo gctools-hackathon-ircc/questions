@@ -307,12 +307,25 @@ class Notifications {
 			return;
 		}
 		
-		$answer = $event->getObject();
-		if (!($answer instanceof \ElggAnswer)) {
+		$object = $event->getObject();
+		if (!($object instanceof \ElggObject)) {
 			return;
 		}
 		
-		$question = $answer->getContainerEntity();
+		$question = false;
+		$container = $object->getContainerEntity();
+		if ($object instanceof \ElggAnswer) {
+			$question = $container;
+		} elseif ($container instanceof \ElggAnswer) {
+			// comments on answers
+			$question = $container->getContainerEntity();
+		}
+		
+		if (!($question instanceof \ElggQuestion)) {
+			// something went wrong, maybe access
+			return;
+		}
+		
 		$owner = $question->getOwnerEntity();
 		
 		$methods = get_user_notification_settings($owner->getGUID());
