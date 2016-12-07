@@ -19,7 +19,7 @@ if ($correct_answer) {
 	
 	$title = elgg_echo('questions:answer:checkmark:title', [$owner_name, $timestamp]);
 	
-	$image .= elgg_format_element('div', ['class' => 'questions-checkmark', 'title' => $title]);
+	$image .= elgg_format_element('div', ['class' => 'questions-checkmark', 'title' => $title], elgg_view_icon('checkmark'));
 }
 
 // create subtitle
