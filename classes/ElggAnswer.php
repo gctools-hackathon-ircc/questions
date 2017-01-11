@@ -37,14 +37,14 @@ class ElggAnswer extends ElggObject {
 	 * (non-PHPdoc)
 	 * @see ElggObject::canComment()
 	 */
-	public function canComment($user_guid = 0) {
+	public function canComment($user_guid = 0, $default = null) {
 		
 		$container = $this->getContainerEntity();
 		if (!($container instanceof ElggQuestion)) {
 			return false;
 		}
 		
-		return $container->canComment($user_guid);
+		return $container->canComment($user_guid, $default);
 	}
 	
 	/**
