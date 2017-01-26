@@ -1,6 +1,11 @@
 Version history
 ===============
 
+5.0 (2017-01-26):
+
+- changed: increased Elgg version requirement to 2.3
+- fixed: incompatible function declaration
+
 4.1 (2016-12-16):
 
 - changed: replaced checkmark icon with FontAwesome checkmark
