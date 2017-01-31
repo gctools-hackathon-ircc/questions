@@ -339,7 +339,7 @@ function questions_permissions_handler($hook, $type, $returnvalue, $params) {
 }
 
 /**
- * A plugin hook for the CRON, so we can send out notifications to the experts about there workload
+ * A plugin hook for the CRON, so we can send out notifications to the experts about their workload
  *
  * @param string $hook        the name of the hook
  * @param string $type        the type of the hook
