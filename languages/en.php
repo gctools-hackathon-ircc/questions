@@ -131,6 +131,8 @@ To view the comment click here:
 	'questions:settings:general:close:description' => "When an answer of a question is marked as the correct answer, close the question. This will mean no more answers can be given.",
 	'questions:settings:general:solution_time' => "Set a default solution time in days",
 	'questions:settings:general:solution_time:description' => "Questions should be answered before this time expires, groups can override this setting with their own time limit. 0 for no limit.",
+	'questions:settings:general:auto_close_time' => "Automaticly close questions after a number of days",
+	'questions:settings:general:auto_close_time:description' => "Questions which are not yet closed after a number of days will be automaticly closed. 0 or empty for no automatic closing.",
 	'questions:settings:general:solution_time_group' => "Group owners can change the default solution time",
 	'questions:settings:general:solution_time_group:description' => "If not allowed, groups will use the default solution time as defined above.",
 	'questions:settings:general:limit_to_groups' => "Limit questions to group context only",

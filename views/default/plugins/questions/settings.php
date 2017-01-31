@@ -46,6 +46,14 @@ $general_settings .= elgg_view_field([
 ]);
 
 $general_settings .= elgg_view_field([
+	'#type' => 'number',
+	'#label' => elgg_echo('questions:settings:general:auto_close_time'),
+	'#help' => elgg_echo('questions:settings:general:auto_close_time:description'),
+	'name' => 'params[auto_close_time]',
+	'value' => $plugin->auto_close_time,
+]);
+
+$general_settings .= elgg_view_field([
 	'#type' => 'select',
 	'#label' => elgg_echo('questions:settings:general:solution_time_group'),
 	'#help' => elgg_echo('questions:settings:general:solution_time_group:description'),
