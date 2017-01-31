@@ -20,7 +20,7 @@ $question = $answer->getContainerEntity();
 
 $title = elgg_echo('questions:answer:edit');
 
-elgg_push_breadcrumb($question->title, $question->getURL());
+elgg_push_breadcrumb($question->getDisplayName(), $question->getURL());
 elgg_push_breadcrumb($title);
 
 $content = elgg_view_form('object/answer/edit', [], ['entity' => $answer]);

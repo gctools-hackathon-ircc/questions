@@ -17,7 +17,7 @@ if (!$question->canEdit()) {
 	forward(REFERRER);
 }
 
-elgg_push_breadcrumb($question->title, $question->getURL());
+elgg_push_breadcrumb($question->getDisplayName(), $question->getURL());
 elgg_push_breadcrumb(elgg_echo('edit'));
 
 $form_vars = [];

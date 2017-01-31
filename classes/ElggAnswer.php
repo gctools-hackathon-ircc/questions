@@ -48,18 +48,13 @@ class ElggAnswer extends ElggObject {
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see ElggEntity::__get()
+	 * {@inheritDoc}
+	 * @see ElggObject::getDisplayName()
 	 */
-	public function __get($name) {
+	public function getDisplayName() {
+		$question = $this->getContainerEntity();
 		
-		if ($name === 'title') {
-			$question = $this->getContainerEntity();
-			
-			return elgg_echo('questions:object:answer:title', [$question->title]);
-		}
-		
-		return parent::__get($name);
+		return elgg_echo('questions:object:answer:title', [$question->title]);
 	}
 	
 	/**

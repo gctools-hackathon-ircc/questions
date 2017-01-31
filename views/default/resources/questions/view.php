@@ -22,7 +22,7 @@ if ($page_owner instanceof ElggGroup) {
 	elgg_push_breadcrumb($crumbs_title, "questions/owner/{$page_owner->username}");
 }
 
-$title = $question->title;
+$title = $question->getDisplayName();
 
 elgg_push_breadcrumb($title);
 

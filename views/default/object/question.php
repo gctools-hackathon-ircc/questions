@@ -138,7 +138,7 @@ if ($full) {
 	if ($question->getMarkedAnswer()) {
 		$title_text = elgg_view_icon('checkmark', ['class' => 'mrs question-listing-checkmark']);
 	}
-	$title_text .= elgg_get_excerpt($question->title, 100);
+	$title_text .= elgg_get_excerpt($question->getDisplayName(), 100);
 	$title = elgg_view('output/url', [
 		'text' => $title_text,
 		'href' => $question->getURL(),
