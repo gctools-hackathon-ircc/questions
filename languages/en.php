@@ -10,6 +10,10 @@ return [
 	'item:object:answer' => "Answers",
 	'item:object:question' => "Questions",
 	
+	// admin
+	'admin:upgrades:set_question_status' => "Set status on all questions",
+	'admin:upgrades:set_question_status:description' => "Make sure all questions have a status metadata field. Older questions don't have this by default.",
+	
 	/**
 	 * Menu items
 	 */

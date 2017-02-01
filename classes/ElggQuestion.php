@@ -128,32 +128,21 @@ class ElggQuestion extends ElggObject {
 	 * @return string the current status
 	 */
 	public function getStatus() {
-		$result = 'open';
+		$result = $this->status;
 		
-		// do we even support status
-		if (questions_close_on_marked_answer()) {
-			// make sure the status is correct
-			switch ($this->status) {
-				case 'open':
-					// is it still open, so no marked answer
-					if ($this->getMarkedAnswer()) {
-						$result = 'closed';
-					}
-					break;
-				case 'closed':
+		// should we check if the status is correct
+		if (!questions_close_on_marked_answer()) {
+			return $result;
+		}
+		
+		// make sure the status is correct
+		switch ($result) {
+			case 'open':
+				// is it still open, so no marked answer
+				if ($this->getMarkedAnswer()) {
 					$result = 'closed';
-					// is it still open, so no marked answer
-					if (!$this->getMarkedAnswer()) {
-						$result = 'open';
-					}
-					break;
-				default:
-					// no setting yet
-					if ($this->getMarkedAnswer()) {
-						$result = 'closed';
-					}
-					break;
-			}
+				}
+				break;
 		}
 		
 		return $result;

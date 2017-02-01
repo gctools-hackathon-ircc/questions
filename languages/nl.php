@@ -1,10 +1,12 @@
 <?php
 /**
  * This file was created by Translation Editor v5.2
- * On 2017-01-31 16:32
+ * On 2017-02-01 10:13
  */
 
 return array (
+  'admin:upgrades:set_question_status' => 'Stel de status in voor alle vragen',
+  'admin:upgrades:set_question_status:description' => 'Zorg ervoor dat alle vragen een status metadata veld hebben. Oudere vragen hadden dit standaard niet.',
   'questions:object:answer:title' => 'Antwoord op vraag %s',
   'questions:notifications:answer:create:subject' => 'Er is een antwoord gegeven op %s',
   'questions:notifications:answer:create:summary' => 'Er is een antwoord gegeven op %s',

@@ -90,6 +90,8 @@ function questions_init() {
 	elgg_register_action('questions/toggle_expert', dirname(__FILE__) . '/actions/toggle_expert.php');
 	elgg_register_action('questions/group_settings', dirname(__FILE__) . '/actions/group_settings.php');
 	
+	elgg_register_action('questions/upgrades/set_question_status', dirname(__FILE__) . '/actions/upgrades/set_question_status.php', 'admin');
+	
 	// question
 	$actions_base = dirname(__FILE__) . '/actions/object/question';
 	elgg_register_action('object/question/save', "{$actions_base}/save.php");
