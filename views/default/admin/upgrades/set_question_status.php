@@ -25,6 +25,15 @@ $count = elgg_get_entities_from_metadata([
 
 access_show_hidden_entities($access_status);
 
+if (empty($count)) {
+	// mark upgrade as completed
+	$factory = new ElggUpgrade();
+	$upgrade = $factory->getUpgradeFromPath('admin/upgrades/set_question_status');
+	if ($upgrade instanceof ElggUpgrade) {
+		$upgrade->setCompleted();
+	}
+}
+
 echo elgg_view('output/longtext', [
 	'value' => elgg_echo('admin:upgrades:set_question_status:description'),
 ]);
