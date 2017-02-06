@@ -85,6 +85,7 @@ function questions_init() {
 	elgg_register_event_handler('leave', 'group', 'questions_leave_group_handler');
 	elgg_register_event_handler('delete', 'relationship', 'questions_leave_site_handler');
 	elgg_register_event_handler('update:after', 'object', '\ColdTrick\Questions\Access::updateQuestion');
+	elgg_register_event_handler('upgrade', 'system', '\ColdTrick\Questions\Upgrade::setStatusOnQuestions');
 	
 	// actions
 	elgg_register_action('questions/toggle_expert', dirname(__FILE__) . '/actions/toggle_expert.php');
