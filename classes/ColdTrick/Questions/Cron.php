@@ -22,6 +22,7 @@ class Cron {
 		}
 		
 		$time = (int) elgg_extract('time', $params, time());
+		$site = elgg_get_site_entity();
 		
 		// ignore access
 		$ia = elgg_set_ignore_access(true);
@@ -42,6 +43,25 @@ class Cron {
 		foreach ($batch as $question) {
 			// close the question
 			$question->close();
+			
+			// notify the user that the question was closed
+			$owner = $question->getOwnerEntity();
+			
+			$subject = elgg_echo('questions:notification:auto_close:subject', [$question->getDisplayName()]);
+			$message = elgg_echo('questions:notification:auto_close:message', [
+				$owner->getDisplayName(),
+				$question->getDisplayName(),
+				$auto_close_days,
+				$question->getURL(),
+			]);
+			
+			$notification_params = [
+				'summary' => elgg_echo('questions:notification:auto_close:summary', [$question->getDisplayName()]),
+				'object' => $question,
+				'action' => 'close',
+			];
+			
+			notify_user($owner->getGUID(), $site->getGUID(), $subject, $message, $notification_params);
 		}
 		
 		// restore access

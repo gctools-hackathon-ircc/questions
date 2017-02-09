@@ -119,6 +119,16 @@ To view the comment click here:
 	'questions:daily:notification:message:overdue' => "The following questions are overdue",
 	'questions:daily:notification:message:due' => "The following questions need to be solved today",
 	'questions:daily:notification:message:new' => "New questions asked",
+	
+	'questions:notification:auto_close:subject' => "The question '%s' was closed due to inactivity",
+	'questions:notification:auto_close:summary' => "The question '%s' was closed due to inactivity",
+	'questions:notification:auto_close:message' => "Hi %s,
+
+Your question '%s' has been inactive for more than %s days. For this reason the question was closed.
+
+To view the question, click here:
+%s",
+	
 	/**
 	 * answers
 	 */
