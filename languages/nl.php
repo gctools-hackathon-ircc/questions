@@ -1,10 +1,18 @@
 <?php
 /**
  * This file was created by Translation Editor v5.2
- * On 2017-02-01 10:13
+ * On 2017-02-13 12:56
  */
 
 return array (
+  'questions:notification:auto_close:subject' => 'De vraag \'%s\' is gesloten vanwege inactiviteit',
+  'questions:notification:auto_close:summary' => 'De vraag \'%s\' is gesloten vanwege inactiviteit',
+  'questions:notification:auto_close:message' => 'Beste %s,
+
+Je vraag \'%s\' heeft al meer dan %s dagen geen reactie gehad. Daarom is deze vraag gesloten.
+
+Om de vraag te bekijken, klik hier:
+%s',
   'admin:upgrades:set_question_status' => 'Stel de status in voor alle vragen',
   'admin:upgrades:set_question_status:description' => 'Zorg ervoor dat alle vragen een status metadata veld hebben. Oudere vragen hadden dit standaard niet.',
   'questions:object:answer:title' => 'Antwoord op vraag %s',
